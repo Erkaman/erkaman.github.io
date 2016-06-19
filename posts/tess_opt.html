@@ -28,7 +28,7 @@
       img {
       display: block;
       margin: auto;
-      width: 90%;
+/*      width: 90%;*/
       }
 
 .last-update { padding-top: 2em; }
@@ -142,6 +142,17 @@
     <div class="center-box">
 <h1>Making Faster Fragment Shaders by Using Tessellation Shaders</h1>
 
+<p>In order to fully understand this post, it is necessary that you understand
+the following topics:</p>
+
+<ul>
+<li>Basic usage of Tessellation Shaders. You can study this topic <a href="http://ogldev.atspace.co.uk/www/tutorial30/tutorial30.html">here</a> and <a href="http://ogldev.atspace.co.uk/www/tutorial31/tutorial31.html">here</a></li>
+<li>Barycentric Coordinates. You can study this topic <a href="http://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates">here</a></li>
+<li>Perlin Noise and Simplex Noise. You can study this topic <a href="http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf">here.</a></li>
+</ul>
+
+<p>So I will be making the assumption that the reader is knowledgeable in these topics.</p>
+
 <h2>Introduction</h2>
 
 <p>In the paper <a href="http://www.cad.zju.edu.cn/home/bao/pub/36.pdf">Automatic Shader Simplification using Surface Signal
@@ -217,10 +228,19 @@ evaluate it for every single fragment.</p>
 
 <p>If we apply the above shader on a teapot, the result is the following:</p>
 
-<p><img src="../img/tess_opt/spec_frag.png" alt="Specular Calculation in the Fragment Shader" title="Specular Calculation in the Fragment Shader" /></p>
+<p><img src="../img/tess_opt/spec_frag.png" width="425" height="390"
+alt="Specular Calculation in the Fragment Shader"
+title="Specular Calculation in the Fragment Shader"
+/></p>
 
 <p>Let us now try the idea that I mentioned above; let us move that
-specular calculation from the fragment shader to the vertex shader:</p>
+specular calculation from the fragment shader to the vertex shader. So
+we essentially move code from the fragment shader to the vertex
+shader:</p>
+
+<p><img src="../img/tess_opt/pipeline1.png" alt="Pipeline1" title="Pipeline1" /></p>
+
+<p>So let us do that to the shader:</p>
 
 <div class="codehilite"><pre><span></span><code><span class="c1">//</span>
 <span class="c1">// Vertex Shader</span>
@@ -305,7 +325,290 @@ vertices and calculate a better approximation!</p>
 <p>I will now explain how the idea of Wang et al. can be implemented in
 OpenGL using tessellation shaders.</p>
 
-<p><img src="../img/tess_opt/pipeline1.png" alt="Pipelin1" title="Pipeline1" /></p>
+<p>As has already been stated, we will divide all triangles of the
+original mesh into subtriangles, and by doing so increase the vertex
+density. Wang et al. define the following tessellation levels in the
+<a href="http://www.cad.zju.edu.cn/home/rwang/projects/shader-optimization/14shaderopt_supp.pdf">supplementary document</a> they provided:</p>
+
+<p><img src="../img/tess_opt/tess_levels.png" alt="Tessellation Levels" title="Tessellation
+ Levels" /></p>
+
+<p>So basically, for tessellation level one, we do not subdivide the
+triangles at all, but let them be. But for level 2, we add four extra
+vertices and subdivide the triangle into six triangles, and so on.</p>
+
+<p>It turns out that this kind of subdivision is surprisingly easy to
+implement using tessellation shaders. To do this in OpenGL, first we
+need to add two new shader stages: the Tessellation Control Shader,
+and the Tessellation Evaluation Shader(hereafter abbreviated TCS and
+TES). If we add these two stages, our shader pipeline will look like this:</p>
+
+<p><img src="../img/tess_opt/pipeline2.png" alt="Pipeline2" title="Pipeline2" /></p>
+
+<p>So, we add the two new shader stages between the vertex and fragment
+shaders. Furthermore, the specular calculation is no longer moved from
+the fragment shader to the vertex shader, but from fragment to
+TES. This is because we do not have access to all vertices in the
+vertex shader. In particular, we only have access to the vertices
+created through tessellation in TES, and so we must move the specular
+calculation to TES.</p>
+
+<p>Now, I shall go through what our new shader looks like. First the
+vertex shader:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">vsPos</span><span class="p">;</span>
+<span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">vsNormal</span><span class="p">;</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">tcsPos</span><span class="p">;</span>
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">tcsNormal</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">(){</span>
+    <span class="n">tcsPos</span> <span class="o">=</span> <span class="n">vsPos</span><span class="p">;</span>
+    <span class="n">tcsNormal</span> <span class="o">=</span> <span class="n">vsNormal</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>We will not be doing the specular calculation in the vertex shader
+anymore, so it is simply a pass-though shader now. Next, let us look
+at TCS:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="k">in</span> <span class="k">vec3</span> <span class="n">tcsPos</span><span class="p">[];</span>
+<span class="k">in</span> <span class="k">vec3</span> <span class="n">tcsNormal</span><span class="p">[];</span>
+
+<span class="n">layout</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">out</span><span class="p">;</span> <span class="c1">// (1)</span>
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">tesPos</span><span class="p">[];</span>
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">tesNormal</span><span class="p">[];</span>
+
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">uTessLevel</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">(){</span>
+
+    <span class="c1">// (2)</span>
+    <span class="n">tesNormal</span><span class="p">[</span><span class="n">gl_InvocationID</span><span class="p">]</span> <span class="o">=</span> <span class="n">tcsNormal</span><span class="p">[</span><span class="n">gl_InvocationID</span><span class="p">];</span>
+    <span class="n">tesPos</span><span class="p">[</span><span class="n">gl_InvocationID</span><span class="p">]</span> <span class="o">=</span> <span class="n">tcsPos</span><span class="p">[</span><span class="n">gl_InvocationID</span><span class="p">];</span>
+
+    <span class="c1">// (3)</span>
+    <span class="n">gl_TessLevelOuter</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">uTessLevel</span><span class="p">;</span>
+    <span class="n">gl_TessLevelOuter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">uTessLevel</span><span class="p">;</span>
+    <span class="n">gl_TessLevelOuter</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">uTessLevel</span><span class="p">;</span>
+
+    <span class="c1">// (4)</span>
+    <span class="n">gl_TessLevelInner</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">uTessLevel</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The above will need some explanation. I will explained the marked
+section of the code. In <code class="inline-code">(1)</code> we specify the patch size. The TCS takes
+a list of patches, and does subdivision on them. Since in our case
+<code class="inline-code">vertices=3</code>, we have that the patches are simply the triangles of the
+original mesh.</p>
+
+<p>To every vertex of the patch, we associate a normal and a position,
+which is what we are doing in <code class="inline-code">(2)</code>.</p>
+
+<p>Next, we need to specify tessellation pattern for the
+mesh. <code class="inline-code">gl_TessLevelOuter[0]</code> specifies how many subedges we should
+divide the 0:th edge into. So in <code class="inline-code">(3)</code> we are specifying that every
+single edge of every single triangle should be subdivided into
+<code class="inline-code">uTessLevel</code> subedges. Also, note that if <code class="inline-code">uTessLevel=1</code>, then no
+subdivision will be done at all.</p>
+
+<p>Finally, in <code class="inline-code">(4)</code>, we are specifying how many times we should
+subdivide the inner part of the triangle.</p>
+
+<p>It should now be clear that if <code class="inline-code">uTessLEvel=2</code>, then every triangle
+will be subdivided according to tessellation level 2 I showed in the
+image above.</p>
+
+<p>That was the TCS. Next comes the TES</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">layout</span><span class="p">(</span><span class="n">triangles</span><span class="p">,</span><span class="n">equal_spacing</span><span class="p">)</span> <span class="k">in</span><span class="p">;</span>
+<span class="k">in</span> <span class="k">vec3</span> <span class="n">tesPos</span><span class="p">[];</span>
+<span class="k">in</span> <span class="k">vec3</span> <span class="n">tesNormal</span><span class="p">[];</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">outColor</span><span class="p">;</span>
+
+<span class="k">uniform</span> <span class="n">mat4</span> <span class="n">uMvp</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="n">mat4</span> <span class="n">uView</span><span class="p">;</span>
+
+<span class="k">vec3</span> <span class="n">lerp3D</span><span class="p">(</span><span class="k">vec3</span> <span class="n">v0</span><span class="p">,</span> <span class="k">vec3</span> <span class="n">v1</span><span class="p">,</span> <span class="k">vec3</span> <span class="n">v2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">vec3</span><span class="p">(</span><span class="n">gl_TessCoord</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">v0</span> <span class="o">+</span> <span class="k">vec3</span><span class="p">(</span><span class="n">gl_TessCoord</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">v1</span> <span class="o">+</span> <span class="k">vec3</span><span class="p">(</span><span class="n">gl_TessCoord</span><span class="p">.</span><span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="n">v2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">(){</span>
+    <span class="k">vec3</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">lerp3D</span><span class="p">(</span><span class="n">tesPos</span><span class="p">[</span><span class="mo">0</span><span class="p">],</span><span class="n">tesPos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tesPos</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+    <span class="k">vec3</span> <span class="n">normal</span> <span class="o">=</span> <span class="n">lerp3D</span><span class="p">(</span><span class="n">tesNormal</span><span class="p">[</span><span class="mo">0</span><span class="p">],</span> <span class="n">tesNormal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tesNormal</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+    <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">uMvp</span><span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="mf">1.0</span> <span class="p">);</span>
+
+    <span class="n">fsColor</span> <span class="o">=</span> <span class="n">doSpecularLight</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">uView</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>This one is a bit more difficult to understand. First, look at this image:</p>
+
+<p><img src="../img/tess_opt/tes.png" alt="TES" title="TES" /></p>
+
+<p>This is a triangle that has been tessellated to level 2. The yellow
+circles are of the three vertices of the original patch(triangle), and
+the positions of these vertices are contained in the input array
+<code class="inline-code">tesPos</code>, and their normals are in <code class="inline-code">tesNormal</code>.</p>
+
+<p>These positions and normals we already know. However, by the TCS 4 new
+vertices were created(they are the pink circles in the image), and we
+do not yet know their positions nor their normals. Kindly enough,
+however, the barycentric coordinates of the vertices created through
+tesselation are sent to the TES. They are <code class="inline-code">(gl_TessCoord.x,
+gl_TessCoord.y, gl_TessCoord.z)</code>. For instance, the barycentric
+coordinates of the center vertex in the above image will be
+<code class="inline-code">(1/3,1/3,1/3)</code>.</p>
+
+<p>But we can just use these barycentric coordinates to compute the
+positions and normals from <code class="inline-code">tesPos</code> and <code class="inline-code">tesNormal</code>(this makes sense,
+because recall that barycentric coordinates allow us to perform
+interpolation on a triangle.).</p>
+
+<p>To summarize, all that the line  <code class="inline-code">vec3 pos =
+lerp3D(tesPos[0],tesPos[1],tesPos[2]);</code> does that it performs
+barycentric interpolation to obtain the positions of all the vertices
+on the tessellated triangle.</p>
+
+<p>Now, note that all the vertices, including the ones created through
+tessellation, will pass through TES. Thus, it is in shader stage, and
+not the vertex shader stage, that we compute the specular
+lighting.</p>
+
+<p>Now all that remains is the fragment shader:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="k">in</span> <span class="k">vec3</span> <span class="n">fsColor</span><span class="p">;</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">color</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">(){</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">fsColor</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>After running TCS and TES, the mesh will now consist of many triangles
+created through tessellation. And every vertex will have a specular
+value associated with it(this was calculated in the end of TES). Now,
+the fragment will be contained in exactly one such triangle, and the
+specular value outputted by the fragment shader will be computed by
+interpolating between the specular values at the vertices of said
+triangle. Since the tessellation has increased the vertex density,
+this should result in a much better approximation of the original
+fragment shader specular lighting.</p>
+
+<p>How much better does this look? Here is the result for tessellation
+level 1:</p>
+
+<p><img src="../img/tess_opt/spec_tess1.png" alt="Specular Lighting Tessellation Level
+ 1" title="Specular Lighting Tessellation
+ Level 1" /></p>
+
+<p>But for tessellation level 1 we are not doing any tessellation at all,
+so we get the same results are we did when we were doing the
+calculation for every vertex. So let us try level 2</p>
+
+<p><img src="../img/tess_opt/spec_tess2.png" alt="Specular Lighting Tessellation Level
+ 2" title="Specular Lighting Tessellation
+ Level 2" /></p>
+
+<p>This already looks much better! And note that level 2 has 6 times as
+many triangles as level 2. Below we can see the difference in vertex density.</p>
+
+<p><img src="../img/tess_opt/tess_level_compare.png" alt="Tessellation Level Comparison" title="Tessellation Level Comparison" /></p>
+
+<p>But tessellation level 2 still have some very slight banding
+artifacts. But by increasing the level to 3, that problem pretty much
+goes away:</p>
+
+<p><img src="../img/tess_opt/spec_tess3.png" alt="Specular Lighting Tessellation Level
+ 3" title="Specular Lighting Tessellation
+ Level 3" /></p>
+
+<p>Let us now compare level 3 with the original fragment shader specular:</p>
+
+<p><img src="../img/tess_opt/compare_level3_original.png" alt="Specular Lighting Original Vs Level
+ 3" title="Specular Lighting
+ Original Vs Level 3" /></p>
+
+<p>As can be observed, the approximation is now almost perfect! But the
+tessellated version should be much faster, since it does not compute
+the specular lighting for every single fragment!</p>
+
+<h2>Speeding up Procedural Textures</h2>
+
+<p>So by doing the above are able to speedup a specular lighting
+calculation. However, that is a very silly example, because specular
+is not at all expensive to compute, even if we are doing it for every
+single fragment. So let us instead speedup a more expensive type of
+shader: Procedural Texture Shader. A procedural texture shader uses
+a Simplex/Perlin noise to compute a texture in real-time, in the
+fragment shader. One advantage of such a texture is that it is very
+easy to make such a texture tile. But one disadvantage is that it is
+quite expensive to calculate a texture in real-time. But by using the
+technique described by Wang et al., we may be able to solve that
+problem.</p>
+
+<p>In our case, the texture will be created by adding 4 octaves of
+Simplex noise. When applied to the teapot, the texture looks like this:</p>
+
+<p><img src="../img/tess_opt/tex_original.png
+" alt="Original Procedural Texture" title="Original Procedural Texture" /></p>
+
+<p>in the above image, the texture is being computed for every single
+fragment, using the fragment position as input to the noise
+function. But this is quite expensive, so let us test whether we can
+approximate the texture by moving that texture calculation from the
+fragment shader to the TES. We can see the result in the below montage:</p>
+
+<p><img src="../img/tess_opt/tex_tess_montage.png
+" alt="Procedural Texture Tessellation
+ Montage" title="Procedural Texture Tessellation Montage" /></p>
+
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>Intel Iris</th>
+  <th>GTX 960</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Original</strong></td>
+  <td>0.3232ms</td>
+  <td>0.323ms</td>
+</tr>
+<tr>
+  <td><strong>Level 1</strong></td>
+  <td>2.2ms</td>
+  <td>12.1ms</td>
+</tr>
+<tr>
+  <td><strong>Level 2</strong></td>
+  <td>2.2ms</td>
+  <td>12.1ms</td>
+</tr>
+<tr>
+  <td><strong>Level 3</strong></td>
+  <td>2.2ms</td>
+  <td>12.1ms</td>
+</tr>
+<tr>
+  <td><strong>Level 4</strong></td>
+  <td>2.2ms</td>
+  <td>12.1ms</td>
+</tr>
+<tr>
+  <td><strong>Level 5</strong></td>
+  <td>2.2ms</td>
+  <td>12.1ms</td>
+</tr>
+</tbody>
+</table>
 <p class="last-update"> <i>This post was last updated: June 19, 2016</i></p>
     </div>
 

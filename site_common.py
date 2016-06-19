@@ -73,7 +73,7 @@ def create_post(input_file):
         markdown_source=f.read()
 
     # process markdown.
-    html_source += markdown2.markdown(markdown_source, extras=["fenced-code-blocks"])
+    html_source += markdown2.markdown(markdown_source, extras=["fenced-code-blocks","tables"])
 
     # finally, add update date.
     now = datetime.datetime.now()

@@ -1,0 +1,24 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{arrows}
+
+\begin{document}
+
+  \begin{tikzpicture}[auto,font=\ttfamily,
+    line/.style={draw, -latex', rounded corners, line width=0.4mm},
+    shader/.style={draw, fill=gray!10,minimum size=8mm},
+    ]
+    % Place nodes
+    \node [shader] (vs) {Vertex}; % keep
+    \node [shader, right of=vs,xshift=25mm] (tcs) {Tessellation Control}; % keep
+    \node [shader, right of=tcs,xshift=40mm] (tes) {Tessellation Evaluation}; %
+    \node [shader, right of=tes,xshift=30mm] (fs) {Fragment}; %
+
+    % Draw edges
+    \path [line] (vs) -- (tcs);
+    \path [line] (tcs) -- (tes);
+    \path [line] (tes) -- (fs);
+
+    \draw [line] (fs.south) -- ++(0,-.5) -| node [near start] {Move Code} (tes.south);
+  \end{tikzpicture}
+
+\end{document}

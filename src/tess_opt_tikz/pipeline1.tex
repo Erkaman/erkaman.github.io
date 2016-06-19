@@ -1,5 +1,4 @@
-\documentclass[tikz,convert={outfile=pipeline.svg}]{standalone}
-%\documentclass[tikz]{standalone}
+\documentclass[tikz]{standalone}
 \usetikzlibrary{arrows}
 
 \begin{document}
@@ -10,16 +9,12 @@
     ]
     % Place nodes
     \node [shader] (vs) {Vertex}; % keep
-    \node [shader, right of=vs,xshift=25mm] (tcs) {Tessellation Control}; % keep
-    \node [shader, right of=tcs,xshift=40mm] (tes) {Tessellation Evaluation}; %
-    \node [shader, right of=tes,xshift=30mm] (fs) {Fragment}; %
+    \node [shader, right of=vs,xshift=30mm] (fs) {Fragment}; %
 
     % Draw edges
-    \path [line] (vs) -- (tcs);
-    \path [line] (tcs) -- (tes);
-    \path [line] (tes) -- (fs);
+    \path [line] (vs) -- (fs);
 
-    \draw [line] (fs.south) -- ++(0,-.5) -| node [near start] {Move Code} (tes.south);
+    \draw [line] (fs.south) -- ++(0,-.5) -| node [near start] {Move Code} (vs.south);
   \end{tikzpicture}
 
 \end{document}
