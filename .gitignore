@@ -1,0 +1,9 @@
+auto/
+*.svg
+*.pdf
+*.aux
+*.log
+
+src/**/*.png
+
+*.pyc

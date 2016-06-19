@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Magnum Opus</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+
+      code {
+      font-size: 80%;
+
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      }
+
+      .inline-code {
+      background-color: rgba(0,0,0,0.05);
+
+      padding: 0;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+      margin: 0;
+
+      font-size: 90%;
+      }
+
+
+      /* we center images. */
+      img {
+      display: block;
+      margin: auto;
+      width: 90%;
+      }
+
+.last-update { padding-top: 2em; }
+
+      #blog-title{font:700 3.5em georgia;color:#000}
+      #top{
+      text-align:center;
+      padding:0 0 2.5em 0; /* vertical spacing below top text. */
+      }
+      #top a{text-decoration:none}
+
+      #blog-title-under{  font-style:italic; }
+
+
+      /* body text font */
+      body{font:95%/1.3 verdana;}
+
+
+      /* headlines. */
+      h1{font:1000 1.27em verdana}
+      h2{font:700 1.27em verdana}
+
+      /* center blog within box*/
+      .center-box{margin:0 auto; max-width:760px;}
+
+      html, body, #container { height: 100%; margin: 0; padding: 0; }
+      body > #container { height: auto; min-height: 100%; padding-bottom: 7em; }
+
+      #footer { background-color: #eee;
+      font-size: 120%; text-align: center;
+      line-height: 3em;
+      martin-top: -3em;
+
+      }
+
+      .codehilite .hll { background-color: #ffffcc }
+      .codehilite .c { color: #008800; font-style: italic } /* Comment */
+      .codehilite .err { border: 1px solid #FF0000 } /* Error */
+      .codehilite .k { color: #AA22FF; font-weight: bold } /* Keyword */
+      .codehilite .o { color: #666666 } /* Operator */
+      .codehilite .cm { color: #008800; font-style: italic } /* Comment.Multiline */
+      .codehilite .cp { color: #008800 } /* Comment.Preproc */
+      .codehilite .c1 { color: #008800; font-style: italic } /* Comment.Single */
+      .codehilite .cs { color: #008800; font-weight: bold } /* Comment.Special */
+      .codehilite .gd { color: #A00000 } /* Generic.Deleted */
+      .codehilite .ge { font-style: italic } /* Generic.Emph */
+      .codehilite .gr { color: #FF0000 } /* Generic.Error */
+      .codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+      .codehilite .gi { color: #00A000 } /* Generic.Inserted */
+      .codehilite .go { color: #808080 } /* Generic.Output */
+      .codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+      .codehilite .gs { font-weight: bold } /* Generic.Strong */
+      .codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+      .codehilite .gt { color: #0040D0 } /* Generic.Traceback */
+      .codehilite .kc { color: #AA22FF; font-weight: bold } /* Keyword.Constant */
+      .codehilite .kd { color: #AA22FF; font-weight: bold } /* Keyword.Declaration */
+      .codehilite .kn { color: #AA22FF; font-weight: bold } /* Keyword.Namespace */
+      .codehilite .kp { color: #AA22FF } /* Keyword.Pseudo */
+      .codehilite .kr { color: #AA22FF; font-weight: bold } /* Keyword.Reserved */
+      .codehilite .kt { color: #00BB00; font-weight: bold } /* Keyword.Type */
+      .codehilite .m { color: #666666 } /* Literal.Number */
+      .codehilite .s { color: #BB4444 } /* Literal.String */
+      .codehilite .na { color: #BB4444 } /* Name.Attribute */
+      .codehilite .nb { color: #AA22FF } /* Name.Builtin */
+      .codehilite .nc { color: #0000FF } /* Name.Class */
+      .codehilite .no { color: #880000 } /* Name.Constant */
+      .codehilite .nd { color: #AA22FF } /* Name.Decorator */
+      .codehilite .ni { color: #999999; font-weight: bold } /* Name.Entity */
+      .codehilite .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+      .codehilite .nf { color: #00A000 } /* Name.Function */
+      .codehilite .nl { color: #A0A000 } /* Name.Label */
+      .codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+      .codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+      .codehilite .nv { color: #B8860B } /* Name.Variable */
+      .codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+      .codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+      .codehilite .mf { color: #666666 } /* Literal.Number.Float */
+      .codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+      .codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+      .codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+      .codehilite .sb { color: #BB4444 } /* Literal.String.Backtick */
+      .codehilite .sc { color: #BB4444 } /* Literal.String.Char */
+      .codehilite .sd { color: #BB4444; font-style: italic } /* Literal.String.Doc */
+      .codehilite .s2 { color: #BB4444 } /* Literal.String.Double */
+      .codehilite .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+      .codehilite .sh { color: #BB4444 } /* Literal.String.Heredoc */
+      .codehilite .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+      .codehilite .sx { color: #008000 } /* Literal.String.Other */
+      .codehilite .sr { color: #BB6688 } /* Literal.String.Regex */
+      .codehilite .s1 { color: #BB4444 } /* Literal.String.Single */
+      .codehilite .ss { color: #B8860B } /* Literal.String.Symbol */
+      .codehilite .bp { color: #AA22FF } /* Name.Builtin.Pseudo */
+      .codehilite .vc { color: #B8860B } /* Name.Variable.Class */
+      .codehilite .vg { color: #B8860B } /* Name.Variable.Global */
+      .codehilite .vi { color: #B8860B } /* Name.Variable.Instance */
+      .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+    </style>
+  </head>
+  <body>
+
+    <div id="container">
+
+    <div class="center-box">
+      <div id="top">
+        <a id="blog-title" href="/">Magnum Opus</a>
+        <p id="blog-title-under">A humble blog about programming</p>
+
+      </div>
+    </div>
+    <div class="center-box">
+<h1>Making Faster Fragment Shaders by Using Tessellation Shaders</h1>
+
+<h2>Introduction</h2>
+
+<p>In the paper <a href="http://www.cad.zju.edu.cn/home/bao/pub/36.pdf">Automatic Shader Simplification using Surface Signal
+Approximation</a>, Wang et
+al described an algorithm that does automatic shader
+simplification. Put briefly, the algorithm automatically rewrites
+shaders so that they become much, much faster. They are using several
+techniques to achieve this, and one of those techniques I'd like to
+described in this post. The technique is that they are moving
+expensive operations from a fragment shader into some earlier shader
+stage, and by doing so they greatly reduce the number of times said
+operation has to be evaluated. In this article, I shall in much detail
+describe this technique.</p>
+
+<h2>Explaining the Main Idea</h2>
+
+<p>So, let us say that we have a shader with fragment shader that is very
+expensive(we are focusing our efforts in simplifying the fragment
+shader, because it is the shader stage that tends to be the most
+expensive nowadays).  Now, how could we make this shader less
+expensive? One way of achieveing a speedup, is that we simplify try to
+run the fragment shader less. The main reason that a fragment shader
+is expensive, is because it has to be evaluated for every single
+fragment that the geometry covers.</p>
+
+<p>But is it really to evaluate it for every single fragment? Maybe it
+could be enough to evaluate it for the vertices of the geometry, and
+then in the fragment shader we interpolate between the values computed at
+the vertices? Let us try that idea out! So, let us try optimizing the
+following shader:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="c1">//</span>
+<span class="c1">// Vertex Shader</span>
+<span class="c1">//</span>
+<span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">vsPos</span><span class="p">;</span>
+<span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">vsNormal</span><span class="p">;</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">fsPos</span><span class="p">;</span>
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">fsNormal</span><span class="p">;</span>
+
+<span class="k">uniform</span> <span class="n">mat4</span> <span class="n">uMvp</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">fsPos</span> <span class="o">=</span> <span class="n">vsPos</span><span class="p">;</span>
+    <span class="n">fsNormal</span> <span class="o">=</span> <span class="n">vsNormal</span><span class="p">;</span>
+
+    <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">uMvp</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vsPos</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//</span>
+<span class="c1">// Fragment Shader</span>
+<span class="c1">//</span>
+<span class="k">in</span> <span class="k">vec3</span> <span class="n">fsPos</span><span class="p">;</span>
+<span class="k">in</span> <span class="k">vec3</span> <span class="n">fsNormal</span><span class="p">;</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">color</span><span class="p">;</span>
+
+<span class="k">uniform</span> <span class="n">mat4</span> <span class="n">uView</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">doSpecularLight</span><span class="p">(</span><span class="n">fsNormal</span><span class="p">,</span> <span class="n">fsPos</span><span class="p">,</span> <span class="n">uView</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>where the function <code class="inline-code">doSpecularLight</code> simply does a standard specular
+light calculation. And since we are calling this function in the
+fragment shader, that means that the function will be evaluated for
+every single fragment that the geometry covers. If <code class="inline-code">doSpecularLight</code>
+were expensive to evaluate, it would certainly be very expensive to
+evaluate it for every single fragment.</p>
+
+<p>If we apply the above shader on a teapot, the result is the following:</p>
+
+<p><img src="../img/tess_opt/spec_frag.png" alt="Specular Calculation in the Fragment Shader" title="Specular Calculation in the Fragment Shader" /></p>
+
+<p>Let us now try the idea that I mentioned above; let us move that
+specular calculation from the fragment shader to the vertex shader:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="c1">//</span>
+<span class="c1">// Vertex Shader</span>
+<span class="c1">//</span>
+<span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">vsPos</span><span class="p">;</span>
+<span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">vsNormal</span><span class="p">;</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">fsResult</span><span class="p">;</span>
+
+<span class="k">uniform</span> <span class="n">mat4</span> <span class="n">uMvp</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">fsResult</span> <span class="o">=</span> <span class="n">doSpecularLight</span><span class="p">(</span><span class="n">vsNormal</span><span class="p">,</span> <span class="n">vsPos</span><span class="p">,</span> <span class="n">uView</span><span class="p">);</span>
+
+    <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">uMvp</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vsPos</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+
+<span class="c1">//</span>
+<span class="c1">// Fragment Shader</span>
+<span class="c1">//</span>
+<span class="k">in</span> <span class="k">vec3</span> <span class="n">fsResult</span><span class="p">;</span>
+
+<span class="k">out</span> <span class="k">vec3</span> <span class="n">color</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">fsResult</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>So now we are calling <code class="inline-code">doSpecularLight</code> in the vertex shader, and then
+sending the result to the fragment shader. The value that is received
+by the fragment shader, is calculated by hardware by interpolating
+between the three vertices that are closest to the fragment(this
+interpolation is based on barycentric coordinates, and you can more
+about this
+<a href="http://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates">here</a>
+).</p>
+
+<p>So the resulting specular lighting is not true fragment shader
+specular lighting. Rather, we are trying to approximate the fragment
+shader specular lighting by interpolating between the values at the
+vertices. However, since we are not computing the specular lighting
+for every single fragment, but for only the vertices, the resulting
+shader should be much cheapter</p>
+
+<p>How does this new shader look? Like this:</p>
+
+<p><img src="../img/tess_opt/spec_vert.png" alt="Specular Calculation in the vertex Shader" title="Specular Calculation in the vertex Shader" /></p>
+
+<p>As can be observed, doing the calculation in the vertex shader results
+in a noticeable drop in quality; the specular highlight is longer
+round, but a has a slightly blocky appearance at the borders. And we
+can see some obvious banding artifacts.</p>
+
+<p>Why do we obtain such an horrendous result? The main problem is that
+the specular lighting generates a relatively high frequency signal, and if take
+too few samlpes, we will not be able to approximate this signal by
+just using barycentric interpolation. In our case, the samples are
+taken at every vertex. And how many vertices does our teapot model have?
+Let us render it as wireframe:</p>
+
+<p><img src="../img/tess_opt/teapot_wireframe1.png" alt="Teapot Wireframe Level 1" title="Teapot
+ Wireframe Level 1" /></p>
+
+<p>Now, look at the vertex density at the location where the big
+highlight was rendered. As can be observed, the vertex is not very high, and thus the
+number of samples will be to low to approximate the original signal.</p>
+
+<p>So if want a better result, we need to take more samples. Wang et
+al. came up with a elegant and ingenious solution to this problem: we
+simply use a tessellation shader to subdivide the triangles of the
+mesh into subtriangles! By doing so, the vertex density of the model
+will be increased, and so, we can compute even more samples at the
+vertices and calculate a better approximation!</p>
+
+<h2>Tessellation Shaders</h2>
+
+<p>I will now explain how the idea of Wang et al. can be implemented in
+OpenGL using tessellation shaders.</p>
+
+<p><img src="../img/tess_opt/pipeline1.png" alt="Pipelin1" title="Pipeline1" /></p>
+<p class="last-update"> <i>This post was last updated: June 19, 2016</i></p>
+    </div>
+
+</div>
+
+    <div id="footer">Blog made by Eric Arneb&#228;ck.
+    <a href="mailto:arnebackeric@gmail.com">Email</a>.
+    <a href="https://github.com/Erkaman">Github</a>
+
+    </div>
+
+  </body>
+</html>
