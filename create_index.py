@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import site_common as site_common
 
@@ -5,9 +7,11 @@ import site_common as site_common
 
 html_source = site_common.get_begin()
 
-html_source += "<h1> List of Posts </h1>"
+html_source += "<h1> About </h1>"
+html_source += "<p> This is just a small blog where the author sometimes puts his articles about things that he has learned. These articles are mostly about graphics programming. </p>"
 
-html_source += "<ul>"
+
+html_source += "<h1> List of Posts </h1>"
 
 def extract_title(md_file):
     # extract the title of a post, from the first line in the file.
@@ -23,11 +27,11 @@ def extract_title(md_file):
 
     return "Invalid Title!"
 
+html_source += "<ul>"
 for md_file in site_common.posts:
 
     html_source += "<li> <a href=\"{0}\">{1}</a>  </li>".format(
         site_common.get_html_file(md_file), extract_title(md_file))
-
 html_source += "</ul>"
 
 html_source += site_common.get_end()

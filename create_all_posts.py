@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import site_common as site_common
 
 

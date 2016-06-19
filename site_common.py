@@ -40,7 +40,7 @@ def get_begin():
     <div class="center-box">
       <div id="top">
         <a id="blog-title" href="/">Magnum Opus</a>
-        <p id="blog-title-under">A humble blog about programming</p>
+        <p id="blog-title-under">A humble little blog about programming</p>
 
       </div>
     </div>
