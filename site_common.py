@@ -34,17 +34,15 @@ def get_begin():
     </style>
   </head>
   <body>
-
     <div id="container">
 
-    <div class="center-box">
-      <div id="top">
-        <a id="blog-title" href="/">Magnum Opus</a>
-        <p id="blog-title-under">A humble little blog about programming</p>
-
-      </div>
-    </div>
-    <div class="center-box">
+     <div class="center-box">
+       <div id="top">
+         <a id="blog-title" href="/">Magnum Opus</a>
+         <p id="blog-title-under">A humble little blog about programming</p>
+       </div>
+     </div>
+     <div class="center-box">
 """
     return begin
 
@@ -52,7 +50,7 @@ def get_end():
     end = """
     </div>
 
-</div>
+    </div>
 
     <div id="footer">Blog made by Eric Arneb&#228;ck.
     <a href="mailto:arnebackeric@gmail.com">Email</a>.
