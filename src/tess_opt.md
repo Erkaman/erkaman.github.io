@@ -34,7 +34,7 @@ run the fragment shader less. The main reason that a fragment shader
 is expensive, is because it has to be evaluated for every single
 fragment that the geometry covers.
 
-But is it really to evaluate it for every single fragment? Maybe it
+But is it really necessary to evaluate it for every single fragment? Maybe it
 could be enough to evaluate it for the vertices of the geometry, and
 then in the fragment shader we interpolate between the values computed at
 the vertices? Let us try that idea out! So, let us try optimizing the
@@ -113,6 +113,7 @@ layout(location = 1) in vec3 vsNormal;
 
 out vec3 fsResult;
 
+uniform mat4 uView;
 uniform mat4 uMvp;
 
 void main()
@@ -168,7 +169,7 @@ in a noticeable drop in quality; the specular highlight is longer
 round, but a has a slightly blocky appearance at the borders. And we
 can see some obvious banding artifacts.
 
-Why do we obtain such an horrendous result? The main problem is that
+Why do we obtain such a horrendous result? The main problem is that
 the specular lighting generates a relatively high frequency signal,
 and if we compute
 too few samlpes, we will not be able to approximate this signal by
@@ -182,12 +183,12 @@ title="Original Teapot Wireframe"
 />
 
 
-Now, look at the vertex density at the location where the big
+Now, look at the vertex density in the region where the big
 highlight was rendered. As can be observed, the vertex density is not very high, and thus the
 number of samples will be too low to approximate the original signal.
 
 So if we want a better result, we need to take more samples. Wang et
-al. came up with a elegant and ingenious solution to this problem: we
+al. came up with an elegant and ingenious solution to this problem: we
 simply use a tessellation shader to subdivide the triangles of the
 mesh into subtriangles! By doing so, the vertex density of the model
 will be increased, and so, we can compute even more samples at the
@@ -283,9 +284,9 @@ a list of patches, and does subdivision on them. Since in our case
 `vertices=3`, we have that the patches are simply the triangles of the
 original mesh.
 
-To every vertex of the patch, we associate a normal and a position,
-which is what we are doing in `(2)`. We output these because we will
-be needing them in the TES later.
+To every vertex of the patch(all three of them), we associate a normal
+and a position(in our case, simply the positions and normals from the original mesh), which is what we are doing in `(2)`. We output these
+because we will be needing them in the TES later.
 
 Next, we need to specify the tessellation pattern for the
 patch. `gl_TessLevelOuter[i]` specifies how many subedges we should
@@ -308,7 +309,7 @@ layout(triangles,equal_spacing) in;
 in vec3 tesPos[];
 in vec3 tesNormal[];
 
-out vec3 outColor;
+out vec3 fsColor;
 
 uniform mat4 uMvp;
 uniform mat4 uView;
@@ -337,16 +338,18 @@ title="TES example"
 />
 
 
-This is a triangle that has been tessellated to level 2. The yellow
-circles are the 3 vertices of the original patch(in our case, a triangle), and
-the positions of these vertices are contained in the input array
-`tesPos`, and their normals are in `tesNormal`.
+This is a triangle that has been tessellated to level 2. Note that now
+that the TCS has been executed, the tessellation has been
+performed. The yellow circles are the 3 vertices of the original
+patch(in our case, a triangle), and the positions of these vertices
+are contained in the input array `tesPos`, and their normals are in
+`tesNormal`(remember that these were output from TCS!).
 
 The positions and normals of the yellow vertices we already
-now. However, by the TCS 4 new vertices were created(they are the pink
+know. However, by the TCS 4 new vertices were created(they are the pink
 circles in the image), and we do not yet know their positions nor
 their normals. Kindly enough, however, the barycentric coordinates of
-the vertices created through tesselation are sent to the TES. They are
+the vertices created through tessellation are sent to the TES. They are
 `(gl_TessCoord.x, gl_TessCoord.y, gl_TessCoord.z)`. For instance, the
 barycentric coordinates of the center vertex in the above image will
 be `(1/3,1/3,1/3)`.
@@ -357,7 +360,7 @@ because recall that barycentric coordinates allow us to perform
 interpolation on a triangle.).
 
 To summarize, all that the line  `vec3 pos =
-lerp3D(tesPos[0],tesPos[1],tesPos[2]);` does that it performs
+lerp3D(tesPos[0],tesPos[1],tesPos[2]);` does is that it performs
 barycentric interpolation to obtain the positions of all the vertices
 on the tessellated triangle.
 
@@ -398,7 +401,7 @@ title="Specular Lighting Tessellation Level 1"
 
 
 But for tessellation level 1 we are not doing any tessellation at all,
-so we get the same results are we did when we were doing the
+so we get the same results as we did when we were doing the
 calculation for every vertex. So let us try level 2
 
 
@@ -408,7 +411,7 @@ title="Specular Lighting Tessellation Level 2"
 />
 
 This already looks much better! And note that level 2 has 6 times as
-many triangles as level 2. Below we can see the difference in vertex density.
+many triangles as level 1. Below we can see the difference in vertex density.
 
 <img src="../img/tess_opt/tess_level_compare.png" width="760" height="387"
 alt="Tessellation Level Comparison"
@@ -463,7 +466,8 @@ In the above image, the texture is being computed for every single
 fragment, using the fragment position as input to the noise
 function. But this is quite expensive, so let us test whether we can
 approximate the texture by moving that texture calculation from the
-fragment shader to the TES. In the below montage, we can see the
+fragment shader to the TES(and we will be using the tessellated vertex
+position as input to the noise function). In the below montage, we can see the
 resulting textures for different tessellation levels:
 
 
@@ -475,12 +479,13 @@ title="Procedural Texture Tessellation Montage"
 
 As can be observed, already in level 3 we are getting quite acceptable
 results. But how fast is this? I tested it on two devices: my Macbook
-running Intel Iris 5100(an integrated graphics card), and my stationary running GeForce GTX 960. In
+running Intel Iris 5100(an integrated graphics card), and my
+stationary desktop running GeForce GTX 960. In
 the profiling test, I position the camera such that the teapot covers
 the entire screen. This means that the fragment will have to be
 evaluated for every single pixel, and so it is maximally expensive. By
-using Query Objects I then measure the average time taken to measure
-the teapot, we can see the results in the table below
+using Query Objects I then measure the average time taken to render
+the teapot. We can see the results in the table below
 
 
 |            | Intel Iris     | GTX 960       |
@@ -493,19 +498,19 @@ the teapot, we can see the results in the table below
 **Level 5**  | 7.88ms         | 4.88ms       |
 
 As can be seen, the winnings are huge for the integrated graphics
-card; the tessellation shader is always faster! The integrated
-graphics has very few shader cores compared to a real graphics card,
+card; doing the calculation in TES is always faster! The integrated
+graphics card has very few shader cores compared to a real graphics card,
 and so it struggles a lot with computing the procedural texture in
-real time. But by using the tessellation shader and doing the
-computation only at the tessellated vertices, the graphics card does
+real time. But by doing the computation in TES, the graphics card does
 not have to do as much work anymore, and it becomes much faster.
 
-But we can also see that GTX 960 does not at all struggle with
-doing the calculation. This makes sense, as it has a lot more
-shader cores at its disposal. Even so, up to tessellation level we are
+But we can also see that the GTX 960 is a lot faster. This makes sense, as it has a lot more
+shader cores at its disposal. Even so, up to tessellation level 3 we are
 obtaining a speedup from using the tessellation technique. But beyond
-that levels, it seems that the overhead of doing all that tessellation
-becomes too much, and it becomes slower.
+that level, it seems that the overhead from doing all the tessellation
+becomes too much, and it becomes slower. But we can see that it is
+certainly possible to use the technique in order to make faster
+procedural textures
 
 ## Drawbacks
 
@@ -514,11 +519,12 @@ drawbacks. A first drawback is that, since the technique uses
 tessellation shaders, you will need a relatively up-to-date graphics
 card. In particular, it [must support at least OpenGL 4.0](https://www.opengl.org/wiki/Tessellation)
 
-Another drawback of the technique is sometimes you will need a
+Another drawback of the technique is that sometimes you will need a
 ridiculously high tessellation level to provide a decent
-approximation. The previous we could approximate with relatively low
+approximation. The previous procedural texture we could approximate with relatively low
 levels of tessellation. But that was only because the texture was a
-rather low-frequency texture. If we try the same thing on a more
+rather low-frequency texture(it was rather blurry and did not have
+much detail). If we try the same thing on a more
 high-frequency texture, that is, a texture with more detail, things
 will not go very well. If I tested the technique on a detailed
 procedural texture, I needed at least a tessellation level of 11 to
@@ -529,16 +535,23 @@ alt="Detailed Texture at level 11"
 title="Detailed Texture at level 11"
 />
 
-But if I tested the performance in my Intel Iris 5100, the original
+But if I tested the performance on my Intel Iris 5100, the original
 one had a render time of 27ms, but the tessellated one had a render
 time of 65ms! I suppose it is much slower because doing all that
 tessellation creates a large amount of overhead.
 
 So it is not a good idea to apply this technique on high frequency
-signals. That is, if some in calculation in the fragment shader
+signals. That is, if some calculation in the fragment shader
 generates a high frequency signal, it would be a very bad idea to move
-that calculation to TES. But as long as the signal is not too high
+that calculation to TES, because we would need an absurdly high
+tessellation level. But as long as the signal is not too high
 frequency, we should pretty much be safe, I suppose.
+
+Wang et al. are using evolutionary programming to determine which
+computations are low frequency to the degree that they can be moved
+from the fragment shader to TES. But it is certainly also possible to
+determine this manually, by moving out different calculations to TES
+and then profiling.
 
 ## Conclusion
 
@@ -562,7 +575,7 @@ title="Demo Application"
 
 Finally, do note that the technique I presented here is just one of
 the shader simplification techniques discovered by Wang et
-al.. Another brilliant technique that they discovered, is that you can use
-bezier triangles to approximate shaders, and by doing so achieve
-significant speedups. Once I have time, I am planning on making a
-write-up about this technique a well, so, please, look forward that!
+al. Another brilliant technique that they discovered, is that you can use
+Bezier triangles to approximate shaders, and by doing so achieve
+significant speedups Once I have time, I am planning on making a
+write-up about this second technique a well, so, please, look forward that!
