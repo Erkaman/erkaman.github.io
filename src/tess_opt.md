@@ -23,6 +23,11 @@ stage, and by doing so they greatly reduce the number of times said
 operation has to be evaluated. In this article, I shall in much detail
 describe this technique.
 
+I have provided a [demo
+application](https://github.com/Erkaman/tess-opt) of the technique on
+github. But you will not understand anything about the demo unless you
+read this article.
+
 ## Explaining the Main Idea
 
 So, let us say that we have a shader with a fragment shader that is very
