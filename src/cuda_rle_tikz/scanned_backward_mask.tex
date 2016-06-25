@@ -1,0 +1,43 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+
+\input{common.tex}
+
+\def\myho{0}
+\def\myht{1.5}
+
+\begin{myenv}
+  \node[mask] (mask0) at (0,\myht) {1};
+  \node[mask] (mask1) at (1,\myht) {1};
+  \node[mask] (mask2) at (2,\myht) {1};
+  \node[mask] (mask3) at (3,\myht) {1};
+  \node[mask] (mask4) at (4,\myht) {0};
+  \node[mask] (mask5) at (5,\myht) {0};
+  \node[mask] (mask6) at (6,\myht) {1};
+  \node[mask] (mask7) at (7,\myht) {0};
+
+
+
+  \node[scan] (scan0) at (0,\myho) {1};
+
+  \node[scan] (scan1) at (1,\myho) {2};
+
+  \node[scan] (scan2) at (2,\myho) {3};
+
+  \node[scan] (scan3) at (3,\myho) {4};
+
+  \node[scan] (scan4) at (4,\myho) {4};
+
+  \node[scan] (scan5) at (5,\myho) {4};
+
+  \node[scan] (scan6) at (6,\myho) {5};
+
+  \node[scan] (scan7) at (7,\myho) {5};
+
+  \node [alabel] at (scan0.west) {scannedBackwardMask};
+\node [alabel] at (mask0.west) {backwardMask};
+
+\end{myenv}
+
+\end{document}

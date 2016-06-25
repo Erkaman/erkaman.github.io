@@ -1,0 +1,57 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+
+\input{common.tex}
+
+\def\myh1{0}
+\def\maskshift{-10mm}
+
+
+\begin{myenv}
+
+  \node[elem] (elem0) at (0,\myh1) {1};
+  \node[above] at (elem0.north) {0};
+
+  \node[elem] (elem1) at (1,\myh1) {2};
+  \node[above] at (elem1.north) {1};
+
+  \node[elem] (elem2) at (2,\myh1) {3};
+  \node[above] at (elem2.north) {2};
+
+  \node[elem] (elem3) at (3,\myh1) {6};
+  \node[above] at (elem3.north) {3};
+
+  \node[elem] (elem4) at (4,\myh1) {6};
+  \node[above] at (elem4.north) {4};
+
+  \node[elem] (elem5) at (5,\myh1) {6};
+  \node[above] at (elem5.north) {5};
+
+  \node[elem] (elem6) at (6,\myh1) {5};
+  \node[above] at (elem6.north) {6};
+
+  \node[elem] (elem7) at (7,\myh1) {5};
+  \node[above] at (elem7.north) {7};
+
+ \node[below,mask,yshift=\maskshift](mask0) at (elem0.south) {1};
+ \node[below,mask,yshift=\maskshift](mask1) at (elem1.south) {1};
+ \node[below,mask,yshift=\maskshift](mask2) at (elem2.south) {1};
+ \node[below,mask,yshift=\maskshift](mask3) at (elem3.south) {1};
+ \node[below,mask,yshift=\maskshift](mask4) at (elem4.south) {0};
+ \node[below,mask,yshift=\maskshift](mask5) at (elem5.south) {0};
+ \node[below,mask,yshift=\maskshift](mask6) at (elem6.south) {1};
+ \node[below,mask,yshift=\maskshift](mask7) at (elem7.south) {0};
+
+ \draw [<-] (elem0.south) -- (mask0.north);
+ \draw [<-] (elem1.south) -- (mask1.north);
+ \draw [<-] (elem2.south) -- (mask2.north);
+ \draw [<-] (elem3.south) -- (mask3.north);
+ \draw [<-] (elem6.south) -- (mask6.north);
+
+\node [alabel] at (elem0.west) {in};
+\node [alabel] at (mask0.west) {backwardMask};
+
+\end{myenv}
+
+\end{document}

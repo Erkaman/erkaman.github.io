@@ -1,0 +1,18 @@
+#y1 = profile random cpu
+#y2 = profile compressible cpu
+#y3 = profile random gpu
+#y4 = profile compressible gpu
+# the unit is microseconds.
+# and you can ignore the x-data, it just makes things convenient for gnuplot
+# x  y1     y2    y3     y4
+  0  18     19    872    823       # 10K
+  1  92     99    818    814       # 50K
+  2  182    200   836    804       # 100K
+  3  363    397   834    816       # 200K
+  4  934    1004  838    809       # 500K
+  5  1867   2053  861    833       # 1M
+  6  3766   4174  1088   842       # 2M
+  7  9443   10400 2731   1918      # 5M
+  8  18788  20864 5588   3844      # 10M
+  9  37685  42010 11579  7763      # 20M
+  10 75446  83779 24138  15814     # 40M

@@ -1,0 +1,88 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+
+\input{common.tex}
+
+\def\myho{0} % one
+\def\myhf{-2.5} % two
+\def\myht{-5.0} % four
+\def\myhs{3.0} % six
+
+% \def\myh2{5}
+
+\def\compshift{-20mm}
+
+
+\begin{myenv}
+
+  \node[count](count0) at (0,\myhs) {1};
+  \node[count](count1) at (1,\myhs) {1};
+  \node[count](count2) at (2,\myhs) {1};
+  \node[count](count3) at (3,\myhs) {3};
+  \node[count](count4) at (4,\myhs) {2};
+  \node [alabel] at (count0.west) {countsOut};
+
+
+  \node[comp](comp0) at (0,\myho) {0};
+  \node[comp](comp1) at (1,\myho) {1};
+  \node[comp](comp2) at (2,\myho) {2};
+  \node[comp](comp3) at (3,\myho) {3};
+  \node[comp](comp4) at (4,\myho) {6};
+  \node[comp](comp5) at (5,\myho) {8};
+  \node [alabel] at (comp0.west) {compactedBackwardMask};
+
+
+  \node[elem](elem0) at (0,\myhf) {1};
+  \node[elem](elem1) at (1,\myhf) {2};
+  \node[elem](elem2) at (2,\myhf) {3};
+  \node[elem](elem3) at (3,\myhf) {6};
+  \node[elem](elem4) at (4,\myhf) {6};
+  \node[elem](elem5) at (5,\myhf) {6};
+  \node[elem](elem6) at (6,\myhf) {5};
+  \node[elem](elem7) at (7,\myhf) {5};
+  \node [alabel] at (elem0.west) {in};
+
+  \node[symb](symb0) at (0,\myht) {1};
+  \node[symb](symb1) at (1,\myht) {2};
+  \node[symb](symb2) at (2,\myht) {3};
+  \node[symb](symb3) at (3,\myht) {6};
+  \node[symb](symb4) at (4,\myht) {5};
+  \node [alabel] at (symb0.west) {symbolsOut};
+
+
+  % arrows from comp to elem
+ \draw [->] (comp0.south) -- (elem0.north);
+ \draw [->] (comp1.south) -- (elem1.north);
+ \draw [->] (comp2.south) -- (elem2.north);
+ \draw [->] (comp3.south) -- (elem3.north);
+ \draw [->] (comp4.south) -- (elem6.north);
+
+ % arrows from elem to symb
+ \draw [->] (elem0.south) -- (symb0.north);
+ \draw [->] (elem1.south) -- (symb1.north);
+ \draw [->] (elem2.south) -- (symb2.north);
+ \draw [->] (elem3.south) -- (symb3.north);
+ \draw [->] (elem6.south) -- (symb4.north);
+
+
+ % arrows from comp to count
+  \draw [->] (comp0.north) -- (count0.south);
+  \draw [->] (comp1.north) -- (count0.south);
+
+  \draw [->] (comp1.north) -- (count1.south);
+  \draw [->] (comp2.north) -- (count1.south);
+
+  \draw [->] (comp2.north) -- (count2.south);
+  \draw [->] (comp3.north) -- (count2.south);
+
+  \draw [->] (comp3.north) -- (count3.south);
+  \draw [->] (comp4.north) -- (count3.south);
+
+  \draw [->] (comp4.north) -- (count4.south);
+  \draw [->] (comp5.north) -- (count4.south);
+
+
+\end{myenv}
+
+\end{document}

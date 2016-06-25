@@ -1,0 +1,23 @@
+\usetikzlibrary{calc}
+
+\colorlet{gr}{green!30}
+\colorlet{re}{red!30}
+\colorlet{bl}{blue!15}
+\colorlet{ye}{yellow!30}
+\colorlet{br}{brown!40}
+\colorlet{gra}{black!30} % gray
+
+\tikzset{
+  cell/.style = {draw, minimum width=1.0cm, minimum height=0.8cm},
+  elem/.style = {cell,fill=gr},
+  mask/.style = {cell,fill=re},
+  scan/.style = {cell,fill=bl}, % scanned
+  comp/.style = {cell,fill=ye}, % compacted
+  symb/.style = {cell,fill=br}, % symbols output
+  count/.style = {cell,fill=gra}, % counts output
+  alabel/.style = {left,font=\Large\ttfamily,xshift=-2mm}, % array label
+}
+
+
+
+\newenvironment{myenv}{\begin{tikzpicture}[font=\ttfamily, very thick]}{\end{tikzpicture}}

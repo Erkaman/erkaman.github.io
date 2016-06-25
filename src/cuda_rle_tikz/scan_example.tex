@@ -1,0 +1,50 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+
+\input{common.tex}
+
+\def\myho{0}
+\def\myht{1.5}
+
+\begin{myenv}
+
+  \node[elem] (elem0) at (0,\myht) {1};
+  \node[elem] (elem1) at (1,\myht) {2};
+  \node[elem] (elem2) at (2,\myht) {3};
+  \node[elem] (elem3) at (3,\myht) {6};
+  \node[elem] (elem4) at (4,\myht) {6};
+  \node[elem] (elem5) at (5,\myht) {6};
+  \node[elem] (elem6) at (6,\myht) {5};
+  \node[elem] (elem7) at (7,\myht) {5};
+
+
+
+
+  \node[scan] (scan0) at (0,\myho) {1};
+
+  \node[scan] (scan1) at (1,\myho) {2};
+
+  \node[scan] (scan2) at (2,\myho) {3};
+
+  \node[scan] (scan3) at (3,\myho) {4};
+
+  \node[scan] (scan4) at (4,\myho) {4};
+
+  \node[scan] (scan5) at (5,\myho) {4};
+
+  \node[scan] (scan6) at (6,\myho) {5};
+
+  \node[scan] (scan7) at (7,\myho) {5};
+
+  \node [alabel] at (scan0.west) {scannedBackwardMask};
+  \node [alabel] at (elem0.west) {in};
+
+ \draw [<->] (elem3.south) -- (scan3.north);
+ \draw [<->] (elem4.south) -- (scan4.north);
+ \draw [<->] (elem5.south) -- (scan5.north);
+
+
+\end{myenv}
+
+\end{document}

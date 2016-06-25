@@ -1,0 +1,63 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+
+\input{common.tex}
+
+\def\myho{0} % one
+%\def\myh2{5}
+
+\def\compshift{-20mm}
+
+
+\begin{myenv}
+
+  \node[scan] (scan0) at (0,\myho) {1};
+  \node[above,red] at (scan0.north) {0};
+
+  \node[scan] (scan1) at (1,\myho) {2};
+  \node[above,red] at (scan1.north) {1};
+
+  \node[scan] (scan2) at (2,\myho) {3};
+  \node[above,red] at (scan2.north) {2};
+
+  \node[scan] (scan3) at (3,\myho) {4};
+  \node[above,red] at (scan3.north) {3};
+
+  \node[scan] (scan4) at (4,\myho) {4};
+  \node[above] at (scan4.north) {4};
+
+  \node[scan] (scan5) at (5,\myho) {4};
+  \node[above] at (scan5.north) {5};
+
+  \node[scan] (scan6) at (6,\myho) {5};
+  \node[above,red] at (scan6.north) {6};
+
+  \node[scan] (scan7) at (7,\myho) {5};
+  \node[above] at (scan7.north) {7};
+
+  \node [alabel] at (scan0.west) {scannedBackwardMask};
+
+%  \node[scan] (scan0) at (0,\myh2) {1};
+
+  \node[below,comp,yshift=\compshift](comp0) at (scan0.south) {0};
+  \node[below,comp,yshift=\compshift](comp1) at (scan1.south) {1};
+  \node[below,comp,yshift=\compshift](comp2) at (scan2.south) {2};
+  \node[below,comp,yshift=\compshift](comp3) at (scan3.south) {3};
+  \node[below,comp,yshift=\compshift](comp4) at (scan4.south) {6};
+  \node[below,comp,yshift=\compshift](comp5) at (scan5.south) {8};
+
+  \node [alabel] at (comp0.west) {compactedBackwardMask};
+
+
+ \draw [<-] (scan0.south) -- (comp0.north);
+ \draw [<-] (scan1.south) -- (comp1.north);
+ \draw [<-] (scan2.south) -- (comp2.north);
+ \draw [<-] (scan3.south) -- (comp3.north);
+
+ \draw [<-] (scan6.south) to  (comp4.north);
+ \draw [<-] (scan7.south) to (comp5.north);
+
+\end{myenv}
+
+\end{document}

@@ -1,0 +1,832 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Magnum Opus</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+code {
+    font-size: 80%;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+.inline-code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    margin: 0;
+    font-size: 90%;
+}
+/* we center images. */
+
+img {
+    display: block;
+    margin: auto;
+    padding-top: 5mm;
+    padding-bottom: 5mm;
+}
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+th,
+td {
+    text-align: left;
+    border-bottom: 1px solid #000;
+    padding: 7px;
+}
+.last-update {
+    padding-top: 2em;
+}
+#blog-title {
+    font: 700 3.5em georgia;
+    color: #000
+}
+#top {
+    text-align: center;
+    padding: 0 0 1.3em 0;
+    /* vertical spacing below top text. */
+
+    border-bottom: 1px solid #000;
+}
+#top a {
+    text-decoration: none
+}
+#blog-title-under {
+    font-style: italic;
+}
+/* body text font */
+
+body {
+    font: 95%/1.3 verdana;
+}
+/* headlines. */
+
+h1 {
+    font: 1000 1.27em verdana
+}
+h2 {
+    font: 700 1.27em verdana
+}
+/* center blog within box*/
+
+.center-box {
+    margin: 0 auto;
+    max-width: 760px;
+}
+html,
+body,
+#container {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body > #container {
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 7em;
+}
+#footer {
+    background-color: #eee;
+    font-size: 120%;
+    text-align: center;
+    line-height: 3em;
+    martin-top: -3em;
+}
+.codehilite .hll {
+    background-color: #ffffcc
+}
+.codehilite .c {
+    color: #008800;
+    font-style: italic
+}
+/* Comment */
+
+.codehilite .err {
+    border: 1px solid #FF0000
+}
+/* Error */
+
+.codehilite .k {
+    color: #AA22FF;
+    font-weight: bold
+}
+/* Keyword */
+
+.codehilite .o {
+    color: #666666
+}
+/* Operator */
+
+.codehilite .cm {
+    color: #008800;
+    font-style: italic
+}
+/* Comment.Multiline */
+
+.codehilite .cp {
+    color: #008800
+}
+/* Comment.Preproc */
+
+.codehilite .c1 {
+    color: #008800;
+    font-style: italic
+}
+/* Comment.Single */
+
+.codehilite .cs {
+    color: #008800;
+    font-weight: bold
+}
+/* Comment.Special */
+
+.codehilite .gd {
+    color: #A00000
+}
+/* Generic.Deleted */
+
+.codehilite .ge {
+    font-style: italic
+}
+/* Generic.Emph */
+
+.codehilite .gr {
+    color: #FF0000
+}
+/* Generic.Error */
+
+.codehilite .gh {
+    color: #000080;
+    font-weight: bold
+}
+/* Generic.Heading */
+
+.codehilite .gi {
+    color: #00A000
+}
+/* Generic.Inserted */
+
+.codehilite .go {
+    color: #808080
+}
+/* Generic.Output */
+
+.codehilite .gp {
+    color: #000080;
+    font-weight: bold
+}
+/* Generic.Prompt */
+
+.codehilite .gs {
+    font-weight: bold
+}
+/* Generic.Strong */
+
+.codehilite .gu {
+    color: #800080;
+    font-weight: bold
+}
+/* Generic.Subheading */
+
+.codehilite .gt {
+    color: #0040D0
+}
+/* Generic.Traceback */
+
+.codehilite .kc {
+    color: #AA22FF;
+    font-weight: bold
+}
+/* Keyword.Constant */
+
+.codehilite .kd {
+    color: #AA22FF;
+    font-weight: bold
+}
+/* Keyword.Declaration */
+
+.codehilite .kn {
+    color: #AA22FF;
+    font-weight: bold
+}
+/* Keyword.Namespace */
+
+.codehilite .kp {
+    color: #AA22FF
+}
+/* Keyword.Pseudo */
+
+.codehilite .kr {
+    color: #AA22FF;
+    font-weight: bold
+}
+/* Keyword.Reserved */
+
+.codehilite .kt {
+    color: #00BB00;
+    font-weight: bold
+}
+/* Keyword.Type */
+
+.codehilite .m {
+    color: #666666
+}
+/* Literal.Number */
+
+.codehilite .s {
+    color: #BB4444
+}
+/* Literal.String */
+
+.codehilite .na {
+    color: #BB4444
+}
+/* Name.Attribute */
+
+.codehilite .nb {
+    color: #AA22FF
+}
+/* Name.Builtin */
+
+.codehilite .nc {
+    color: #0000FF
+}
+/* Name.Class */
+
+.codehilite .no {
+    color: #880000
+}
+/* Name.Constant */
+
+.codehilite .nd {
+    color: #AA22FF
+}
+/* Name.Decorator */
+
+.codehilite .ni {
+    color: #999999;
+    font-weight: bold
+}
+/* Name.Entity */
+
+.codehilite .ne {
+    color: #D2413A;
+    font-weight: bold
+}
+/* Name.Exception */
+
+.codehilite .nf {
+    color: #00A000
+}
+/* Name.Function */
+
+.codehilite .nl {
+    color: #A0A000
+}
+/* Name.Label */
+
+.codehilite .nn {
+    color: #0000FF;
+    font-weight: bold
+}
+/* Name.Namespace */
+
+.codehilite .nt {
+    color: #008000;
+    font-weight: bold
+}
+/* Name.Tag */
+
+.codehilite .nv {
+    color: #B8860B
+}
+/* Name.Variable */
+
+.codehilite .ow {
+    color: #AA22FF;
+    font-weight: bold
+}
+/* Operator.Word */
+
+.codehilite .w {
+    color: #bbbbbb
+}
+/* Text.Whitespace */
+
+.codehilite .mf {
+    color: #666666
+}
+/* Literal.Number.Float */
+
+.codehilite .mh {
+    color: #666666
+}
+/* Literal.Number.Hex */
+
+.codehilite .mi {
+    color: #666666
+}
+/* Literal.Number.Integer */
+
+.codehilite .mo {
+    color: #666666
+}
+/* Literal.Number.Oct */
+
+.codehilite .sb {
+    color: #BB4444
+}
+/* Literal.String.Backtick */
+
+.codehilite .sc {
+    color: #BB4444
+}
+/* Literal.String.Char */
+
+.codehilite .sd {
+    color: #BB4444;
+    font-style: italic
+}
+/* Literal.String.Doc */
+
+.codehilite .s2 {
+    color: #BB4444
+}
+/* Literal.String.Double */
+
+.codehilite .se {
+    color: #BB6622;
+    font-weight: bold
+}
+/* Literal.String.Escape */
+
+.codehilite .sh {
+    color: #BB4444
+}
+/* Literal.String.Heredoc */
+
+.codehilite .si {
+    color: #BB6688;
+    font-weight: bold
+}
+/* Literal.String.Interpol */
+
+.codehilite .sx {
+    color: #008000
+}
+/* Literal.String.Other */
+
+.codehilite .sr {
+    color: #BB6688
+}
+/* Literal.String.Regex */
+
+.codehilite .s1 {
+    color: #BB4444
+}
+/* Literal.String.Single */
+
+.codehilite .ss {
+    color: #B8860B
+}
+/* Literal.String.Symbol */
+
+.codehilite .bp {
+    color: #AA22FF
+}
+/* Name.Builtin.Pseudo */
+
+.codehilite .vc {
+    color: #B8860B
+}
+/* Name.Variable.Class */
+
+.codehilite .vg {
+    color: #B8860B
+}
+/* Name.Variable.Global */
+
+.codehilite .vi {
+    color: #B8860B
+}
+/* Name.Variable.Instance */
+
+.codehilite .il {
+    color: #666666
+}
+/* Literal.Number.Integer.Long */
+
+    </style>
+  </head>
+  <body>
+    <div id="container">
+
+     <div class="center-box">
+       <div id="top">
+         <a id="blog-title" href="/">Magnum Opus</a>
+         <p id="blog-title-under">A humble little blog about programming</p>
+       </div>
+     </div>
+     <div class="center-box">
+<h1>PARLE - Implementing Run-length encoding in CUDA</h1>
+
+<p>In order to fully understand this post, it is necessary that you understand
+the following topics:</p>
+
+<ul>
+<li>Basic CUDA programming.</li>
+<li>Prefix sum(also known as scan). You can study this topic <a href="https://www.youtube.com/watch?v=We9j876CjtA&amp;list=PLGvfHSgImk4aweyWlhBXNF6XISY3um82_&amp;index=129">here</a></li>
+</ul>
+
+<p>So I will be making the assumption that the reader is knowledgeable in these topics.</p>
+
+<h2>Introduction</h2>
+
+<p>In the paper <a href="http://tesla.rcub.bg.ac.rs/~taucet/docs/papers/HIPEAC-ShortPaper-AnaBalevic.pdf">Fine-Grain Parallelization of Entropy Coding on
+GPGPUs</a>,
+Ana Balevic describes how Run-length encoding(hereafter abbreviated
+RLE) can be implemented on the GPU. Although the paper is very sparse
+on details, I have been able to implement her approach in CUDA. For
+the purpose of providing a supplementary document to her paper, I would now like
+to go through how I implemented this technique in CUDA.</p>
+
+<p>Before I begin, I want to mention that I have provided a
+<a href="https://github.com/Erkaman/parle-cuda">implementation</a> of the
+technique on github.</p>
+
+<h2>Introduction to Run-Length Encoding</h2>
+
+<p>RLE is a very simple compression algorithm. Let us say we have the
+input data <code class="inline-code">[1,2,3,6,6,6,5,5]</code>. If we run RLE on this data, we obtain
+the compressed data <code class="inline-code">[(1,1),(1,2),(1,3),(3,6),(2,5)]</code>. As can be seen,
+by running RLE, we replace runs of repeated data by pairs on the form
+<code class="inline-code">(x,y)</code>, where <code class="inline-code">y</code> is the symbol being repeated, and <code class="inline-code">x</code> is the number
+of times the symbol is repeated. So the pair <code class="inline-code">(3,6)</code> represents the
+data <code class="inline-code">[6,6,6]</code>.</p>
+
+<p>In my CUDA implementation, I have chosen to split the output pair
+into two arrays. The first arrays contains the x:s, and the second
+arrays contains the y:s. So running PARLE on the input data
+<code class="inline-code">[1,2,3,6,6,6,5,5]</code> will yield the two output arrays <code class="inline-code">[1,1,1,3,2]</code> and
+<code class="inline-code">[1,2,3,6,5]</code>.</p>
+
+<p>Now, it should be obvious that the above compression scheme should be
+extremely easy to implement on the CPU. An simple CPU implementation is
+given below</p>
+
+<div class="codehilite"><pre><span></span><code><span class="kt">int</span> <span class="nf">rleCpu</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">symbolsOut</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">countsOut</span><span class="p">){</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// nothing to compress!</span>
+
+    <span class="kt">int</span> <span class="n">outIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">symbol</span> <span class="o">=</span> <span class="n">in</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">symbol</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// run is over.</span>
+            <span class="c1">// So output run.</span>
+            <span class="n">symbolsOut</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">symbol</span><span class="p">;</span>
+            <span class="n">countsOut</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+            <span class="n">outIndex</span><span class="o">++</span><span class="p">;</span>
+
+            <span class="c1">// and start new run:</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="o">++</span><span class="n">count</span><span class="p">;</span> <span class="c1">// run is not over yet.</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// output last run.</span>
+    <span class="n">symbolsOut</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">symbol</span><span class="p">;</span>
+    <span class="n">countsOut</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+    <span class="n">outIndex</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">outIndex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Where <code class="inline-code">symbolsOut</code> contains the symbols that are being repeated, and
+<code class="inline-code">countsOut</code> is the number of times said numbers are repeated. And the
+return value is the number of repeated runs(i.e., the number of pairs)</p>
+
+<p>But as can be seen the above algorithm is an extremely serial one, so
+implementing it on the GPU can be a bit tricky. In fact, a large
+majority of compression algorithms are all very serial
+algorithms(examples of such algorithms are arithmetic coding, LZW, and
+so on), and therefore hard to GPU accelerate. However, it would also
+be very nice if we were able to implement them on the GPU. That would allow us
+to, for instance, implement fast video codecs.</p>
+
+<h2>Parallel Run-Length Encoding</h2>
+
+<p>So, I shall now show how we can implement RLE on the GPU. Ana calls
+this algorithm Parallel Run-Length Encoding, which we will from now on will
+abbreviate PARLE. Throughout my explanation, I shall through images
+illustrate what happens to the input array <code class="inline-code">[1,2,3,6,6,6,5,5]</code>, as we
+run it through the compression algorithm. Also, I shall henceforth
+refer to this input array to as <code class="inline-code">in</code></p>
+
+<p>The first step of the algorithm is that we construct a mask from
+<code class="inline-code">in</code>. We call this mask the <code class="inline-code">backwardMask</code>, and it is constructed as
+follows: For every element <code class="inline-code">in[i]</code>, we assign a thread, and that
+thread compares the current and the previous elements for equality. If
+they are not equal, <code class="inline-code">backwardMask[i]</code> will be 1, and otherwise, it
+is 0. However, the first element does not have a previous element, so,
+for reasons that will soon become clear, we always set
+<code class="inline-code">backwardMask[0]</code> to 1. The construction of the mask is also
+illustrated through the below image.</p>
+
+<p><img src="../img/cuda_rle/backward_mask.png" width="549" height="149"
+alt="Backward Mask Construction"
+title="Backward Mask Construction"
+/></p>
+
+<p>The numbers over <code class="inline-code">in</code> are the ids of the threads assigned to every
+element. To give an example, thread number 6 will do the following: It
+will observe that <code class="inline-code">in[6] == 5</code>, and <code class="inline-code">in[5] == 6</code>, so it will set
+<code class="inline-code">backwardMask[6] = 1</code>.</p>
+
+<p>From the above illustration, we can draw a simple conclusion;
+<code class="inline-code">backwardMask</code> encodes the beginning of all the runs. So if
+<code class="inline-code">backwardMask[i]==1</code>, that means that at <code class="inline-code">i</code> a new repeated runs of
+characters begin. Now it should be obvious why we said that
+<code class="inline-code">backwardMask[0] == 1</code>.</p>
+
+<p>From the above description, we can now easily implement a CUDA kernel:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">maskKernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">g_in</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">g_backwardMask</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">hemi</span><span class="o">::</span><span class="n">grid_stride_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">g_backwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="n">g_backwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">g_in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">g_in</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Where <code class="inline-code">i</code> becomes the thread id, and <code class="inline-code">n</code> is the length of the input array. And the above kernel is launched like</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">hemi</span><span class="o">::</span><span class="n">cudaLaunch</span><span class="p">(</span><span class="n">maskKernel</span><span class="p">,</span> <span class="n">d_in</span><span class="p">,</span> <span class="n">d_backwardMask</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+</code></pre></div>
+
+<p>And note that I am using <a href="https://github.com/harrism/hemi">Hemi</a> to
+launch the above Kernel. Launching CUDA kernels by using Hemi is nice,
+because it will choose for you automatically a grid and thread block
+size that, for your specific graphics card, gives you a nice amount of
+occupancy. So it saves you from having to manually twiddle with thread block
+and grid sizes.</p>
+
+<p>Also, in order to assign a thread to every element, I am using yet
+another nice utility function from Hemi:
+<code class="inline-code">hemi::grid_stride_range</code>. This function implements a grid-stride loop
+in your Kernel, which is much more flexible than the traditional
+approaches. You can read more about this
+<a href="https://devblogs.nvidia.com/parallelforall/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/">here</a>.</p>
+
+<p>So that is how the construct <code class="inline-code">backwardMask</code>. In the next step, we run
+an inclusive prefix sum(also called scan) on <code class="inline-code">backwardMask</code>, and we will call this
+prefix sum <code class="inline-code">scannedBackwardMask</code>. The result of the scan is the below</p>
+
+<p><img src="../img/cuda_rle/scanned_backward_mask.png" width="635" height="110"
+alt="Scanned Mask"
+title="Scanned Mask"
+/></p>
+
+<p>There are many implementations of a prefix sum available, but in my
+case, I chose to use the prefix sum provided by
+<a href="https://newq.net/archived/www.cse.chalmers.se/pub/pp/">chag::pp</a>. According
+to the authors, it is the fastest prefix sum available.</p>
+
+<p>We can see that the prefix sum encodes a very important piece of
+information. It encodes the output location of all the compressed
+pairs!</p>
+
+<p>For serial algorithms, such the RLE implemented on the CPU above,
+knowing where to output the next element is often easy; you just
+output to the next free spot in the array. However, doing the same
+thing on the GPU considerably more difficult, because we have lots of
+threads working at the same time, and we have no idea in which order
+they finish. As a result, finding the next free spot in the array is
+often impossible. Instead what often do is that you basically twiddle with
+prefix sums until you get what you want.</p>
+
+<p>In our example, from the input data <code class="inline-code">[1,2,3,6,6,6,5,5]</code> we want the
+output compressed arrays <code class="inline-code">[1,1,1,3,2]</code> and <code class="inline-code">[1,2,3,6,5]</code>(recall that
+these are just the array of pairs split into two arrays). We can see
+that the subsequence of <code class="inline-code">6,6,6</code> has been represented as the pair <code class="inline-code">(3,6)</code>,
+and it is output to the position <code class="inline-code">3</code>. However, now look at the prefix
+sum above once more. Notice that sequence <code class="inline-code">6,6,6</code> from <code class="inline-code">in</code> is
+represented by a sequence of <code class="inline-code">4,4,4</code> in <code class="inline-code">scannedBackwardMask</code>:</p>
+
+<p><img src="../img/cuda_rle/scan_example.png" width="635" height="110"
+alt="Scan Example"
+title="Scan Example"
+/></p>
+
+<p>This represents that the output location of the pair that represents
+the sequence <code class="inline-code">6,6,6</code> will be output to <code class="inline-code">3 = 4-1</code>. So the above prefix
+sum simply represents all the output locations plus one, for all the
+outputted pairs. So by computing the above prefix sum, we have been
+able to find the output positions of all the outputted pairs for our
+GPU algorithm.</p>
+
+<p>So that is why are computing a prefix sum. In the next step, we will
+have to create yet another auxiliary array. But fortunately, this will
+be the last one. This last array is called <code class="inline-code">compactedBackwardMask</code>,
+and it is slightly more tricky to understand than the other two.</p>
+
+<p>At this point, we are very happy, because we know all the locations of the
+output pairs(encoded through <code class="inline-code">scannedBackwardMask</code>), <em>and</em> we know which
+symbols are being repeated(encoded through <code class="inline-code">backwardMask</code>. We
+basically just have to output symbols from the positions where the
+mask is 1). However,
+we do not yet know how the long the runs are; <code class="inline-code">6,6,6</code> is compressed as
+the pair <code class="inline-code">(3,6)</code>, and at this point we know <code class="inline-code">6</code>, and we know the
+output position of the pair, but we have not yet
+calculated <code class="inline-code">3</code>.</p>
+
+<p>But, if we could now obtain an array that stores the indexes of the
+beginnings of the every runs, we would be very happy again. Because we
+could then calculate the run-lengths by subtracting the current
+element and the previous element from each other. And constructing
+such an array is not very difficult. A kernel that implements this is
+given below</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">compactKernel</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">g_scannedBackwardMask</span><span class="p">,</span>
+                              <span class="kt">int</span><span class="o">*</span> <span class="n">g_compactedBackwardMask</span><span class="p">,</span>
+                              <span class="kt">int</span><span class="o">*</span> <span class="n">g_totalRuns</span><span class="p">,</span>
+                              <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">hemi</span><span class="o">::</span><span class="n">grid_stride_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">g_compactedBackwardMask</span><span class="p">[</span><span class="n">g_scannedBackwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="o">*</span><span class="n">g_totalRuns</span> <span class="o">=</span> <span class="n">g_scannedBackwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">g_compactedBackwardMask</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">g_scannedBackwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">g_scannedBackwardMask</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">g_compactedBackwardMask</span><span class="p">[</span><span class="n">g_scannedBackwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Basically, what we do is that we run a thread for every element in
+<code class="inline-code">scannedBackwardMask</code>. If the current and the previous element are not
+equal, that means that a new run starts at that index. So we would now
+like to output that index, and that index is just the thread id
+<code class="inline-code">i</code>. And we output at <code class="inline-code">scannedBackwardMask[i] - 1</code>, because as
+already stated, <code class="inline-code">scannedBackwardMask</code> encodes the output positions of
+all the pairs plus one.</p>
+
+<p>We also have two special cases:</p>
+
+<ul>
+<li>The first element has no previous element, we just output 0. But this makes sense, since a run will always start at the first element</li>
+<li>For the very last element, in addition to checking the previous element, we do two additional things. <strong>(1)</strong> at the end of the output array, we output the total size of <code class="inline-code">in</code>(which is <code class="inline-code">n</code>). It will soon make sense why we do this. <strong>(2)</strong> we also output the total number of runs/pairs in <code class="inline-code">totalRuns</code>. And this number is certainly the last element of <code class="inline-code">scannedBackwardMask</code>, because <code class="inline-code">scannedBackwardMask</code> is the inclusive prefix sum of <code class="inline-code">backwardMask</code>.</li>
+</ul>
+
+<p>Also, I call the output array <code class="inline-code">compactedBackwardMask</code> , because it
+will often end up much smaller than the input <code class="inline-code">in</code>.</p>
+
+<p>The below image also illustrates the algorithm</p>
+
+<p>0.06 image scale</p>
+
+<p><img src="../img/cuda_rle/compacted_backward_mask.png" width="660" height="196"
+alt="Scanned Mask"
+title="Scanned Mask"
+/></p>
+
+<p>To give an example, we output 6 to the index 4, because
+<code class="inline-code">scannedBackwardMask[6] != scannedBackwardMask[5]</code>. And the output
+index is calculated as <code class="inline-code">scannedBackwardMask[6]-1 = 5 - 1 = 4</code>. Also,
+notice that thread 7, the last thread, outputs the length of <code class="inline-code">in</code> to
+the last element of <code class="inline-code">compactedBackwardMask</code></p>
+
+<p>Now that we have obtained the auxiliary array <code class="inline-code">compactedBackwardMask</code>,
+we can finally finish the compression. We finish the compression in
+our final kernel <code class="inline-code">scatter</code>, and it is actually rather simple:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">scatterKernel</span><span class="p">(</span>
+              <span class="kt">int</span><span class="o">*</span> <span class="n">g_compactedBackwardMask</span><span class="p">,</span>
+          <span class="kt">int</span><span class="o">*</span> <span class="n">g_totalRuns</span><span class="p">,</span>
+          <span class="kt">int</span><span class="o">*</span> <span class="n">g_in</span><span class="p">,</span>
+          <span class="kt">int</span><span class="o">*</span> <span class="n">g_symbolsOut</span><span class="p">,</span>
+          <span class="kt">int</span><span class="o">*</span> <span class="n">g_countsOut</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="o">*</span><span class="n">g_totalRuns</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">hemi</span><span class="o">::</span><span class="n">grid_stride_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">g_compactedBackwardMask</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">g_compactedBackwardMask</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+
+        <span class="n">g_symbolsOut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">g_in</span><span class="p">[</span><span class="n">a</span><span class="p">];</span>
+        <span class="n">g_countsOut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>We illustrate the kernel by the following image</p>
+
+<p><img src="../img/cuda_rle/scatter.png" width="659" height="417"
+alt="Scatter Kernel"
+title="Scatter Kernel"
+/></p>
+
+<p>We assign a thread to every element in <code class="inline-code">compactedBackwardMask</code>. And we
+are using <code class="inline-code">totalRuns</code> to determine which threads needs to work, and
+which threads should do nothing. Every
+thread looks at the current element, and the next one. Since
+<code class="inline-code">compactedBackwardMask</code> simply encodes the beginnings of every run of
+repeated characters, we can just compute the difference between the
+next element and the current element in <code class="inline-code">compactedBackwardMask</code>, to
+compute the length of a single run. That is how we compute the output
+array <code class="inline-code">countsOut</code>. So, for instance, we have that <code class="inline-code">countsOut[3]==3</code>, because
+<code class="inline-code">compactedBackwardMask[4] - compactedBackwardMask[3] = 6 - 3 = 3</code>. Now
+it should be clear why the last element of <code class="inline-code">compactedBackwardMask</code> was
+set to <code class="inline-code">totalRuns</code> by <code class="inline-code">compactKernel</code>.</p>
+
+<p>It is also easy to compute <code class="inline-code">symbolsOut</code>. Because, again,
+<code class="inline-code">compactedBackwardMask</code> encodes the indices of the beginnings of the repeated runs in the
+original data. So we can just use that index to take the first element
+of that run from <code class="inline-code">in</code>, and store it in <code class="inline-code">symbolsOut</code>. So
+<code class="inline-code">symbolsOut[4]==5</code>, because <code class="inline-code">in[compactedBackwardMask[4]] = in[6] =
+5</code>.</p>
+
+<p>And that was the entire algorithm! As can be seen, it is much more
+complex than the CPU implementation. But when we performance profile PARLE, we
+will realize that all that extra complexity is well worth it</p>
+
+<h2>Profiling PARLE</h2>
+
+<p>Now, how well does PARLE stack up against the CPU? Pretty well, it
+turns out.</p>
+
+<p>I performance profiled PARLE for two kinds of input data. <strong>(1)</strong> Entirely random data on the
+form <code class="inline-code">[1,3,5,2,...]</code>, and <strong>(2)</strong> very compressible data with lots of repeated
+symbols on the form <code class="inline-code">[1,1,1,1,6,6,6,7,7,7,7,7,7,...]</code>. The thing is
+that if the data is very compressible, then <code class="inline-code">compactedBackwardMask</code>
+will be much smaller than <code class="inline-code">in</code>, which means that the final
+<code class="inline-code">scatterKernel</code> has to do much less work. For that reason,
+compressible data should compress much faster than random data.</p>
+
+<p>When profiling PARLE, I made sure that I uploaded all the input data
+to the device, and made sure to allocate all memory on the device
+before doing the profiling. This ensures that I will only be testing the actual
+performance of the algorithm on the GPU, and not the transfer
+performance from the CPU to the GPU, which is uninteresting for us.</p>
+
+<p>I profiled PARLE on my GTX960, and obtained the following results:</p>
+
+<p><img src="../img/cuda_rle/plot.png" width="618" height="377"
+alt="Performance Plot"
+title="Performance Plot"
+/></p>
+
+<p>Note that I tested the CPU implementation of RLE on both compressible
+data and random data, but the results were so similar that I decided on
+just showing one of them for the CPU.</p>
+
+<p>As can be seen from the above graph, PARLE greatly outperforms the CPU
+version for large data sets. PARLE is up to 5 times faster than the
+CPU. Ana claims that by using shared memory atomics, she is able to
+make it up to 35 times faster. But I have refrained from doing such heavy
+optimization in my implementation, in order to keep the code neat and
+readable.</p>
+
+<p>For those interested, the raw profiling data that was used to produce the above
+graph can be found <a href="fixme">here</a></p>
+
+<h2>Possible Further Optimization</h2>
+
+<p>As stated above, Ana's implementation is up to 35 times faster than
+the CPU. This is because her optimized implementation uses shared
+memory atomics. When I profiled PARLE in Nvidia Visual Profiler, I
+found that the algorithm is heavily bottlenecked by memory; the
+arithmetic intensity is very low, so the execution time dominated by
+the time it takes to read from the global memory. So if you want to
+implement a faster version of PARLE, you will need to minimize your
+reads and writes to the global memory. And one way of doing is, like
+Ana did, to use cleverly used shared memory.</p>
+<p class="last-update"> <i>This post was last updated: June 25, 2016</i></p>
+    </div>
+
+    </div>
+
+    <div id="footer">Blog made by Eric Arneb&#228;ck.
+    <a href="mailto:arnebackeric@gmail.com">Email</a>.
+    <a href="https://github.com/Erkaman">Github</a>
+
+    </div>
+
+  </body>
+</html>
