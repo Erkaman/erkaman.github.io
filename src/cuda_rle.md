@@ -1,9 +1,10 @@
-# PARLE - Implementing Run-length encoding in CUDA
+# Implementing Run-length encoding in CUDA
 
 In order to fully understand this post, it is necessary that you understand
 the following topics:
 
-* Basic CUDA programming.
+* Basic CUDA programming. So you should know how to write and launch a
+  kernel.
 * Prefix sum(also known as scan). You can study this topic [here](https://www.youtube.com/watch?v=We9j876CjtA&list=PLGvfHSgImk4aweyWlhBXNF6XISY3um82_&index=129)
 
 So I will be making the assumption that the reader is knowledgeable in these topics.
@@ -18,7 +19,7 @@ on details, I have been able to implement her approach in CUDA. For
 the purpose of providing a supplementary document to her paper, I would now like
 to go through how I implemented this technique in CUDA.
 
-Before I begin, I want to mention that I have provided a
+Before I begin, I want to mention that I have provided an
 [implementation](https://github.com/Erkaman/parle-cuda) of the
 technique on github.
 
@@ -32,14 +33,14 @@ by running RLE, we replace runs of repeated data by pairs on the form
 of times the symbol is repeated. So the pair `(3,6)` represents the
 data `[6,6,6]`.
 
-In my CUDA implementation, I have chosen to split the output pair
-into two arrays. The first arrays contains the x:s, and the second
-arrays contains the y:s. So running PARLE on the input data
+In my CUDA implementation, I have chosen to split the output pairs
+into two arrays. The first array contains the x:s, and the second
+array contains the y:s. So running PARLE on the input data
 `[1,2,3,6,6,6,5,5]` will yield the two output arrays `[1,1,1,3,2]` and
 `[1,2,3,6,5]`.
 
 Now, it should be obvious that the above compression scheme should be
-extremely easy to implement on the CPU. An simple CPU implementation is
+extremely easy to implement on the CPU. A simple CPU implementation is
 given below
 
 ```C++
@@ -93,7 +94,7 @@ to, for instance, implement fast video codecs.
 ##  Parallel Run-Length Encoding
 
 So, I shall now show how we can implement RLE on the GPU. Ana calls
-this algorithm Parallel Run-Length Encoding, which we will from now on will
+this algorithm Parallel Run-Length Encoding, which we will from now on
 abbreviate PARLE. Throughout my explanation, I shall through images
 illustrate what happens to the input array `[1,2,3,6,6,6,5,5]`, as we
 run it through the compression algorithm. Also, I shall henceforth
@@ -108,8 +109,6 @@ is 0. However, the first element does not have a previous element, so,
 for reasons that will soon become clear, we always set
 `backwardMask[0]` to 1. The construction of the mask is also
 illustrated through the below image.
-
-9152, 2482
 
 <img src="../img/cuda_rle/backward_mask.png" width="549" height="149"
 alt="Backward Mask Construction"
@@ -157,11 +156,11 @@ and grid sizes.
 Also, in order to assign a thread to every element, I am using yet
 another nice utility function from Hemi:
 `hemi::grid_stride_range`. This function implements a grid-stride loop
-in your Kernel, which is much more flexible than the traditional
+in your kernel, which is much more flexible than the traditional
 approaches. You can read more about this
 [here](https://devblogs.nvidia.com/parallelforall/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/).
 
-So that is how the construct `backwardMask`. In the next step, we run
+So that is how we construct `backwardMask`. In the next step, we run
 an inclusive prefix sum(also called scan) on `backwardMask`, and we will call this
 prefix sum `scannedBackwardMask`. The result of the scan is the below
 
@@ -182,19 +181,19 @@ pairs!
 For serial algorithms, such the RLE implemented on the CPU above,
 knowing where to output the next element is often easy; you just
 output to the next free spot in the array. However, doing the same
-thing on the GPU considerably more difficult, because we have lots of
+thing on the GPU is considerably more difficult, because we have lots of
 threads working at the same time, and we have no idea in which order
 they finish. As a result, finding the next free spot in the array is
-often impossible. Instead what often do is that you basically twiddle with
+often impossible. Instead what you often do, is that you basically twiddle with
 prefix sums until you get what you want.
 
 In our example, from the input data `[1,2,3,6,6,6,5,5]` we want the
 output compressed arrays `[1,1,1,3,2]` and `[1,2,3,6,5]`(recall that
 these are just the array of pairs split into two arrays). We can see
-that the subsequence of `6,6,6` has been represented as the pair `(3,6)`,
-and it is output to the position `3`. However, now look at the prefix
-sum above once more. Notice that sequence `6,6,6` from `in` is
-represented by a sequence of `4,4,4` in `scannedBackwardMask`:
+that the subarray of `6,6,6` has been represented as the pair `(3,6)`,
+and it is output to the position `3`. However, now look at the
+resulting prefix sum once more. Notice that the sequence `6,6,6` from `in`
+is represented by a sequence of `4,4,4` in `scannedBackwardMask`:
 
 <img src="../img/cuda_rle/scan_example.png" width="635" height="110"
 alt="Scan Example"
@@ -202,13 +201,13 @@ title="Scan Example"
 />
 
 This represents that the output location of the pair that represents
-the sequence `6,6,6` will be output to `3 = 4-1`. So the above prefix
+the sequence `6,6,6` will be `3 = 4-1`. So the above prefix
 sum simply represents all the output locations plus one, for all the
 outputted pairs. So by computing the above prefix sum, we have been
 able to find the output positions of all the outputted pairs for our
 GPU algorithm.
 
-So that is why are computing a prefix sum. In the next step, we will
+So that is why we are computing a prefix sum. In the next step, we will
 have to create yet another auxiliary array. But fortunately, this will
 be the last one. This last array is called `compactedBackwardMask`,
 and it is slightly more tricky to understand than the other two.
@@ -224,9 +223,9 @@ output position of the pair, but we have not yet
 calculated `3`.
 
 But, if we could now obtain an array that stores the indexes of the
-beginnings of the every runs, we would be very happy again. Because we
+beginnings of every run, we would be very happy again. Because we
 could then calculate the run-lengths by subtracting the current
-element and the previous element from each other. And constructing
+element and the previous element from each other in that array. And constructing
 such an array is not very difficult. A kernel that implements this is
 given below
 
@@ -253,7 +252,7 @@ __global__ void compactKernel(int* g_scannedBackwardMask,
 ```
 
 Basically, what we do is that we run a thread for every element in
-`scannedBackwardMask`. If the current and the previous element are not
+`scannedBackwardMask`. If the current and the previous elements are not
 equal, that means that a new run starts at that index. So we would now
 like to output that index, and that index is just the thread id
 `i`. And we output at `scannedBackwardMask[i] - 1`, because as
@@ -262,15 +261,13 @@ all the pairs plus one.
 
 We also have two special cases:
 
-* The first element has no previous element, we just output 0. But this makes sense, since a run will always start at the first element
+* The first element has no previous element, so we just output 0. But this makes sense, since a run will always start at the first element
 * For the very last element, in addition to checking the previous element, we do two additional things. **(1)** at the end of the output array, we output the total size of `in`(which is `n`). It will soon make sense why we do this. **(2)** we also output the total number of runs/pairs in `totalRuns`. And this number is certainly the last element of `scannedBackwardMask`, because `scannedBackwardMask` is the inclusive prefix sum of `backwardMask`.
 
 Also, I call the output array `compactedBackwardMask` , because it
 will often end up much smaller than the input `in`.
 
 The below image also illustrates the algorithm
-
-0.06 image scale
 
 <img src="../img/cuda_rle/compacted_backward_mask.png" width="660" height="196"
 alt="Scanned Mask"
@@ -308,7 +305,7 @@ __global__ void scatterKernel(
 
 We illustrate the kernel by the following image
 
-<img src="../img/cuda_rle/scatter.png" width="659" height="417"
+<img src="../img/cuda_rle/scatter.png" width="659" height="462"
 alt="Scatter Kernel"
 title="Scatter Kernel"
 />
@@ -324,7 +321,7 @@ compute the length of a single run. That is how we compute the output
 array `countsOut`. So, for instance, we have that `countsOut[3]==3`, because
 `compactedBackwardMask[4] - compactedBackwardMask[3] = 6 - 3 = 3`. Now
 it should be clear why the last element of `compactedBackwardMask` was
-set to `totalRuns` by `compactKernel`.
+set to `n` by `compactKernel`.
 
 It is also easy to compute `symbolsOut`. Because, again,
 `compactedBackwardMask` encodes the indices of the beginnings of the repeated runs in the
@@ -334,15 +331,15 @@ of that run from `in`, and store it in `symbolsOut`. So
 5`.
 
 And that was the entire algorithm! As can be seen, it is much more
-complex than the CPU implementation. But when we performance profile PARLE, we
+complex than the CPU implementation. But when we benchmark PARLE, we
 will realize that all that extra complexity is well worth it
 
-##  Profiling PARLE
+## Benchmarks
 
 Now, how well does PARLE stack up against the CPU? Pretty well, it
 turns out.
 
-I performance profiled PARLE for two kinds of input data. **(1)** Entirely random data on the
+I benchmarked PARLE for two kinds of input data. **(1)** Entirely random data on the
 form `[1,3,5,2,...]`, and **(2)** very compressible data with lots of repeated
 symbols on the form `[1,1,1,1,6,6,6,7,7,7,7,7,7,...]`. The thing is
 that if the data is very compressible, then `compactedBackwardMask`
@@ -350,13 +347,13 @@ will be much smaller than `in`, which means that the final
 `scatterKernel` has to do much less work. For that reason,
 compressible data should compress much faster than random data.
 
-When profiling PARLE, I made sure that I uploaded all the input data
+When benchmarking PARLE, I made sure that I uploaded all the input data
 to the device, and made sure to allocate all memory on the device
-before doing the profiling. This ensures that I will only be testing the actual
+before doing the benchmarking. This ensures that I will only be testing the actual
 performance of the algorithm on the GPU, and not the transfer
 performance from the CPU to the GPU, which is uninteresting for us.
 
-I profiled PARLE on my GTX960, and obtained the following results:
+I benchmarked PARLE on my GTX960, and obtained the following results:
 
 <img src="../img/cuda_rle/plot.png" width="618" height="377"
 alt="Performance Plot"
@@ -374,8 +371,9 @@ make it up to 35 times faster. But I have refrained from doing such heavy
 optimization in my implementation, in order to keep the code neat and
 readable.
 
-For those interested, the raw profiling data that was used to produce the above
-graph can be found [here](fixme)
+For those interested, the raw benchmarking data that was used to produce the above
+graph can be found
+[here](https://github.com/Erkaman/erkaman.github.io/blob/master/src/cuda_rle_gnuplot/data.dat)
 
 ## Possible Further Optimization
 
@@ -386,5 +384,5 @@ found that the algorithm is heavily bottlenecked by memory; the
 arithmetic intensity is very low, so the execution time dominated by
 the time it takes to read from the global memory. So if you want to
 implement a faster version of PARLE, you will need to minimize your
-reads and writes to the global memory. And one way of doing is, like
-Ana did, to use cleverly used shared memory.
+reads and writes to the global memory. And one way of doing this is, like
+Ana did, to use shared memory.

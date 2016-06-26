@@ -430,13 +430,14 @@ body > #container {
        </div>
      </div>
      <div class="center-box">
-<h1>PARLE - Implementing Run-length encoding in CUDA</h1>
+<h1>Implementing Run-length encoding in CUDA</h1>
 
 <p>In order to fully understand this post, it is necessary that you understand
 the following topics:</p>
 
 <ul>
-<li>Basic CUDA programming.</li>
+<li>Basic CUDA programming. So you should know how to write and launch a
+kernel.</li>
 <li>Prefix sum(also known as scan). You can study this topic <a href="https://www.youtube.com/watch?v=We9j876CjtA&amp;list=PLGvfHSgImk4aweyWlhBXNF6XISY3um82_&amp;index=129">here</a></li>
 </ul>
 
@@ -452,7 +453,7 @@ on details, I have been able to implement her approach in CUDA. For
 the purpose of providing a supplementary document to her paper, I would now like
 to go through how I implemented this technique in CUDA.</p>
 
-<p>Before I begin, I want to mention that I have provided a
+<p>Before I begin, I want to mention that I have provided an
 <a href="https://github.com/Erkaman/parle-cuda">implementation</a> of the
 technique on github.</p>
 
@@ -466,14 +467,14 @@ by running RLE, we replace runs of repeated data by pairs on the form
 of times the symbol is repeated. So the pair <code class="inline-code">(3,6)</code> represents the
 data <code class="inline-code">[6,6,6]</code>.</p>
 
-<p>In my CUDA implementation, I have chosen to split the output pair
-into two arrays. The first arrays contains the x:s, and the second
-arrays contains the y:s. So running PARLE on the input data
+<p>In my CUDA implementation, I have chosen to split the output pairs
+into two arrays. The first array contains the x:s, and the second
+array contains the y:s. So running PARLE on the input data
 <code class="inline-code">[1,2,3,6,6,6,5,5]</code> will yield the two output arrays <code class="inline-code">[1,1,1,3,2]</code> and
 <code class="inline-code">[1,2,3,6,5]</code>.</p>
 
 <p>Now, it should be obvious that the above compression scheme should be
-extremely easy to implement on the CPU. An simple CPU implementation is
+extremely easy to implement on the CPU. A simple CPU implementation is
 given below</p>
 
 <div class="codehilite"><pre><span></span><code><span class="kt">int</span> <span class="nf">rleCpu</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">symbolsOut</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">countsOut</span><span class="p">){</span>
@@ -526,7 +527,7 @@ to, for instance, implement fast video codecs.</p>
 <h2>Parallel Run-Length Encoding</h2>
 
 <p>So, I shall now show how we can implement RLE on the GPU. Ana calls
-this algorithm Parallel Run-Length Encoding, which we will from now on will
+this algorithm Parallel Run-Length Encoding, which we will from now on
 abbreviate PARLE. Throughout my explanation, I shall through images
 illustrate what happens to the input array <code class="inline-code">[1,2,3,6,6,6,5,5]</code>, as we
 run it through the compression algorithm. Also, I shall henceforth
@@ -586,11 +587,11 @@ and grid sizes.</p>
 <p>Also, in order to assign a thread to every element, I am using yet
 another nice utility function from Hemi:
 <code class="inline-code">hemi::grid_stride_range</code>. This function implements a grid-stride loop
-in your Kernel, which is much more flexible than the traditional
+in your kernel, which is much more flexible than the traditional
 approaches. You can read more about this
 <a href="https://devblogs.nvidia.com/parallelforall/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/">here</a>.</p>
 
-<p>So that is how the construct <code class="inline-code">backwardMask</code>. In the next step, we run
+<p>So that is how we construct <code class="inline-code">backwardMask</code>. In the next step, we run
 an inclusive prefix sum(also called scan) on <code class="inline-code">backwardMask</code>, and we will call this
 prefix sum <code class="inline-code">scannedBackwardMask</code>. The result of the scan is the below</p>
 
@@ -611,19 +612,19 @@ pairs!</p>
 <p>For serial algorithms, such the RLE implemented on the CPU above,
 knowing where to output the next element is often easy; you just
 output to the next free spot in the array. However, doing the same
-thing on the GPU considerably more difficult, because we have lots of
+thing on the GPU is considerably more difficult, because we have lots of
 threads working at the same time, and we have no idea in which order
 they finish. As a result, finding the next free spot in the array is
-often impossible. Instead what often do is that you basically twiddle with
+often impossible. Instead what you often do, is that you basically twiddle with
 prefix sums until you get what you want.</p>
 
 <p>In our example, from the input data <code class="inline-code">[1,2,3,6,6,6,5,5]</code> we want the
 output compressed arrays <code class="inline-code">[1,1,1,3,2]</code> and <code class="inline-code">[1,2,3,6,5]</code>(recall that
 these are just the array of pairs split into two arrays). We can see
-that the subsequence of <code class="inline-code">6,6,6</code> has been represented as the pair <code class="inline-code">(3,6)</code>,
-and it is output to the position <code class="inline-code">3</code>. However, now look at the prefix
-sum above once more. Notice that sequence <code class="inline-code">6,6,6</code> from <code class="inline-code">in</code> is
-represented by a sequence of <code class="inline-code">4,4,4</code> in <code class="inline-code">scannedBackwardMask</code>:</p>
+that the subarray of <code class="inline-code">6,6,6</code> has been represented as the pair <code class="inline-code">(3,6)</code>,
+and it is output to the position <code class="inline-code">3</code>. However, now look at the
+resulting prefix sum once more. Notice that the sequence <code class="inline-code">6,6,6</code> from <code class="inline-code">in</code>
+is represented by a sequence of <code class="inline-code">4,4,4</code> in <code class="inline-code">scannedBackwardMask</code>:</p>
 
 <p><img src="../img/cuda_rle/scan_example.png" width="635" height="110"
 alt="Scan Example"
@@ -631,13 +632,13 @@ title="Scan Example"
 /></p>
 
 <p>This represents that the output location of the pair that represents
-the sequence <code class="inline-code">6,6,6</code> will be output to <code class="inline-code">3 = 4-1</code>. So the above prefix
+the sequence <code class="inline-code">6,6,6</code> will be <code class="inline-code">3 = 4-1</code>. So the above prefix
 sum simply represents all the output locations plus one, for all the
 outputted pairs. So by computing the above prefix sum, we have been
 able to find the output positions of all the outputted pairs for our
 GPU algorithm.</p>
 
-<p>So that is why are computing a prefix sum. In the next step, we will
+<p>So that is why we are computing a prefix sum. In the next step, we will
 have to create yet another auxiliary array. But fortunately, this will
 be the last one. This last array is called <code class="inline-code">compactedBackwardMask</code>,
 and it is slightly more tricky to understand than the other two.</p>
@@ -653,9 +654,9 @@ output position of the pair, but we have not yet
 calculated <code class="inline-code">3</code>.</p>
 
 <p>But, if we could now obtain an array that stores the indexes of the
-beginnings of the every runs, we would be very happy again. Because we
+beginnings of every run, we would be very happy again. Because we
 could then calculate the run-lengths by subtracting the current
-element and the previous element from each other. And constructing
+element and the previous element from each other in that array. And constructing
 such an array is not very difficult. A kernel that implements this is
 given below</p>
 
@@ -681,7 +682,7 @@ given below</p>
 </code></pre></div>
 
 <p>Basically, what we do is that we run a thread for every element in
-<code class="inline-code">scannedBackwardMask</code>. If the current and the previous element are not
+<code class="inline-code">scannedBackwardMask</code>. If the current and the previous elements are not
 equal, that means that a new run starts at that index. So we would now
 like to output that index, and that index is just the thread id
 <code class="inline-code">i</code>. And we output at <code class="inline-code">scannedBackwardMask[i] - 1</code>, because as
@@ -691,7 +692,7 @@ all the pairs plus one.</p>
 <p>We also have two special cases:</p>
 
 <ul>
-<li>The first element has no previous element, we just output 0. But this makes sense, since a run will always start at the first element</li>
+<li>The first element has no previous element, so we just output 0. But this makes sense, since a run will always start at the first element</li>
 <li>For the very last element, in addition to checking the previous element, we do two additional things. <strong>(1)</strong> at the end of the output array, we output the total size of <code class="inline-code">in</code>(which is <code class="inline-code">n</code>). It will soon make sense why we do this. <strong>(2)</strong> we also output the total number of runs/pairs in <code class="inline-code">totalRuns</code>. And this number is certainly the last element of <code class="inline-code">scannedBackwardMask</code>, because <code class="inline-code">scannedBackwardMask</code> is the inclusive prefix sum of <code class="inline-code">backwardMask</code>.</li>
 </ul>
 
@@ -699,8 +700,6 @@ all the pairs plus one.</p>
 will often end up much smaller than the input <code class="inline-code">in</code>.</p>
 
 <p>The below image also illustrates the algorithm</p>
-
-<p>0.06 image scale</p>
 
 <p><img src="../img/cuda_rle/compacted_backward_mask.png" width="660" height="196"
 alt="Scanned Mask"
@@ -737,7 +736,7 @@ our final kernel <code class="inline-code">scatter</code>, and it is actually ra
 
 <p>We illustrate the kernel by the following image</p>
 
-<p><img src="../img/cuda_rle/scatter.png" width="659" height="417"
+<p><img src="../img/cuda_rle/scatter.png" width="659" height="462"
 alt="Scatter Kernel"
 title="Scatter Kernel"
 /></p>
@@ -753,7 +752,7 @@ compute the length of a single run. That is how we compute the output
 array <code class="inline-code">countsOut</code>. So, for instance, we have that <code class="inline-code">countsOut[3]==3</code>, because
 <code class="inline-code">compactedBackwardMask[4] - compactedBackwardMask[3] = 6 - 3 = 3</code>. Now
 it should be clear why the last element of <code class="inline-code">compactedBackwardMask</code> was
-set to <code class="inline-code">totalRuns</code> by <code class="inline-code">compactKernel</code>.</p>
+set to <code class="inline-code">n</code> by <code class="inline-code">compactKernel</code>.</p>
 
 <p>It is also easy to compute <code class="inline-code">symbolsOut</code>. Because, again,
 <code class="inline-code">compactedBackwardMask</code> encodes the indices of the beginnings of the repeated runs in the
@@ -763,15 +762,15 @@ of that run from <code class="inline-code">in</code>, and store it in <code clas
 5</code>.</p>
 
 <p>And that was the entire algorithm! As can be seen, it is much more
-complex than the CPU implementation. But when we performance profile PARLE, we
+complex than the CPU implementation. But when we benchmark PARLE, we
 will realize that all that extra complexity is well worth it</p>
 
-<h2>Profiling PARLE</h2>
+<h2>Benchmarks</h2>
 
 <p>Now, how well does PARLE stack up against the CPU? Pretty well, it
 turns out.</p>
 
-<p>I performance profiled PARLE for two kinds of input data. <strong>(1)</strong> Entirely random data on the
+<p>I benchmarked PARLE for two kinds of input data. <strong>(1)</strong> Entirely random data on the
 form <code class="inline-code">[1,3,5,2,...]</code>, and <strong>(2)</strong> very compressible data with lots of repeated
 symbols on the form <code class="inline-code">[1,1,1,1,6,6,6,7,7,7,7,7,7,...]</code>. The thing is
 that if the data is very compressible, then <code class="inline-code">compactedBackwardMask</code>
@@ -779,13 +778,13 @@ will be much smaller than <code class="inline-code">in</code>, which means that 
 <code class="inline-code">scatterKernel</code> has to do much less work. For that reason,
 compressible data should compress much faster than random data.</p>
 
-<p>When profiling PARLE, I made sure that I uploaded all the input data
+<p>When benchmarking PARLE, I made sure that I uploaded all the input data
 to the device, and made sure to allocate all memory on the device
-before doing the profiling. This ensures that I will only be testing the actual
+before doing the benchmarking. This ensures that I will only be testing the actual
 performance of the algorithm on the GPU, and not the transfer
 performance from the CPU to the GPU, which is uninteresting for us.</p>
 
-<p>I profiled PARLE on my GTX960, and obtained the following results:</p>
+<p>I benchmarked PARLE on my GTX960, and obtained the following results:</p>
 
 <p><img src="../img/cuda_rle/plot.png" width="618" height="377"
 alt="Performance Plot"
@@ -803,8 +802,9 @@ make it up to 35 times faster. But I have refrained from doing such heavy
 optimization in my implementation, in order to keep the code neat and
 readable.</p>
 
-<p>For those interested, the raw profiling data that was used to produce the above
-graph can be found <a href="fixme">here</a></p>
+<p>For those interested, the raw benchmarking data that was used to produce the above
+graph can be found
+<a href="https://github.com/Erkaman/erkaman.github.io/blob/master/src/cuda_rle_gnuplot/data.dat">here</a></p>
 
 <h2>Possible Further Optimization</h2>
 
@@ -815,9 +815,9 @@ found that the algorithm is heavily bottlenecked by memory; the
 arithmetic intensity is very low, so the execution time dominated by
 the time it takes to read from the global memory. So if you want to
 implement a faster version of PARLE, you will need to minimize your
-reads and writes to the global memory. And one way of doing is, like
-Ana did, to use cleverly used shared memory.</p>
-<p class="last-update"> <i>This post was last updated: June 25, 2016</i></p>
+reads and writes to the global memory. And one way of doing this is, like
+Ana did, to use shared memory.</p>
+<p class="last-update"> <i>This post was last updated: June 26, 2016</i></p>
     </div>
 
     </div>

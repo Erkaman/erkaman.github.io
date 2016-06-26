@@ -17,10 +17,15 @@
 \begin{myenv}
 
   \node[count](count0) at (0,\myhs) {1};
+  \node[above] at (count0.north) {0};
   \node[count](count1) at (1,\myhs) {1};
+  \node[above] at (count1.north) {1};
   \node[count](count2) at (2,\myhs) {1};
+  \node[above] at (count2.north) {2};
   \node[count](count3) at (3,\myhs) {3};
+  \node[above] at (count3.north) {3};
   \node[count](count4) at (4,\myhs) {2};
+  \node[above] at (count4.north) {4};
   \node [alabel] at (count0.west) {countsOut};
 
 
@@ -44,10 +49,15 @@
   \node [alabel] at (elem0.west) {in};
 
   \node[symb](symb0) at (0,\myht) {1};
+  \node[below] at (symb0.south) {0};
   \node[symb](symb1) at (1,\myht) {2};
+  \node[below] at (symb1.south) {1};
   \node[symb](symb2) at (2,\myht) {3};
+  \node[below] at (symb2.south) {2};
   \node[symb](symb3) at (3,\myht) {6};
+  \node[below] at (symb3.south) {3};
   \node[symb](symb4) at (4,\myht) {5};
+  \node[below] at (symb4.south) {4};
   \node [alabel] at (symb0.west) {symbolsOut};
 
 
