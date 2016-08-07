@@ -12,6 +12,17 @@ code {
 }
 /* we center images. */
 
+h1 {
+    text-align: center;
+}
+
+canvas {
+    display: block;
+    margin: auto;
+    padding-top: 5mm;
+    padding-bottom: 5mm;
+}
+
 img {
     display: block;
     margin: auto;

@@ -3,6 +3,7 @@ import markdown2
 import datetime
 
 posts = [
+    "src/regl_anim.md",
     "src/cuda_rle.md",
     "src/tess_opt.md"
 ]

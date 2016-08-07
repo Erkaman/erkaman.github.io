@@ -441,10 +441,46 @@ body > #container {
        </div>
      </div>
      <div class="center-box">
-<h1> About </h1><p> This is just a small blog where the author sometimes puts his articles about things that he has learned. These articles are mostly about graphics programming. </p><h1> List of Posts </h1><ul><li> <a href="posts/regl_anim.html">I made some weird animations in WebGL
-</a>  </li><li> <a href="posts/cuda_rle.html">Implementing Run-length encoding in CUDA
-</a>  </li><li> <a href="posts/tess_opt.html">Making Faster Fragment Shaders by Using Tessellation Shaders
-</a>  </li></ul>
+<h1>I made some weird animations in WebGL</h1>
+
+<p>Using the WebGL framework
+<a href="https://github.com/mikolalysenko/regl">regl</a>, I made some weird
+animations. All of them are basically  just using trigonometric functions to
+create patterns in a fragment shader. Check out the source code if
+you are interested.</p>
+
+<script language=javascript src="../script/regl_anim/regl.min.js"></script>
+
+<p><canvas id="glcanvas1" width="480" height="270">
+  Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+</canvas></p>
+
+<script language=javascript src="../script/regl_anim/vines.min.js"></script>
+
+<script>  vines(initREGL, 'glcanvas1')</script>
+
+<p style="text-align: center"><a href="google.com">Source Code</a></p>
+
+<p><canvas id="glcanvas2" width="480" height="270">
+  Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+</canvas></p>
+
+<script language=javascript src="../script/regl_anim/rainbow.min.js"></script>
+
+<script>  rainbow(initREGL, 'glcanvas2')</script>
+
+<p style="text-align: center"><a href="google.com">Source Code</a></p>
+
+<p><canvas id="glcanvas3" width="480" height="270">
+  Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+</canvas></p>
+
+<script language=javascript src="../script/regl_anim/circle.min.js"></script>
+
+<script>  circle(initREGL, 'glcanvas3')</script>
+
+<p style="text-align: center"><a href="google.com">Source Code</a></p>
+<p class="last-update"> <i>This post was last updated: August 07, 2016</i></p>
     </div>
 
     </div>
