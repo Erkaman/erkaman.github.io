@@ -19,8 +19,8 @@ h1 {
 canvas {
     display: block;
     margin: auto;
-    padding-top: 5mm;
-    padding-bottom: 5mm;
+    padding-top: 8mm;
+    padding-bottom: 0mm;
 }
 
 img {
