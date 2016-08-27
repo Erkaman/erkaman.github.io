@@ -1,0 +1,16 @@
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js
+/img/gallery/deferred_shading.png https://github.com/mikolalysenko/regl/blob/gh-pages/example/deferred_shading.js

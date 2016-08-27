@@ -464,3 +464,8 @@ canvas {
     padding-top: 8mm;
     padding-bottom: 0mm;
 }
+
+h2 a{
+    text-decoration: none;
+    color: #333;
+}
