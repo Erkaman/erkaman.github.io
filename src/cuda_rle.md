@@ -110,7 +110,7 @@ for reasons that will soon become clear, we always set
 `backwardMask[0]` to 1. The construction of the mask is also
 illustrated through the below image.
 
-<img src="../img/cuda_rle/backward_mask.png" width="549" height="149"
+<img class="article-img" src="/img/cuda_rle/backward_mask.png"
 alt="Backward Mask Construction"
 title="Backward Mask Construction"
 />
@@ -164,7 +164,7 @@ So that is how we construct `backwardMask`. In the next step, we run
 an inclusive prefix sum(also called scan) on `backwardMask`, and we will call this
 prefix sum `scannedBackwardMask`. The result of the scan is the below
 
-<img src="../img/cuda_rle/scanned_backward_mask.png" width="635" height="110"
+<img class="article-img" src="../img/cuda_rle/scanned_backward_mask.png"
 alt="Scanned Mask"
 title="Scanned Mask"
 />
@@ -195,7 +195,7 @@ and it is output to the position `3`. However, now look at the
 resulting prefix sum once more. Notice that the sequence `6,6,6` from `in`
 is represented by a sequence of `4,4,4` in `scannedBackwardMask`:
 
-<img src="../img/cuda_rle/scan_example.png" width="635" height="110"
+<img class="article-img" src="../img/cuda_rle/scan_example.png"
 alt="Scan Example"
 title="Scan Example"
 />
@@ -269,7 +269,7 @@ will often end up much smaller than the input `in`.
 
 The below image also illustrates the algorithm
 
-<img src="../img/cuda_rle/compacted_backward_mask.png" width="660" height="196"
+<img class="article-img" src="../img/cuda_rle/compacted_backward_mask.png"
 alt="Scanned Mask"
 title="Scanned Mask"
 />
@@ -305,7 +305,7 @@ __global__ void scatterKernel(
 
 We illustrate the kernel by the following image
 
-<img src="../img/cuda_rle/scatter.png" width="659" height="462"
+<img class="article-img" src="../img/cuda_rle/scatter.png"
 alt="Scatter Kernel"
 title="Scatter Kernel"
 />
@@ -355,10 +355,7 @@ performance from the CPU to the GPU, which is uninteresting for us.
 
 I benchmarked PARLE on my GTX960, and obtained the following results:
 
-<img src="../img/cuda_rle/plot.png" width="618" height="377"
-alt="Performance Plot"
-title="Performance Plot"
-/>
+<img class="article-img" src="/img/cuda_rle/plot.png" alt="Performance Plot" title="Performance Plot"/>
 
 Note that I tested the CPU implementation of RLE on both compressible
 data and random data, but the results were so similar that I decided on

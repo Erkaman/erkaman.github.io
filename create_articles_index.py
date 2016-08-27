@@ -3,15 +3,10 @@
 import sys
 import site_common as site_common
 
-
-
-html_source = site_common.get_begin()
-
-html_source += "<h1> About </h1>"
-html_source += "<p> This is just a small blog where the author sometimes puts his articles about things that he has learned. These articles are mostly about graphics programming. </p>"
-
-
-html_source += "<h1> List of Posts </h1>"
+html_source = ''
+html_source += '<div class="container">'
+html_source += "<h1>Articles</h1>"
+html_source += "<p>Below are some small articles and tutorials I have written.</p>"
 
 def extract_title(md_file):
     # extract the title of a post, from the first line in the file.
@@ -34,9 +29,14 @@ for md_file in site_common.posts:
         site_common.get_html_file(md_file), extract_title(md_file))
 html_source += "</ul>"
 
-html_source += site_common.get_end()
+html_source += '</div>'
 
-output_file = "index.html"
+with open('src/template.html', 'r') as f:
+    template=f.read()
+
+output_file = "articles.html"
+
+src = template.format(src=html_source)
 
 with open(output_file, 'w') as f:
-     f.write(html_source)
+     f.write(src)

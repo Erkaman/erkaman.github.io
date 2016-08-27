@@ -91,9 +91,9 @@ evaluate it for every single fragment.
 
 If we apply the above shader on a teapot, the result is the following:
 
-<img src="../img/tess_opt/spec_frag.png" width="425" height="390"
+<img class="article-img" src="/img/tess_opt/spec_frag.png"
 alt="Specular Calculation in the Fragment Shader"
-title="Specular Calculation in the Fragment Shader"
+     title="Specular Calculation in the Fragment Shader"
 />
 
 
@@ -102,7 +102,7 @@ specular calculation from the fragment shader to the vertex shader. So
 we essentially move code from the fragment shader to the vertex
 shader:
 
-<img src="../img/tess_opt/pipeline1.png" width="436" height="140"
+<img class="article-img" src="/img/tess_opt/pipeline1.png"
 alt="Pipeline 1"
 title="Pipeline 1"
 />
@@ -164,7 +164,7 @@ shader should be much cheaper.
 
 How does this new shader look? Like this:
 
-<img src="../img/tess_opt/spec_vert.png" width="425" height="390"
+<img class="article-img" src="/img/tess_opt/spec_vert.png"
 alt="Specular Calculation in the vertex Shader"
 title="Specular Calculation in the vertex Shader"
 />
@@ -182,7 +182,7 @@ just using barycentric interpolation. In our case, the samples are
 taken at every vertex. And how many vertices does our teapot model have?
 Let us render it as wireframe:
 
-<img src="../img/tess_opt/teapot_wireframe1.png" width="425" height="390"
+<img class="article-img" src="/img/tess_opt/teapot_wireframe1.png"
 alt="Original Teapot Wireframe"
 title="Original Teapot Wireframe"
 />
@@ -209,7 +209,7 @@ original mesh into subtriangles, and by doing so increase the vertex
 density. Wang et al. define the following tessellation levels in the
 [supplementary document](http://www.cad.zju.edu.cn/home/rwang/projects/shader-optimization/14shaderopt_supp.pdf) they provided:
 
-<img src="../img/tess_opt/tess_levels.png" width="680" height="154"
+<img class="article-img" src="/img/tess_opt/tess_levels.png"
 alt="Tessellation Levels"
 title="Tessellation Levels"
 />
@@ -225,7 +225,7 @@ need to add two new shader stages: the Tessellation Control Shader,
 and the Tessellation Evaluation Shader(hereafter abbreviated TCS and
 TES). If we add these two stages, our shader pipeline will look like this:
 
-<img src="../img/tess_opt/pipeline2.png" width="663" height="84"
+<img class="article-img" src="/img/tess_opt/pipeline2.png"
 alt="Pipeline 2"
 title="Pipeline 2"
 />
@@ -337,7 +337,7 @@ void main(){
 
 This one is a bit more difficult to understand. First, look at this image:
 
-<img src="../img/tess_opt/tes.png"
+<img class="article-img" src="/img/tess_opt/tes.png"
 alt="TES example"
 title="TES example"
 />
@@ -399,7 +399,7 @@ fragment shader specular lighting.
 How much better does this look? Here is the result for tessellation
 level 1:
 
-<img src="../img/tess_opt/spec_tess1.png" width="425" height="390"
+<img class="article-img" src="/img/tess_opt/spec_tess1.png"
 alt="Specular Lighting Tessellation Level 1"
 title="Specular Lighting Tessellation Level 1"
 />
@@ -409,8 +409,7 @@ But for tessellation level 1 we are not doing any tessellation at all,
 so we get the same results as we did when we were doing the
 calculation for every vertex. So let us try level 2
 
-
-<img src="../img/tess_opt/spec_tess2.png" width="425" height="390"
+<img class="article-img" src="/img/tess_opt/spec_tess2.png"
 alt="Specular Lighting Tessellation Level 2"
 title="Specular Lighting Tessellation Level 2"
 />
@@ -418,7 +417,7 @@ title="Specular Lighting Tessellation Level 2"
 This already looks much better! And note that level 2 has 6 times as
 many triangles as level 1. Below we can see the difference in vertex density.
 
-<img src="../img/tess_opt/tess_level_compare.png" width="760" height="387"
+<img class="article-img" src="/img/tess_opt/tess_level_compare.png"
 alt="Tessellation Level Comparison"
 title="Tessellation Level Comparison"
 />
@@ -427,14 +426,14 @@ But tessellation level 2 still have some very slight banding
 artifacts. But by increasing the level to 3, that problem pretty much
 goes away:
 
-<img src="../img/tess_opt/spec_tess3.png" width="425" height="390"
+<img class="article-img" src="../img/tess_opt/spec_tess3.png"
 alt="Specular Lighting Tessellation Level 3"
 title="Specular Lighting Tessellation Level 3"
 />
 
 Let us now compare level 3 with the original fragment shader specular:
 
-<img src="../img/tess_opt/compare_level3_original.png" width="760" height="387"
+<img class="article-img" src="../img/tess_opt/compare_level3_original.png"
 alt="Specular Lighting Original Vs Level 3"
 title="Specular Lighting Original Vs Level 3"
 />
@@ -461,7 +460,7 @@ issue.
 We will create a procedural texture by adding 4 octaves of
 Simplex noise. When applied to the teapot, the texture looks like this:
 
-<img src="../img/tess_opt/tex_original.png" width="425" height="390"
+<img class="article-img" src="../img/tess_opt/tex_original.png"
 alt="Original Procedural Texture"
 title="Original Procedural Texture"
 />
@@ -477,7 +476,7 @@ resulting textures for different tessellation levels:
 
 
 
-<img src="../img/tess_opt/tex_tess_montage.png" width="608" height="949"
+<img class="article-img" src="../img/tess_opt/tex_tess_montage.png"
 alt="Procedural Texture Tessellation Montage"
 title="Procedural Texture Tessellation Montage"
 />
@@ -535,7 +534,7 @@ will not go very well. If I tested the technique on a detailed
 procedural texture, I needed at least a tessellation level of 11 to
 provide a decent approximation:
 
-<img src="../img/tess_opt/level11_approx.png" width="760" height="387"
+<img class="article-img" src="../img/tess_opt/level11_approx.png"
 alt="Detailed Texture at level 11"
 title="Detailed Texture at level 11"
 />
@@ -572,8 +571,7 @@ application](https://github.com/Erkaman/tess-opt) of the technique on
 github. This application was used to produce all the teapot images
 seen in this article. Below is an image of the application
 
-
-<img src="../img/tess_opt/demo_img.png" width="574" height="404"
+<img class="article-img" src="../img/tess_opt/demo_img.png"
 alt="Demo Application"
 title="Demo Application"
 />
