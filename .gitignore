@@ -7,3 +7,4 @@ auto/
 src/**/*.png
 
 *.pyc
+.DS_Store
