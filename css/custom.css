@@ -15,6 +15,16 @@ nav ul li {
     font-size: 2.7rem;
 }
 
+.myname {
+    font-weight: 500;
+    font-size: 3.2rem;
+}
+
+.myname a:hover, .myname a:link, .myname a:visited, .myname a:active, .myname a{
+    text-decoration: none;
+    color: #333;
+}
+
 nav a {
     text-decoration: none;
 }
@@ -48,32 +58,27 @@ body {
       height: auto;
     }
 
-
 hr {
-    margin-top: 0.1rem;
-    margin-bottom: 2.8rem;
+    margin-top: 2.5rem;
+    margin-bottom: 3.5rem;
 }
+
+.header hr {
+    margin-top: 0.0rem;
+    margin-bottom: 3.5rem;
+}
+
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
   margin-bottom: 2rem;
   font-weight: 300; }
 h1 { font-size: 3.0rem; line-height: 1.2;  letter-spacing: -.1rem;}
-h2 { font-size: 2.7rem; line-height: 1.25; letter-spacing: -.1rem; }
+h2 { font-size: 2.3rem; line-height: 1.25; letter-spacing: -.1rem; }
 h3 { font-size: 3.0rem; line-height: 1.3;  letter-spacing: -.1rem; }
 h4 { font-size: 2.4rem; line-height: 1.35; letter-spacing: -.08rem; }
 h5 { font-size: 1.8rem; line-height: 1.5;  letter-spacing: -.05rem; }
 h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
-
-/* Larger than phablet */
-@media (min-width: 550px) {
-  h1 { font-size: 3.0rem; }
-  h2 { font-size: 2.7rem; }
-  h3 { font-size: 2.2rem; }
-  h4 { font-size: 3.0rem; }
-  h5 { font-size: 2.4rem; }
-  h6 { font-size: 1.5rem; }
-}
 
 
 /*.gallery-row {

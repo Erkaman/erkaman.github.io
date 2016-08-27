@@ -25,14 +25,16 @@ def elem2str(elem):
 tree = ET.parse('src/project_list.xml')
 root = tree.getroot()
 #print ET.tostring(root)
+first = True
 for child in root:
     title = child[0].text
     href = child[1].text
     img = child[2].text
     text = ET.tostring(child[3])[6:-11]
 
+    project_list += "<hr>"
+
     project_list += """
-    <hr>
   <div class="row project-row">
     <div class="two-thirds column">
       <h2><a href="{href}">{title}</a></h2>
