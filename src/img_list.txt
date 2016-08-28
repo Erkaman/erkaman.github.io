@@ -1,3 +1,6 @@
+/img/gallery/02AO.jpg http://www.cse.chalmers.se/~uffe/bachelor/kandidatarbetestartpaket/Final-Voxelspel.pdf
+/img/gallery/02with_ao.png http://www.cse.chalmers.se/~uffe/bachelor/kandidatarbetestartpaket/Final-Voxelspel.pdf
+/img/gallery/03full_noise.png http://www.cse.chalmers.se/~uffe/bachelor/kandidatarbetestartpaket/Final-Voxelspel.pdf
 /img/gallery/glitter.png https://www.shadertoy.com/view/ltBSzt
 /img/gallery/grass.png https://www.shadertoy.com/view/MlSXRV
 /img/gallery/earthball.png https://github.com/Erkaman/glsl-gradient-palette
@@ -20,6 +23,13 @@
 /img/gallery/water-edit.png https://github.com/Erkaman/gl-water2d
 /img/gallery/obstacles.png https://github.com/Erkaman/gl-water2d
 /img/gallery/sprinkler.png https://github.com/Erkaman/gl-water2d
+/img/gallery/cloth.png https://www.youtube.com/watch?v=scg33DHDnHc
+/img/gallery/deferred_shading.png https://mikolalysenko.github.io/regl/www/gallery/deferred_shading.js.html
+/img/gallery/line-primitives.png https://twitter.com/erkaman2/status/768773636098396160
+/img/gallery/minecraft.png https://mikolalysenko.github.io/regl/www/gallery/minecraft.js.html
+/img/gallery/planar-reflection.png https://www.youtube.com/watch?v=FUNAcjJHo8U
+/img/gallery/point-light-shadow.png https://mikolalysenko.github.io/regl/www/gallery/point-light-shadow.js.html
+/img/gallery/stencil-transition.png https://twitter.com/erkaman2/status/760785285739319296
 /img/gallery/wireframe.png https://github.com/Erkaman/wireframe-world
 /img/gallery/vines.png https://github.com/Erkaman/regl-anim
 /img/gallery/rainbow.png https://github.com/Erkaman/regl-anim
