@@ -275,8 +275,19 @@ title="Scanned Mask"
 />
 
 To give an example, we output 6 to the index 4, because
-`scannedBackwardMask[6] != scannedBackwardMask[5]`. And the output
-index is calculated as `scannedBackwardMask[6]-1 = 5 - 1 = 4`. Also,
+
+```C++
+scannedBackwardMask[6] != scannedBackwardMask[5]
+```
+
+And the output
+index is calculated as
+
+```C++
+scannedBackwardMask[6]-1 = 5 - 1 = 4
+```
+
+Also,
 notice that thread 7, the last thread, outputs the length of `in` to
 the last element of `compactedBackwardMask`
 
@@ -319,7 +330,12 @@ repeated characters, we can just compute the difference between the
 next element and the current element in `compactedBackwardMask`, to
 compute the length of a single run. That is how we compute the output
 array `countsOut`. So, for instance, we have that `countsOut[3]==3`, because
-`compactedBackwardMask[4] - compactedBackwardMask[3] = 6 - 3 = 3`. Now
+
+```C++
+compactedBackwardMask[4] - compactedBackwardMask[3] = 6 - 3 = 3
+```
+
+Now
 it should be clear why the last element of `compactedBackwardMask` was
 set to `n` by `compactKernel`.
 
@@ -327,8 +343,11 @@ It is also easy to compute `symbolsOut`. Because, again,
 `compactedBackwardMask` encodes the indices of the beginnings of the repeated runs in the
 original data. So we can just use that index to take the first element
 of that run from `in`, and store it in `symbolsOut`. So
-`symbolsOut[4]==5`, because `in[compactedBackwardMask[4]] = in[6] =
-5`.
+`symbolsOut[4]==5`, because
+
+```C++
+in[compactedBackwardMask[4]] = in[6] = 5
+```
 
 And that was the entire algorithm! As can be seen, it is much more
 complex than the CPU implementation. But when we benchmark PARLE, we

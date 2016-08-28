@@ -18,28 +18,24 @@
   </head>
   <body>
 
-    <div class="table-container">
-
-      <div class="table-block footer-push">
-
-        <div class="header container">
-          <div class="row">
-            <div class="twelve columns">
-              <nav>
-                <ul>
-                  <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
-                  <li><a href="/index.html">Home</a></li>
-                  <li><a href="/projects.html">Projects</a></li>
-                  <li><a href="/articles.html">Articles</a></li>
-                  <li><a href="/resume.html">Resume</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-          <hr>
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
         </div>
+      </div>
+      <hr>
+    </div>
 
-        <div class="container"><h1>Implementing Run-length encoding in CUDA</h1>
+    <div class="container"><h1>Implementing Run-length encoding in CUDA</h1>
 
 <p>In order to fully understand this post, it is necessary that you understand
 the following topics:</p>
@@ -315,9 +311,18 @@ alt="Scanned Mask"
 title="Scanned Mask"
 /></p>
 
-<p>To give an example, we output 6 to the index 4, because
-<code class="inline-code">scannedBackwardMask[6] != scannedBackwardMask[5]</code>. And the output
-index is calculated as <code class="inline-code">scannedBackwardMask[6]-1 = 5 - 1 = 4</code>. Also,
+<p>To give an example, we output 6 to the index 4, because</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">scannedBackwardMask</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">!=</span> <span class="n">scannedBackwardMask</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+</code></pre></div>
+
+<p>And the output
+index is calculated as</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">scannedBackwardMask</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">=</span> <span class="mi">4</span>
+</code></pre></div>
+
+<p>Also,
 notice that thread 7, the last thread, outputs the length of <code class="inline-code">in</code> to
 the last element of <code class="inline-code">compactedBackwardMask</code></p>
 
@@ -358,8 +363,12 @@ thread looks at the current element, and the next one. Since
 repeated characters, we can just compute the difference between the
 next element and the current element in <code class="inline-code">compactedBackwardMask</code>, to
 compute the length of a single run. That is how we compute the output
-array <code class="inline-code">countsOut</code>. So, for instance, we have that <code class="inline-code">countsOut[3]==3</code>, because
-<code class="inline-code">compactedBackwardMask[4] - compactedBackwardMask[3] = 6 - 3 = 3</code>. Now
+array <code class="inline-code">countsOut</code>. So, for instance, we have that <code class="inline-code">countsOut[3]==3</code>, because</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">compactedBackwardMask</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">compactedBackwardMask</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">3</span>
+</code></pre></div>
+
+<p>Now
 it should be clear why the last element of <code class="inline-code">compactedBackwardMask</code> was
 set to <code class="inline-code">n</code> by <code class="inline-code">compactKernel</code>.</p>
 
@@ -367,8 +376,10 @@ set to <code class="inline-code">n</code> by <code class="inline-code">compactKe
 <code class="inline-code">compactedBackwardMask</code> encodes the indices of the beginnings of the repeated runs in the
 original data. So we can just use that index to take the first element
 of that run from <code class="inline-code">in</code>, and store it in <code class="inline-code">symbolsOut</code>. So
-<code class="inline-code">symbolsOut[4]==5</code>, because <code class="inline-code">in[compactedBackwardMask[4]] = in[6] =
-5</code>.</p>
+<code class="inline-code">symbolsOut[4]==5</code>, because</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">in</span><span class="p">[</span><span class="n">compactedBackwardMask</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span> <span class="o">=</span> <span class="n">in</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+</code></pre></div>
 
 <p>And that was the entire algorithm! As can be seen, it is much more
 complex than the CPU implementation. But when we benchmark PARLE, we
@@ -425,25 +436,21 @@ reads and writes to the global memory. And one way of doing this is, like
 Ana did, to use shared memory.</p>
 </div>
 
-      </div>
 
-      <div class="table-block">
-        <div class="container">
-          <div class="footer">
-            <hr>
-            <ul>
-              <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
-              <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
-              <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
-              <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
-              <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
-              <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
-            </ul>
-          </div>
-        </div>
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
       </div>
-
     </div>
+
 
 
   </body>
