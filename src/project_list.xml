@@ -2,7 +2,7 @@
   <project>
     <title>regl</title>
     <href>https://github.com/mikolalysenko/regl</href>
-    <img>/img/gallery/regl.png</img>
+    <img>/img/gallery/regl.jpg</img>
     <text>
       <p>
         I am a very active contributor to the open source WebGL
@@ -18,7 +18,7 @@
   <project>
     <title>regl-cnn</title>
     <href>https://github.com/Erkaman/regl-cnn</href>
-    <img>/img/gallery/regl-cnn.png</img>
+    <img>/img/gallery/regl-cnn.jpg</img>
     <text>
       <p>
         Using the WebGL framework regl, I implemented a
@@ -31,7 +31,7 @@
   <project>
     <title>wireframe-world</title>
     <href>https://github.com/Erkaman/wireframe-world</href>
-    <img>/img/gallery/wireframe.png</img>
+    <img>/img/gallery/wireframe.jpg</img>
     <text>
       <p>
         A small demo that renders an infinitely scrolling world with
@@ -46,7 +46,7 @@
   <project>
     <title>planar-reflection.js</title>
     <href>https://www.youtube.com/watch?v=FUNAcjJHo8U</href>
-    <img>/img/gallery/planar-reflection.png</img>
+    <img>/img/gallery/planar-reflection.jpg</img>
     <text>
       <p>
         A small demo that renders reflections in a plane by using a trick
@@ -58,7 +58,7 @@
   <project>
     <title>deferred_shading.js</title>
     <href>https://mikolalysenko.github.io/regl/www/gallery/deferred_shading.js.html</href>
-    <img>/img/gallery/deferred-shading.png</img>
+    <img>/img/gallery/deferred-shading.jpg</img>
     <text>
       <p>
         A simple reference implementation of deferred
@@ -74,7 +74,7 @@
   <project>
     <title>cloth.js</title>
     <href>https://www.youtube.com/watch?v=scg33DHDnHc</href>
-    <img>/img/gallery/cloth.png</img>
+    <img>/img/gallery/cloth.jpg</img>
     <text>
       <p>
         A simple cloth simulation implemented in WebGL, using the
@@ -86,7 +86,7 @@
   <project>
     <title>gl-water2d</title>
     <href>https://github.com/Erkaman/gl-water2d</href>
-    <img>/img/gallery/water-edit.png</img>
+    <img>/img/gallery/water-edit.jpg</img>
     <text>
       <p>
         A 2D water simulation based on Smoothed Particle Hydrodynamics
@@ -114,7 +114,7 @@
   <project>
     <title>gl-catmull-clark</title>
     <href>https://github.com/Erkaman/gl-catmull-clark</href>
-    <img>/img/gallery/subdivide.png</img>
+    <img>/img/gallery/subdivide.jpg</img>
     <text>
       <p>
         A reference implementation of <a href="https://en.wikipedia.org/wiki/Catmull%E2%80%93Clark_subdivision_surface">Catmull-Clark subdivision
@@ -125,7 +125,7 @@
   <project>
     <title>tess-opt</title>
     <href>https://github.com/Erkaman/tess-opt</href>
-    <img>/img/gallery/tess_opt.png</img>
+    <img>/img/gallery/tess_opt.jpg</img>
     <text>
       <p>
         This small application shows how we can use tessellation
@@ -140,7 +140,7 @@
   <project>
     <title>glsl-worley</title>
     <href>https://github.com/Erkaman/glsl-worley</href>
-    <img>/img/gallery/worley.png</img>
+    <img>/img/gallery/worley.jpg</img>
     <text>
       <p>
         A port of <a
@@ -157,7 +157,7 @@
   <project>
     <title>gl-rock</title>
     <href>https://github.com/Erkaman/gl-rock</href>
-    <img>/img/gallery/1000rocks.png</img>
+    <img>/img/gallery/1000rocks.jpg</img>
     <text>
       <p>
         A simple script that implements procedural generation of rock
@@ -170,7 +170,7 @@
   <project>
     <title>pnp-gui</title>
     <href>https://github.com/Erkaman/pnp-gui</href>
-    <img>/img/gallery/pnp-gui-rabbit.png</img>
+    <img>/img/gallery/pnp-gui-rabbit.jpg</img>
     <text>
       <p>
         pnp-gui implements a minimalistic Immediate Mode GUI toolkit
@@ -192,7 +192,7 @@
   <project>
     <title>glsl-godrays</title>
     <href>https://github.com/Erkaman/glsl-godrays</href>
-    <img>/img/gallery/scattering.png</img>
+    <img>/img/gallery/scattering.jpg</img>
     <text>
       <p>
         An implementation of a screen space-based volumetric light
@@ -206,7 +206,7 @@
   <project>
     <title>Bloxel - Developing a voxel game engine in Java using OpenGL</title>
     <href>http://www.cse.chalmers.se/~uffe/bachelor/kandidatarbetestartpaket/Final-Voxelspel.pdf</href>
-    <img>/img/gallery/03full_noise.png</img>
+    <img>/img/gallery/03full_noise.jpg</img>
     <text>
       <p>
         This is my bachelor's thesis, where we developed a voxel game
