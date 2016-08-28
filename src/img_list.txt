@@ -24,7 +24,7 @@
 /img/gallery/obstacles.png https://github.com/Erkaman/gl-water2d
 /img/gallery/sprinkler.png https://github.com/Erkaman/gl-water2d
 /img/gallery/cloth.png https://www.youtube.com/watch?v=scg33DHDnHc
-/img/gallery/deferred_shading.png https://mikolalysenko.github.io/regl/www/gallery/deferred_shading.js.html
+/img/gallery/deferred-shading.png https://mikolalysenko.github.io/regl/www/gallery/deferred_shading.js.html
 /img/gallery/line-primitives.png https://twitter.com/erkaman2/status/768773636098396160
 /img/gallery/minecraft.png https://mikolalysenko.github.io/regl/www/gallery/minecraft.js.html
 /img/gallery/planar-reflection.png https://www.youtube.com/watch?v=FUNAcjJHo8U
