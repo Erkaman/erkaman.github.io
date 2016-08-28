@@ -68,6 +68,11 @@ hr {
     margin-bottom: 3.5rem;
 }
 
+.footer hr {
+    margin-top: 1.9rem;
+    margin-bottom: 0.6rem;
+}
+
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
@@ -102,13 +107,14 @@ h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
     max-width: 90%;
 }
 
+.footer {
+    margin: auto;
+    text-align: center;
+}
 
 .footer ul li {
-    margin: 0;
-    padding: 0;
     list-style: none;
-    font-size: 0;
-    float: left;
+    display: inline-block;
 }
 
 
