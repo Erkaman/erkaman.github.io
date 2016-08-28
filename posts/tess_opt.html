@@ -380,18 +380,25 @@ are contained in the input array <code class="inline-code">tesPos</code>, and th
 know. However, by the TCS 4 new vertices were created(they are the pink
 circles in the image), and we do not yet know their positions nor
 their normals. Kindly enough, however, the barycentric coordinates of
-the vertices created through tessellation are sent to the TES. They are
-<code class="inline-code">(gl_TessCoord.x, gl_TessCoord.y, gl_TessCoord.z)</code>. For instance, the
-barycentric coordinates of the center vertex in the above image will
-be <code class="inline-code">(1/3,1/3,1/3)</code>.</p>
+the vertices created through tessellation are sent to the TES. They are</p>
+
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">gl_TessCoord</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">gl_TessCoord</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">gl_TessCoord</span><span class="p">.</span><span class="n">z</span><span class="p">)</span>
+</code></pre></div>
+
+<p>For instance, the barycentric coordinates of the center vertex in the
+above image will be <code class="inline-code">(1/3,1/3,1/3)</code>.</p>
 
 <p>But we can just use these barycentric coordinates to compute the
 positions and normals from <code class="inline-code">tesPos</code> and <code class="inline-code">tesNormal</code>(this makes sense,
 because recall that barycentric coordinates allow us to perform
 interpolation on a triangle.).</p>
 
-<p>To summarize, all that the line  <code class="inline-code">vec3 pos =
-lerp3D(tesPos[0],tesPos[1],tesPos[2]);</code> does is that it performs
+<p>To summarize, all that the line</p>
+
+<div class="codehilite"><pre><span></span><code><span class="k">vec3</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">lerp3D</span><span class="p">(</span><span class="n">tesPos</span><span class="p">[</span><span class="mo">0</span><span class="p">],</span><span class="n">tesPos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tesPos</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</code></pre></div>
+
+<p>does is that it performs
 barycentric interpolation to obtain the positions of all the vertices
 on the tessellated triangle.</p>
 

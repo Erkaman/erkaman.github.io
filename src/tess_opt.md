@@ -355,17 +355,26 @@ know. However, by the TCS 4 new vertices were created(they are the pink
 circles in the image), and we do not yet know their positions nor
 their normals. Kindly enough, however, the barycentric coordinates of
 the vertices created through tessellation are sent to the TES. They are
-`(gl_TessCoord.x, gl_TessCoord.y, gl_TessCoord.z)`. For instance, the
-barycentric coordinates of the center vertex in the above image will
-be `(1/3,1/3,1/3)`.
+
+```glsl
+(gl_TessCoord.x, gl_TessCoord.y, gl_TessCoord.z)
+```
+
+For instance, the barycentric coordinates of the center vertex in the
+above image will be `(1/3,1/3,1/3)`.
 
 But we can just use these barycentric coordinates to compute the
 positions and normals from `tesPos` and `tesNormal`(this makes sense,
 because recall that barycentric coordinates allow us to perform
 interpolation on a triangle.).
 
-To summarize, all that the line  `vec3 pos =
-lerp3D(tesPos[0],tesPos[1],tesPos[2]);` does is that it performs
+To summarize, all that the line
+
+```glsl
+vec3 pos = lerp3D(tesPos[0],tesPos[1],tesPos[2]);
+```
+
+does is that it performs
 barycentric interpolation to obtain the positions of all the vertices
 on the tessellated triangle.
 
