@@ -24,6 +24,10 @@ nav ul li {
     color: #333;
 }
 
+a {
+    text-decoration: none;
+}
+
 nav a {
     text-decoration: none;
 }

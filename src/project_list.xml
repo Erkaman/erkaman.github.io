@@ -132,7 +132,7 @@
         shaders to make faster fragment shaders, using the techniques
         described by Wang et al. in their paper Automatic
         Shader Simplification using Surface Signal
-        Approximation. You can more abut this in my <a
+        Approximation. You can read more abut this in my <a
         href="/posts/tess_opt.html">article</a>.
       </p>
     </text>
@@ -146,7 +146,7 @@
         A port of <a
         href="http://webstaff.itn.liu.se/~stegu/GLSL-cellular/GLSL-cellular-notes.pdf">Stephan
         Gustavson's</a> implementation of Worley noise to WebGL
-        shaders. Worley noise can be used for cool many things, and one
+        shaders. Worley noise can be used for many cool things, and one
         possible application is procedural textures.
       </p>
       <p>
@@ -161,7 +161,7 @@
     <text>
       <p>
         A simple script that implements procedural generation of rock
-        meshes. The script is used to implement a demo that render
+        meshes. The script is used to implement a demo that renders
         1000 unique rocks. Included is also an editor for making your own
         procedural rocks.
       </p>
@@ -181,7 +181,7 @@
         single line of HTML code.
       </p>
         <p>
-        I have used to the toolkit in several of my other projects,
+        I have used the toolkit in several of my other projects,
         such as <a
         href="https://github.com/Erkaman/gl-water2d">gl-water2d</a>
         and <a
