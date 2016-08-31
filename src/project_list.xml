@@ -1,7 +1,7 @@
 <list>
   <project>
     <title>regl</title>
-    <href>https://github.com/mikolalysenko/regl</href>
+    <href>https://github.com/regl-project/regl</href>
     <img>/img/gallery/regl.jpg</img>
     <text>
       <p>
@@ -57,7 +57,7 @@
   </project>
   <project>
     <title>deferred_shading.js</title>
-    <href>https://mikolalysenko.github.io/regl/www/gallery/deferred_shading.js.html</href>
+    <href>https://regl-project.github.io/regl/www/gallery/deferred_shading.js.html</href>
     <img>/img/gallery/deferred-shading.jpg</img>
     <text>
       <p>

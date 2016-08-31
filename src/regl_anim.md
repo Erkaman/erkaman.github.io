@@ -1,7 +1,7 @@
 # I made some weird animations in WebGL
 
 Using the WebGL framework
-[regl](https://github.com/mikolalysenko/regl), I made some weird
+[regl](https://github.com/regl-project/regl), I made some weird
 animations. All of them are basically  just using trigonometric functions to
 create patterns in a fragment shader. Check out the source code if
 you are interested.
