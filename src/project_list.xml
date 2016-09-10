@@ -44,6 +44,20 @@
     </text>
   </project>
   <project>
+    <title>shadow-volume.js</title>
+    <href>https://www.youtube.com/watch?v=oO0LJWy5COg</href>
+    <img>/img/gallery/shadow-volume.jpg</img>
+    <text>
+      <p>
+        A reference implementation of shadow volumes in WebGL using
+        regl that I implemented with the guidance of <a
+        href="https://github.com/mikolalysenko/">Mikola
+        Lysenko</a>. The main purpose was to demonstrate advanced
+        usage of the stencil buffer in regl.
+      </p>
+    </text>
+  </project>
+  <project>
     <title>planar-reflection.js</title>
     <href>https://www.youtube.com/watch?v=FUNAcjJHo8U</href>
     <img>/img/gallery/planar-reflection.jpg</img>

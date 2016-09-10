@@ -28,6 +28,7 @@
 /img/gallery/line-primitives.jpg https://twitter.com/erkaman2/status/768773636098396160
 /img/gallery/minecraft.jpg https://regl-project.github.io/regl/www/gallery/minecraft.js.html
 /img/gallery/planar-reflection.jpg /projects.html#planar-reflection.js
+/img/gallery/shadow-volume.jpg https://www.youtube.com/watch?v=oO0LJWy5COg
 /img/gallery/point-light-shadow.jpg https://regl-project.github.io/regl/www/gallery/point-light-shadow.js.html
 /img/gallery/stencil-transition.jpg https://twitter.com/erkaman2/status/760785285739319296
 /img/gallery/wireframe.jpg /projects.html#wireframe-world
