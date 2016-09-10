@@ -35,3 +35,4 @@
 /img/gallery/rainbow.jpg https://github.com/Erkaman/regl-anim
 /img/gallery/regl-cnn.jpg /projects.html#regl-cnn
 /img/gallery/smiley.jpg https://github.com/Erkaman/smiley
+/img/gallery/regl-fire.jpg https://github.com/Erkaman/regl-fire
