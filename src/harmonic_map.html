@@ -154,10 +154,9 @@ has both a $u$ and $v$ value, and we denote these values $\vec{v_i} =
 all edge indices. So that if there is an edge between the vertices
 with indices $i$ and $j$, then $(i,j) \in E$ and $(j, i) \in E$. Now we define the function
 
-\begin{equation*}
-E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E}
-w_{ij} |\vec{v}_j - \vec{v}_i|^2
-\end{equation*}
+\begin{align*}
+E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2
+\end{align*}
 
 So we are basically doing a weighted sum over all vertices based on
 the distances between the vertices that are connected by an edge. And
@@ -203,12 +202,12 @@ papers all the time.
 So now I will show how step 2 in the recipe is implemented. First I
 expand the squared vector norm:
 
-\begin{equation}
-E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i, j)\in E}
-w_{ij} |\vec{v}_j - \vec{v}_i|^2 = \frac{1}{2} \sum_{(i, j)\in E}
-w_{ij} ((u_j - u_i)^2 + (v_j - v_i)^2)
+\begin{align}
+E(\vec{v}_1,\dots,\vec{v}_{n}) =& \nonumber \\
+& \frac{1}{2} \sum_{(i, j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2 = \nonumber\\
+& \frac{1}{2} \sum_{(i, j)\in E} w_{ij} ((u_j - u_i)^2 + (v_j - v_i)^2)
 \label{eq:ebefore}
-\end{equation}
+\end{align}
 
 
 Now, the next step is a bit non-obvious. And most the literature don't
