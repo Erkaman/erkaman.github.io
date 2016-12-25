@@ -13,19 +13,37 @@ def get_html_file(md_file):
 
 def create_post(input_file):
 
-    with open(input_file, 'r') as f:
-        markdown_source=f.read()
 
     with open('src/template.html', 'r') as f:
         template=f.read()
 
-    # process markdown.
-    article_src = '<div class="container">' + markdown2.markdown(markdown_source, extras=["fenced-code-blocks","tables"]) + '</div>'
-#    article_src = markdown2.markdown(markdown_source, extras=["fenced-code-blocks","tables"])
+    if input_file[-5:] == '.html':
 
-    src = template.format(src=article_src)
+        with open(input_file, 'r') as f:
+            html_source=f.read()
 
-    output_file = get_html_file(input_file)
+        # process markdown.
+        article_src = '<div class="container">' + html_source + '</div>'
+        src = template.format(src=article_src)
 
-    with open(output_file, 'w') as f:
-        f.write(src)
+        output_file = "posts/"+input_file[4:-5] + '.html'
+
+        print output_file
+
+        with open(output_file, 'w') as f:
+            f.write(src)
+
+    else:
+
+        with open(input_file, 'r') as f:
+            markdown_source=f.read()
+
+        # process markdown.
+        article_src = '<div class="container">' + markdown2.markdown(markdown_source, extras=["fenced-code-blocks","tables"]) + '</div>'
+
+        src = template.format(src=article_src)
+
+        output_file = get_html_file(input_file)
+
+        with open(output_file, 'w') as f:
+            f.write(src)
