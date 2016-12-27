@@ -1,10 +1,6 @@
 
-$\newcommand{\myr}{\mathbb{R}}$
-$\newcommand{\myrt}{\mathbb{R}^3}$
-$\newcommand{\myrs}{\mathbb{R}^2}$
 
-$\newcommand{\vec}[1]{\mathbf{#1}}$
-<h1>Harmonic Mapping: A Tutorial and Introduction</h1>
+<h1>Automatic UV mapping using Harmonic Mapping: A tutorial and Introduction</h1>
 
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config(
@@ -18,28 +14,36 @@ $\newcommand{\vec}[1]{\mathbf{#1}}$
   src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
 </script>
 
-<p>A week, published a reference implemenation of automatic UV mapping
-using harmonic mapping. In the README of that repo, I promised that I
-would write an article that explains how the code works. So in this
-  article I shall do precisely that.</p>
+
+
+<p>$\newcommand{\myr}{\mathbb{R}}\newcommand{\myrt}{\mathbb{R}^3}\newcommand{\myrs}{\mathbb{R}^2}\newcommand{\vec}[1]{\mathbf{#1}}$Some
+  weeks ago, I
+  published <a href="https://github.com/Erkaman/auto_uv_map">a
+  reference implementation of automatic UV mapping</a> using harmonic
+  mapping. In the README of that repo, I promised that I would write
+  an article that explains how the code works. So in this article I
+  shall do precisely that.</p>
 
 <p>
 
-  Before I begin I just want to warn you that I have mostly a computer
+  Before I begin, I just want to warn you that I have mostly a computer
   science background, and mathematics is not my main area of
-  expertise. As a result of this I may sometimes acidentaly write
+  expertise. As a result of this I may sometimes accidentally write
   things that are not entirely mathematically correct. But anyone who finds any such
   mistakes are very much welcome to email me corrections
 
 </p>
 
-<h2>The Name of the Game</h2>
+<p><a href="/img/harmonic_map/mask_gallery.png"><img class="article-img" src="/img/harmonic_map/mask_gallery.png"
+alt="Mask Gallery"
+title="Mask Gallery"
+/></a></p>
 
-TODO: image of uv unmapped mesh here.
+<h2>The Name of the Game</h2>
 
 <p>
 But before I can describe automatic UV mapping, I think it is
-necessary that we precisely understand what is UV mapping. UV mapping is
+necessary that we precisely understand what UV-mapping is. UV-mapping is
 simply about finding a mapping from three dimensional space into two
 dimensional space. Given any point on the surface of some mesh in three dimensional
 space, we want to be able to find some corresponding point in two
@@ -47,14 +51,26 @@ dimensional space. Let us denote this mapping by the function
 $f$. Since $f$ maps from the three dimensional space to two
 dimensional space, the type of $f$ is $\myrt \mapsto
 \myrs$.
+
 </p>
+
+<p>
+
+  A reason why we would want to find such a mapping is that we want to
+  apply a texture onto the mesh. But a mesh is a three-dimensional
+  object, and a texture is a two-dimensional object, and so we need to
+  find some way to flatten to the mesh into the second dimension, if
+  we want to use that texture.
+
+  </p>
 
 <p>
 In UV-mapping we implement this mapping follow: In every vertex, in
 addition to storing the three dimensional coordinates $(x,y,z) \in
 \myrt$, we also store the corresponding two dimensional coordinates
-$(u,v) \in \myrs$. With that, we can easily for some vector $\vec{p} \in
-\myrt$ evaluate $f(\vec{p})$ as follows: $\vec{p}$ since is on the
+$(u,v) \in \myrs$. With that, we can easily for some point on the mesh
+surface denoted $\vec{p} \in
+\myrt$ evaluate $f(\vec{p})$ as follows: since $\vec{p}$ is on the
 surface of the mesh, $\vec{p}$ will be inside some triangle on the
 mesh. We can now use the barycentric coordinates of $\vec{p}$
 within that triangle to interpolate between the UV-coordinates of the
@@ -66,32 +82,57 @@ The above procedure can easily be implemented in existing graphics
 APIs. The barycentric interpolation can be implemented simply by
 outputting the UV-coordinates of every vertex from the vertex
 shader. Then, for the fragments evaluated in the fragment shader, every
-fragment will have the interpolated UV coordinates.
+fragment will now receive the interpolated UV coordinates.
+</p>
+
+<p>
+
+  The above procedure is exact same way that is used to store normals
+  in a mesh. Usually, you do not store the normals for every single
+  point on the mesh, but you only store the normals at the
+  vertices. Because if you send those vertex normals out from the
+  vertex shader, then the fragment shader will receive the normal that
+  results from from interpolating between the normals at the triangle
+  vertices.
+
 </p>
 
 <p>
 The attractive part of UV mapping is that it is dead simple to
 implement, and it is fast, assuming that you have already performed
 the UV mapping process. However, the main problem in the technique is
-exactly how we obtain the mapping.
+exactly how we obtain the mapping. To be more precise, the difficulty
+lies in finding a <i>good</i> UV-mapping that has little
+distortion.
 </p>
 
 <p>
-As can be seen in the image above, the UV mapped vertices in $\myrs$ form
-triangles that correspond to the triangles of the original mesh in
-$\myrt$. For an UV mapping to be considered good, we want that the
-original triangles correspond as well as possible to the UV-mapped
-triangles. Because if some triangle on $S$ is large, while its
-correponding triangle in $\Omega$ is small, then there will not be
-enough pixels for that large triangle when applying a texture onto
-that mesh. So the texture would in that case become blurry!
+
+  I in the below image, to the left we can see a mask that we wish to
+  perform UV-mapping on. And on the right we can see a UV-map of that
+  mask constructed with harmonic mapping. I will be using this mask as
+  an example throughout the article.
+</p>
 
 <p><a href="/img/harmonic_map/mask_arrow.svg"><img class="article-img" src="/img/harmonic_map/mask_arrow.png"
 alt="Mask Arrow"
 title="Mask Arrow"
 /></a></p>
 
-TOOD: image that illustrates blurry texture.
+<p>
+
+In the above image, we can see also that for every triangle in the UV
+map, there is a corresponding triangle in the original mesh. For an UV
+mapping to be considered good, we want that the original triangles
+correspond as well as possible to the UV-mapped triangles. Because if
+some triangle in the original mesh is large, while its corresponding
+triangle in the UV-map is small, then there will not be enough pixels
+for that large triangle when applying a texture onto that mesh. So the
+texture would in that case become blurry! And we can see in the above
+image that harmonic mapping does a pretty good job for the mask mesh;
+because we can see that triangle that form the lips in the original mesh are
+smaller than the rest, and also in the UV map are those triangles of
+the lips smaller.
 
 </p>
 
@@ -101,13 +142,15 @@ TOOD: image that illustrates blurry texture.
 <p>
 Now I will implement one simple technique for finding such a
 mapping. There are several properties we would want such a mapping to
-have.
+have:
 
-ONE: isometric. The lengths of the triangle edges are preserved by the
-mapping.
+<ol>
+<li><b>isometric</b>: The lengths of the triangle edges are preserved by the
+  mapping. </li>
+<li><b>conformal:</b> The angles between the triangle edges are preserved by
+the mapping.</li>
+</ol>
 
-TWO: conformal. The angles between the triangle edges are preserved by
-the mapping.
 </p>
 
 <p>
@@ -119,14 +162,16 @@ triangles. Obviously, we want to minimize the distortion.
 
 <p>
 Harmonic mapping works as follow: let us define a mathematical
-function whose value is small when there is little distortion. Let us
-also assume that there are couple of vertices that form a boundary on
-the mesh. The edges that are only adjacent to only one face are the
-boundary edges, and all vertices that are at the endpoints of these
-forms the boundary. For harmonic mapping to work, we must place these
-vertices onto a convex polygon. In other words, their UV-coordinates must be on
-some convex polygon. For simplicity, let us a put them on a
-circle.
+function whose value is small when there is little distortion. First,
+let us also assume that there are couple of vertices that form a
+boundary on the mesh(what happens if we can't find any boundary? I will
+explain that later). The edges that are only adjacent to only one
+face are the boundary edges, and all vertices that are at the
+endpoints of these forms the boundary. For harmonic mapping to work,
+we must place these vertices onto a convex polygon. In other words,
+their UV-coordinates must be on some convex polygon. For simplicity,
+let us a put them on a unit circle. Below we can see the boundary formed by
+the mask mesh.
 
 <p><a href="/img/harmonic_map/mask_border_together2.svg"><img class="article-img" src="/img/harmonic_map/mask_border_together.png"
 alt="Mesh Border"
@@ -137,22 +182,25 @@ title="Mesh Border"
 
 <p>
 
-At this point, we know the UV-coordinates of the border vertices, and
-we need to know the values for the interior vertices. To find those,
-we will define a function that is minimal when the UV-coordinates of
-the interior vertices are chosen such that the distortion is minimal.
+At this point, we know the UV-coordinates of the border vertices, but
+we need to know the values for the interior vertices. So we want the
+UV-coordinates of the vertices within the red circle above. To find
+those, we will define a function that is minimal when the
+UV-coordinates of the interior vertices are chosen such that the
+distortion is minimal.
 
 </p>
 
 <p>
-Let the UV-coordinates of the interior vertices be $(\vec{v_1},
-\vec{v_2},\dots,\vec{v_n})$ and the UV-coordinates of the boundary
-vertices be $(\vec{v}_{n+1},\dots,\vec{v}_{n+b})$. So that there are
-$b$ boundary vertices and $n$ interior vertices. Where every vertex
-has both a $u$ and $v$ value, and we denote these values $\vec{v_i} =
-(u_i, v_i)$. Let $E$ be the set of
-all edge indices. So that if there is an edge between the vertices
-with indices $i$ and $j$, then $(i,j) \in E$ and $(j, i) \in E$. Now we define the function
+Now let me define a bunch of stuff. Let the UV-coordinates of the
+interior vertices be $(\vec{v_1}, \vec{v_2},\dots,\vec{v_n})$ and the
+UV-coordinates of the boundary vertices be
+$(\vec{v_{n+1}},\dots,\vec{v_{n+b}})$. So that there are $b$ boundary
+vertices and $n$ interior vertices. Where every vertex has both a $u$
+and $v$ value, and we denote these values $\vec{v_i} = (u_i,
+v_i)$. Let $E$ be the set of all edge indices. So that if there is an
+edge between the vertices with indices $i$ and $j$, then $(i,j) \in E$
+and $(j, i) \in E$. Now we define the function
 
 \begin{align*}
 E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2
@@ -164,7 +212,7 @@ we multiply by the factor $\frac{1}{2}$, because the sum counts every
 edge twice(can you see why?), so we need to divide by two to get the
 correct sum. If we cleverly choose the values of the weights $w_{ij}$,
 minimizing $E$ will yield us a mappping that strives to be
-conformal. I later will describe how to choose the weights. But for
+conformal. Later, I will describe how to choose the weights. But for
 now, I will show how we can minimize $E$. I will follow the recipe
 
 </p>
@@ -172,8 +220,8 @@ now, I will show how we can minimize $E$. I will follow the recipe
 <ol>
   <li>We start with the expression for $E$</li>
   <li>Lots of math happens here in this step.</li>
-  <li>We end up with two matrix equations $\vec{Mu=b_u}$ and
-  $\vec{Mv=b_v}$, where $\vec{u}$ and $\vec{v}$ are the values of the
+  <li>We end up with two matrix equations $M\vec{u=\bar u}$ and
+  $M\vec{v= \bar v}$, where $\vec{u}$ and $\vec{v}$ are the values of the
   UV-coordinates that minimize $E$. Now just solve both equations with
   some linear solver(say, using a direct solver with <a href="https://en.wikipedia.org/wiki/LU_decomposition">LU decomposition
 </a> or a iterative solver based on <a href="https://en.wikipedia.org/wiki/Conjugate_gradient_method">Conjugate gradient</a>) and we are done.</li>
@@ -187,12 +235,7 @@ specific for the problem at hand, and there are often no solvers that
 can help in solving them. However, if we convert the problem into well
 a well known problem, here the problem of solving a linear system,
 then we can simply feed the problem into some solver for that standard
-problem.
-
-</p>
-
-<p>
-If you have not seen this kind of pattern before, be sure to
+problem. If you have not seen this kind of pattern before, be sure to
 rememeber it! This is a very powerful pattern and used in scientific
 papers all the time.
 </p>
@@ -212,7 +255,7 @@ E(\vec{v}_1,\dots,\vec{v}_{n}) =& \nonumber \\
 
 Now, the next step is a bit non-obvious. And most the literature don't
 really explain this part at all, so I shall carefully go
-through it. Observe that $E$ is a function of variables $2n$:
+through it. Observe that $E$ is a function of $2n$ variables:
 $u_1,\dots,u_n$ and $v_1,\dots,v_n$. We can compute the partial
 derivative of $E$ with respect to all the variables. Those partial
 derivatives are
@@ -225,7 +268,7 @@ derivatives are
 And we know from calculus, that $E$ is either at a maximma, a minima or a
 saddle point at the point where <i>all</i> the partial derivatives are
 zero. However, I claim that $E$ can <i>only</i> be minimal at that
-point! I shall give an inuitive argument for this:
+point! I shall attempt giving an intuitive argument for this.
 
 Observe that $E$ is just a sum of terms on the form
 
@@ -275,7 +318,10 @@ $y$ must look like this:
 
 </p>
 
-INSERT LATEX IMAGE HERE.
+<p><a href="/img/harmonic_map/uj_plot.svg"><img class="article-img" src="/img/harmonic_map/uj_plot_copy.png"
+alt="uj plot"
+title="uj plot"  width="52%" height="52%"
+/></a></p>
 
 <p>
 
@@ -314,7 +360,7 @@ $\eqref{eq:ebefore}$. But I shall just show to do it in terms of
 $u_1,\dots,u_n$, because the process is identical for
 $v_1,\dots,v_n$.
 
-Ok, so let $u_i$ be an arbitrary UV-coordinate. It will be one of
+Ok, so let $u_i$ be an arbitrary U-coordinate; it will be one of
 $u_1,\dots,u_n$. Let us find $\frac{\partial E}{\partial u_i}$. Observe,
 again, that $E$ is just a sum of terms in the form:
 
@@ -326,7 +372,7 @@ w_{ij}((u_j - u_i)^2 + (v_j - v_i)^2)
 But $(v_j−v_i)^2$ will be considered a constant when we are partially
 differenriating with respect to $u_i$, so it will disappear. And we
 apply the chain rule to differentiate $(u_j - u_i)^2$, and this causes
-the the two to be moved down, and the inner derivative is just 1, so
+the $2$ to be moved down, and the inner derivative is just 1, so
 
 \begin{equation*}
 \frac{\partial E}{\partial u_i} = \frac{1}{2} \sum_{j \in N(i)}
@@ -365,8 +411,10 @@ summarize, we have
 u_i &= \cos\theta_i, &i = &n+1,\dots,n+b
 \end{align*}
 
-We now have $n+b$ equations of $n+b$ variables. Let $\vec{\bar u}$ be the right-hand of all
-those equations. It is a $(n+b)\times 1$ column vector where
+We now have $n+b$ equations of $n+b$ variables. Now let us translate
+this above linear system in a matrix equation of the
+form $M\vec{u=\bar u}$. Let $\vec{\bar u}$ be the right-hand side of
+all those equations. It is a $(n+b)\times 1$ column vector where
 
 \begin{align*}
 \vec{\bar u_i} &= 0, &i = &1,\dots,n \\
@@ -375,12 +423,15 @@ those equations. It is a $(n+b)\times 1$ column vector where
 
 And we already know that $\vec{u}$ is a $(n+b)\times 1$ column vector
 such that $\vec{u} = (u_1,\dots,u_{n+b})$. Let us now find a matrix
-$M$ that captures the left-hand side of the equations above, so that
-solving the linear system $M\vec{u=\bar u}$ would yield us the
-U-coordinates that minimizes the harmonic energy. Note row $i$ in
+$M$ that expresses the left-hand side of the equations above. Note that row $i$ in
 the matrix $M$ should capture all the information on the
-left-hand side of equation $i$. Let us first look at
-already know the border vertices. But we already know that these are
+left-hand side of equation $i$.
+
+</p>
+
+<p>
+
+Let us first deal with the boundary vertices. We already know that these are
 projected onto the unit circle, so we can simply set $m_{ii}=1$ and
 let all other entires in row $i$ be 0, when $i = n+1,\dots,n+b$. This
 has the result that $u_i$ is assigned to $\cos\theta_i$ for the border
@@ -388,16 +439,16 @@ vertices, which is just what we want.
 
 </p>
 
+<p>
+
 Now let us see how we deal with the internal vertices. I will explain
 through an example: Let $E=\{0,1,2,3,4,5,6\}$, let $i=0$ and let $N(i)=\{1,2,3\}$. What does
 row $i$ in $M$ look like? Let us expand the left-hand side for $i$:
 
 \begin{align*}
-\sum_{j \in N(i)} w_{ij} (u_j - u_i)
-&= \\
-\sum_{j \in \{1,2,3\} } w_{0j} (u_j - u_0)
-&= \\
-&= w_{01}u_1 + w_{02}u_2 + w_{03}u_3 - (w_{01} + w_{02} + w_{03})u_0
+&\sum_{j \in N(i)} w_{ij} (u_j - u_i) = \\
+&\sum_{j \in \{1,2,3\} } w_{0j} (u_j - u_0) = \\
+& w_{01}u_1 + w_{02}u_2 + w_{03}u_3 - (w_{01} + w_{02} + w_{03})u_0
 \end{align*}
 
 So this means that for row 0, $m_{00}$ is the negative sum of all the
@@ -408,6 +459,157 @@ the remaining columns we have $m_{04} = m_{05} = m_{06} = 0$. So for
 the vertices that are not connected to $i$, then the corresponding
 entry in the row is 0.
 
+</p>
+
+<p>
 If we now repeat the same process for the remaining rows
-$i=1,\dots,n$, we will have formulated the matrix $M$, and can then
-solve the linear system and find the UV-coordinates!
+$i=1,\dots,n$, we will have formulated the matrix $M$. We can then
+solve the linear system $M\vec{u=\bar u}$ to find $\vec{u}$, the
+U-coordinates of both the internal and boundary vertices. And we can
+find the V-coordinates by doing the same process as above but for $v$,
+formulating the linear system $M\vec{v=\bar v}$ and solving.
+</p>
+
+<h2>Choosing the Weights</h2>
+
+<p>
+
+One thing I have procrastinated explaining thus far is how to choose
+the weights $w_{ij}$. There are several kinds of weights that can be
+used, but in my implementation I used the <i> discrete harmonic
+  weights</i>. Recall that the weights are assigned to every single
+edge in the harmonic energy:
+
+\begin{equation*}
+E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2
+\end{equation*}
+
+every edge $(i,j)$ will be adjacent to two triangles. We now define the angles
+$\alpha$ and $\beta$ as in the figure below.
+
+</p>
+
+<p><a href="/img/harmonic_map/edge_weight.svg"><img class="article-img" src="/img/harmonic_map/edge_weight.png"
+alt="Harmonic Weights"
+title="Harmonic Weights"  width="40%" height="40%"
+/></a></p>
+
+<p>
+And those angles are taken from the original mesh, so they are constant! The
+harmonic weights are now simply defined as
+
+\begin{equation*}
+w_{ij} = \frac{\cot\alpha + \cot\beta}{2}
+\end{equation*}
+
+If you haven't seen $\cot$ before, it is the cotangent function, which is
+simply the inverse tangent function, so $\cot\alpha =
+\frac{\cos\alpha}{\sin\alpha}$.
+
+</p>
+<p>
+
+Now, why should be define the weights in this way? The
+cotangent-weights comes from the discretization of the
+Laplace-Beltrami operator. The Laplace-Beltrami operator is simply the
+Laplace operator generalized to operate on functions defined on
+surfaces.  The discretization of the Laplace-Beltrami operator allows
+you to take the Laplacian of the surface of a triangular
+mesh. Basically, the weights fall out during the derivation of the
+discretized Laplace-Beltrami operator. You can find a full derivation
+of the operator in chapter 3 of <a href="#refone">[1]</a>. But you can
+also find some hints on how to derive it
+in <a href="#refthree">[3]</a> and <a href="#reffour">[4]</a>.
+
+</p>
+<p>
+
+If I were to write down the full derivation here, the article would
+basically quadruple in size, and I'm too lazy to write that much text,
+so I will instead now attempt to offer an intuitive explanation for this choice of
+weights.
+
+Observe that we the cotangent weights strive to be conformal, meaning
+that they try to create a mapping that, as best as possible, preserves
+the angles from the original mesh. Now, note that there be triangles
+with acute angles, and triangles with less acute angles:
+
+</p>
+
+<p><a href="/img/harmonic_map/triangle_angle.svg"><img class="article-img"
+src="/img/harmonic_map/triangle_angle.png"
+alt="triangle types"
+title="triangle types"  width="52%" height="52%"
+/></a></p>
+
+<p>
+
+  And again, note that $E$ is just a sum of terms on the form $w_{ij}
+|\vec{v}_j - \vec{v}_i|^2$. Now, if the angles a very acute, like in
+the second triangle above, then we want the weight to have a large
+value for the edge between the triangles. Why? Because if $w_{ij}$ is
+large, then we will need make sure that $|\vec{v}_j - \vec{v}_i|^2$ is
+small, if we want to minimize $E$. In other words, if the weight is
+large, then the linear solver(that solves the matrix equation) will be
+very inclined towards pushing the UV-mapped vertices towards each
+other, thus minimizing the edge length. If we minimize the edge
+  length, the angles UV-mapped triangles will also be acute, just the
+  like acute triangles in the original mesh.
+
+  </p>
+
+<p>
+  In the same manner, we want the weight to be small if the angles are
+  large, like in the first image above. Because then the linear solver
+  will not be very inclined to minimize $|\vec{v}_j - \vec{v}_i|^2$,
+  because since the weight is small, $$w_{ij} |\vec{v}_j -
+  \vec{v}_i|^2$ is already pretty small. Thus, if the angles are
+  large, then the linear solver will not be as inclined to push the
+  vertices away from each other in the UV-map, and so the larger
+  angles will be preserved in the UV-map.
+</p>
+
+<p>
+  So, if we make the weight fulfill the requirements above, we will
+  obtain an UV-mapping that strives to be conformal. And it turns out
+  that the cotanget-weight fulfills these requirements very
+  well. Because observe the graph of $cot x$
+</p>
+
+
+<p><a href="/img/harmonic_map/cotan.svg"><img class="article-img"
+src="/img/harmonic_map/cotan.png"
+alt="cotan"
+title="cotan"  width="52%" height="52%"
+/></a></p>
+
+<p>
+  We can see that for small angles of $x$, \$cot(x)$ is very large,
+  but for larger angles it goes towards zero. Just like we
+  want. However, we can also see that if $x \ge \frac{\pi}{2}$, then
+  $\cot(x)\le 0$. So for obtuse angles, the cotangent weights may
+  actually evaluate to negative values! This is not good, because
+  above, we relied on the fact the weights are positive when deriving
+  the matrix equation the minimizes $E$. However, in practice, this is
+  not a good big deal, because we can just clamp the cotangent weights
+  so that they are greater than or equal to zero.
+</p>
+
+<h2>References</h2>
+
+<p id="refone">
+   [1] Mario Botsch, Leif Kobbelt, Mark Pauly, Pierre Alliez, Bruno Lévy, "Polygon Mesh Processing"
+</p>
+
+<p id="reftwo">
+   [2] Kai Hormann, Bruno Lévy, Alla Sheffer, <a href="http://alice.loria.fr/publications/papers/2007/SigCourseParam/param-course.pdf">"Mesh Parameterization, Theory and Practice"</a>
+</p>
+
+<p id="refthree">
+   [3] Keenan
+   Crame, <a href="https://www.cs.cmu.edu/~kmcrane/Projects/DDG/">"Discrete Differential Geometry: An Applied Introduction"</a>
+</p>
+
+<p id="reffour">
+   [4] Justin Solomon, Keenan Crane, Etienne Vouga, <a href="https://www.cs.cmu.edu/~kmcrane/Projects/Other/SwissArmyLaplacian.pdf">"Laplace-Beltrami: The Swiss Army Knife of Geometry Processing"</a>
+</p>
