@@ -40,3 +40,4 @@
 /img/gallery/physics.jpg https://twitter.com/erkaman2/status/775043341998231552
 /img/gallery/dawn.png https://github.com/Erkaman/cloud_gen
 /img/gallery/blue_sky.png https://github.com/Erkaman/cloud_gen
+/img/gallery/spiky.png https://github.com/Erkaman/spiky-anim

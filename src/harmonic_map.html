@@ -1,5 +1,4 @@
 
-
 <h1>Automatic UV mapping using Harmonic Mapping: A tutorial and Introduction</h1>
 
 <script type="text/x-mathjax-config">
@@ -173,7 +172,7 @@ their UV-coordinates must be on some convex polygon. For simplicity,
 let us a put them on a unit circle. Below we can see the boundary formed by
 the mask mesh.
 
-<p><a href="/img/harmonic_map/mask_border_together2.svg"><img class="article-img" src="/img/harmonic_map/mask_border_together.png"
+<p><a href="/img/harmonic_map/mask_border_together.svg"><img class="article-img" src="/img/harmonic_map/mask_border_together.png"
 alt="Mesh Border"
 title="Mesh Border"
 /></a></p>
@@ -300,7 +299,8 @@ $B = 2u_iw_{ij}$ and $A=w_{ij}$. And then we get
 y = Au_j^2 + Bu_j + C
 \end{equation*}
 
-Where all of $A$, $B$ and $C$ are constant. We can see that $y$ is the
+We do these assignments just to make the expression for $y$ less
+unwieldy. We can see that $y$ is the
 equation of a second grade equation. So $y$ is now either a
 hill-shaped or a valley-shaped parabola. But since $w_{ij} > 0$ we
 have $A > 0$, and therefore
@@ -309,7 +309,7 @@ have $A > 0$, and therefore
 \frac{\partial^2 E}{\partial v_j^2} = 2A > 0
 \end{equation*}
 
-so second derivative is positive! But that means that if there is some
+so the second derivative is positive! But that means that if there is some
 extrema at some point, that means it must be a minima. But since
 $y$ is a second grade equation it has exactly one extrema, and so we must have that $y$
 has exactly one minimum point! And we find that point by finding the
@@ -356,7 +356,7 @@ derivatives are zero!
 <p>
 
 So let us then find the partial derivatives of equation
-$\eqref{eq:ebefore}$. But I shall just show to do it in terms of
+$\eqref{eq:ebefore}$. But I shall just show how to do it in terms of
 $u_1,\dots,u_n$, because the process is identical for
 $v_1,\dots,v_n$.
 
@@ -402,7 +402,8 @@ harmonic energy, then for all $i=1,\dots,n$ we must have
 because then $E$ is minimal. However, we also know that all the
 boundary vertices have been placed in a unit circle. So we can
 describe all the boundary vertices by polar coordinates as
-$(u_i,v_i)=(\cos\theta_i, \sin\theta_i), i=n+1,\dots,n+b$. To
+$(u_i,v_i)=(\cos\theta_i, \sin\theta_i), i=n+1,\dots,n+b$ and $\theta
+\in [0,2\pi]$. To
 summarize, we have
 
 \begin{align*}
@@ -412,7 +413,7 @@ u_i &= \cos\theta_i, &i = &n+1,\dots,n+b
 \end{align*}
 
 We now have $n+b$ equations of $n+b$ variables. Now let us translate
-this above linear system in a matrix equation of the
+this above linear system into a matrix equation of the
 form $M\vec{u=\bar u}$. Let $\vec{\bar u}$ be the right-hand side of
 all those equations. It is a $(n+b)\times 1$ column vector where
 
@@ -422,10 +423,11 @@ all those equations. It is a $(n+b)\times 1$ column vector where
 \end{align*}
 
 And we already know that $\vec{u}$ is a $(n+b)\times 1$ column vector
-such that $\vec{u} = (u_1,\dots,u_{n+b})$. Let us now find a matrix
-$M$ that expresses the left-hand side of the equations above. Note that row $i$ in
-the matrix $M$ should capture all the information on the
-left-hand side of equation $i$.
+such that $\vec{u} = (u_1,\dots,u_{n+b})$. So it is the vector of the
+U-coordinates of all the vertices. Let us now find a matrix $M$ that
+expresses the left-hand side of the equations above. Note that row $i$
+in the matrix $M$ should capture all the information on the left-hand
+side with respect to $i$.
 
 </p>
 
@@ -433,16 +435,19 @@ left-hand side of equation $i$.
 
 Let us first deal with the boundary vertices. We already know that these are
 projected onto the unit circle, so we can simply set $m_{ii}=1$ and
-let all other entires in row $i$ be 0, when $i = n+1,\dots,n+b$. This
+let all other entires in row $i$ in $M$ be 0, when $i = n+1,\dots,n+b$. This
 has the result that $u_i$ is assigned to $\cos\theta_i$ for the border
-vertices, which is just what we want.
+vertices, which is just what we want. Because we already know the
+U-coordinates of the border vertices, because we projected them onto the
+unit circle in the beginning.
 
 </p>
 
 <p>
 
 Now let us see how we deal with the internal vertices. I will explain
-through an example: Let $E=\{0,1,2,3,4,5,6\}$, let $i=0$ and let $N(i)=\{1,2,3\}$. What does
+through a toy example: Let all vertices be $\{0,1,2,3,4,5,6\}$, let
+$i=0$ and let the neighbours be $N(i)=\{1,2,3\}$. What does
 row $i$ in $M$ look like? Let us expand the left-hand side for $i$:
 
 \begin{align*}
@@ -451,10 +456,11 @@ row $i$ in $M$ look like? Let us expand the left-hand side for $i$:
 & w_{01}u_1 + w_{02}u_2 + w_{03}u_3 - (w_{01} + w_{02} + w_{03})u_0
 \end{align*}
 
-So this means that for row 0, $m_{00}$ is the negative sum of all the
+So, $m_{00}$ is the negative sum of all the
 weights of the adjacent edges. And $m_{01}=w_{01}$, $m_{02}=w_{02}$
 and $m_{03}=w_{03}$. Meaning that for the adjacent edges, the entry in
-the matrix is just the weight for those adjacent edges. Finally, for
+the matrix is just the weight for those adjacent edges. Finally, since
+$u_4$, $u_5$ and $u_6$ doesn't appear in the above expression, for
 the remaining columns we have $m_{04} = m_{05} = m_{06} = 0$. So for
 the vertices that are not connected to $i$, then the corresponding
 entry in the row is 0.
@@ -463,11 +469,10 @@ entry in the row is 0.
 
 <p>
 If we now repeat the same process for the remaining rows
-$i=1,\dots,n$, we will have formulated the matrix $M$. We can then
+$i=2,\dots,n$, we will have formulated the matrix $M$. We can then
 solve the linear system $M\vec{u=\bar u}$ to find $\vec{u}$, the
 U-coordinates of both the internal and boundary vertices. And we can
-find the V-coordinates by doing the same process as above but for $v$,
-formulating the linear system $M\vec{v=\bar v}$ and solving.
+find the V-coordinates by doing the same process as above but for $v$.
 </p>
 
 <h2>Choosing the Weights</h2>
@@ -502,7 +507,7 @@ harmonic weights are now simply defined as
 w_{ij} = \frac{\cot\alpha + \cot\beta}{2}
 \end{equation*}
 
-If you haven't seen $\cot$ before, it is the cotangent function, which is
+$\cot$ is the cotangent function, which is
 simply the inverse tangent function, so $\cot\alpha =
 \frac{\cos\alpha}{\sin\alpha}$.
 
@@ -515,7 +520,7 @@ Laplace-Beltrami operator. The Laplace-Beltrami operator is simply the
 Laplace operator generalized to operate on functions defined on
 surfaces.  The discretization of the Laplace-Beltrami operator allows
 you to take the Laplacian of the surface of a triangular
-mesh. Basically, the weights fall out during the derivation of the
+mesh. And basically, the weights fall out during the derivation of the
 discretized Laplace-Beltrami operator. You can find a full derivation
 of the operator in chapter 3 of <a href="#refone">[1]</a>. But you can
 also find some hints on how to derive it
@@ -529,10 +534,11 @@ basically quadruple in size, and I'm too lazy to write that much text,
 so I will instead now attempt to offer an intuitive explanation for this choice of
 weights.
 
-Observe that we the cotangent weights strive to be conformal, meaning
+Observe that the cotangent weights strive to be conformal, meaning
 that they try to create a mapping that, as best as possible, preserves
 the angles from the original mesh. Now, note that there be triangles
-with acute angles, and triangles with less acute angles:
+with acute angles, and triangles with less acute angles in the
+original mesh:
 
 </p>
 
@@ -549,12 +555,13 @@ title="triangle types"  width="52%" height="52%"
 the second triangle above, then we want the weight to have a large
 value for the edge between the triangles. Why? Because if $w_{ij}$ is
 large, then we will need make sure that $|\vec{v}_j - \vec{v}_i|^2$ is
-small, if we want to minimize $E$. In other words, if the weight is
-large, then the linear solver(that solves the matrix equation) will be
-very inclined towards pushing the UV-mapped vertices towards each
-other, thus minimizing the edge length. If we minimize the edge
-  length, the angles UV-mapped triangles will also be acute, just the
-  like acute triangles in the original mesh.
+small, if we want to minimize the contribution of this term to sum of $E$. In
+other words, if the weight is large, then the linear solver(that
+solves the matrix equation) will be very inclined towards pushing the
+UV-mapped vertices towards each other, thus minimizing the edge
+length. If we minimize the edge length, the angles of the UV-mapped triangles
+will also be acute, just the like acute triangles in the original
+mesh.
 
   </p>
 
@@ -562,10 +569,11 @@ other, thus minimizing the edge length. If we minimize the edge
   In the same manner, we want the weight to be small if the angles are
   large, like in the first image above. Because then the linear solver
   will not be very inclined to minimize $|\vec{v}_j - \vec{v}_i|^2$,
-  because since the weight is small, $$w_{ij} |\vec{v}_j -
-  \vec{v}_i|^2$ is already pretty small. Thus, if the angles are
-  large, then the linear solver will not be as inclined to push the
-  vertices away from each other in the UV-map, and so the larger
+  because since the weight is small, $w_{ij} |\vec{v}_j -
+  \vec{v}_i|^2$ is already pretty small, so the contribution of this
+  edge to the sum of $E$ is already pretty small. Thus, if the angles
+  are large, then the linear solver will not be as inclined to push
+  the vertices away from each other in the UV-map, and so the larger
   angles will be preserved in the UV-map.
 </p>
 
@@ -573,7 +581,7 @@ other, thus minimizing the edge length. If we minimize the edge
   So, if we make the weight fulfill the requirements above, we will
   obtain an UV-mapping that strives to be conformal. And it turns out
   that the cotanget-weight fulfills these requirements very
-  well. Because observe the graph of $cot x$
+  well. Because observe the graph of $\cot x$
 </p>
 
 
@@ -584,16 +592,179 @@ title="cotan"  width="52%" height="52%"
 /></a></p>
 
 <p>
-  We can see that for small angles of $x$, \$cot(x)$ is very large,
+  We can see that for small angles of $x$, $\cot(x)$ is very large,
   but for larger angles it goes towards zero. Just like we
   want. However, we can also see that if $x \ge \frac{\pi}{2}$, then
   $\cot(x)\le 0$. So for obtuse angles, the cotangent weights may
   actually evaluate to negative values! This is not good, because
-  above, we relied on the fact the weights are positive when deriving
+  above we relied on the fact the weights are positive when deriving
   the matrix equation the minimizes $E$. However, in practice, this is
   not a good big deal, because we can just clamp the cotangent weights
   so that they are greater than or equal to zero.
 </p>
+
+<h2>Tutte's Theorem</h2>
+
+<p>
+
+In the beginning, I stated that the boundary vertices must be
+projected onto a convex polygon. But for some meshes, putting the
+boundary vertices on a convex polygon will not result a good mapping,
+and a concave polygon would actually be better. However, even for
+those situations, we must not use a concave polygon.
+
+</p>
+
+<p>
+The reason for this is explained in chapter 5
+of <a href="#refone">[1]</a>. In section 5.3, the authors state that
+the entire reason why harmonic mapping works, is because because of
+<i>Tutte's barycentric mapping theorem</i>(henceforth abbreviated "Tutte's Theorem"). This is a theorem from graph
+theory that provides the mathematical foundations for harmonic
+mapping, and according the authors you can read more about this in
+in <a href="#reffive">[5]</a>.
+</p>
+
+<p>
+The theorem gives exactly three conditions that must be
+fullfilled for harmonic mapping to yield a valid mapping: <b>(1)</b>
+the original mesh surface is homeomorphic to a disk. <b>(2)</b>
+the boundary vertices are on a convex polygon. <b>(3)</b> the
+coordinates of the internal vertices are a convex combination of their
+neighbours.
+</p>
+
+<p>
+But what does <i>valid mapping</i> mean? It means that the UV-mapped
+triangles do not cross each other, and none triangles have been
+flipped by the mapping. If this is not fulfilled, we basically get a
+very weird UV-mapping. And we don't want that.
+</p>
+
+<p>
+
+The first condition basically means that the input mesh to the
+algorithm must be an object with <i>one</i> clearly defined
+border. The mask we have been working with thus far is homeomorphic to
+a disk, because it has one border, and no holes. If there were a hole
+in the mask, there would be <i>two</i> borders, and we would not be
+able to use harmonic mapping anymore. Also, a sphere is not
+homeomorphic to a disk. However, if we cut the sphere into a northern
+and a southern hemisphere, then those two hemispheres are homeomorphic
+to a disk, and we can apply the harmonic mapping algorithm on both of
+them separately. Thus, if we want to apply harmonic mapping on more
+complex meshes, we must split the mesh into homeomorphic disks, and
+apply harmonic mapping on them.
+
+</p>
+
+<p>
+
+Alright, now onto the second condition. So this condition is basically
+the reason why we must project the vertices onto a convex
+polygon. Because otherwise, the conditions for Tutte's theorem are not
+fulfilled, and we longer have any guarantees of obtaining a valid mapping with
+the algorithm.
+</p>
+
+<p>
+  Finally, let us look at the third condition. This condition says that
+  every internal vertex should be a convex combination of its
+  neighbours. What does this mean? First, recall that we earlier
+  showed that
+
+\begin{equation*}
+\frac{\partial E}{\partial u_i} = \sum_{j \in N(i)} w_{ij} (u_j - u_i)
+= 0
+  \end{equation*}
+
+  for all internal vertices $i$. We can rewrite this as
+
+\begin{equation*}
+\sum_{j \in N(i)} w_{ij} u_j
+= \sum_{j \in N(i)} w_{ij} u_i
+  \end{equation*}
+
+  But the $j$-indices on both sides are not the same, so let us
+  relabel the one on the right-hand side
+
+\begin{equation*}
+\sum_{j \in N(i)} w_{ij} u_j
+= \sum_{k \in N(i)} w_{ik} u_i
+  \end{equation*}
+
+  Now let us define
+
+  \begin{equation*}
+  \lambda_{ij} = \frac{w_{ij}}{\sum_{k \in N(i)} w_{ik}}
+  \end{equation*}
+
+  If we solve for $u_i$, it turns out we can write
+
+\begin{equation*}
+  u_i = \sum_{j \in N(i)} \lambda_{ij} u_j
+  \end{equation*}
+
+  As we can see from above, any internal U-coordinate $u_i$ can be
+  expressed as a weighted sum of its neighbours. If all those weights
+  sum one:
+
+\begin{equation*}
+  \sum_{j \in N(i)} \lambda_{ij} = 1
+  \end{equation*}
+
+  then we say that the internal U-coordinates are a <i>convex combination</i>
+  of its neighbours. And if this condition is fulfilled, then also the
+  third condition of Tutte's theorem is fulfulled. Fortunately, the
+  discrete harmonic weights are defined such that the weights sum to
+  one, so the third condition of Tutte's theorem is thus fulfilled!
+  And certainly, it is fulfilled also for the V-coordinates. The argument
+  is the exact same as above.
+
+</p>
+
+<p>
+  To conclude, all three conditions of Tutte's theorem are fulfilled,
+  and as a consequence, harmonic mapping gives us a valid mapping.
+</p>
+
+<h2>Literature</h2>
+
+<p>
+
+So that is how harmonic mapping is implemented. To conclude the
+article, I will now list some literature that I recommend reading if
+you want to know about this stuff in even more detail.
+
+</p>
+
+<p>
+
+I will first mention that harmonic mapping is not only useful for
+automatic UV-mapping. Harmonic mapping is about obtaining a two
+dimensional representation of a three dimensional mesh. And this is called
+ <i>Mesh Parameterization</i> by researchers, and Mesh
+Parameterization has many other applications. Indeed, in the paper where
+harmonic mapping was first introduced <a href="#refsix">[6]</a>,
+harmonic mapping was used an important component in an algorithm for
+obtaining a multiresolution representation of an arbitrary mesh. In
+section 4 of <a href="#refsix">[6]</a> you can read the original
+description of harmonic mapping. Also, in chapter 1
+of <a href="#reftwo">[2]</a> you can read about other applications of
+ mesh parameterization, that are not UV-mapping.
+
+</p>
+
+<p>
+
+ If you wish to know even more about mesh parameterization techniques, you can
+ read chapter 5 in <a href="#refone">[1]</a>. There is
+ also <a href="#reftwo">[2]</a>, which an entire Siggraph course
+ dedicated to the topic of Mesh Parameterization.
+
+</p>
+
+
 
 <h2>References</h2>
 
@@ -612,4 +783,13 @@ title="cotan"  width="52%" height="52%"
 
 <p id="reffour">
    [4] Justin Solomon, Keenan Crane, Etienne Vouga, <a href="https://www.cs.cmu.edu/~kmcrane/Projects/Other/SwissArmyLaplacian.pdf">"Laplace-Beltrami: The Swiss Army Knife of Geometry Processing"</a>
+</p>
+
+<p id="reffive">
+   [5] William Tutte, "Convex Representation of Graphs"
+</p>
+
+<p id="refsix">
+   [6] Matthias Eck, Tony DeRose, Ton Duchamp, Hugues Hoppe, Michael
+   Lounsberyz, Werner Stuetzle, <a href="http://hhoppe.com/mra.pdf">"Multiresolution Analysis of Arbitrary Meshes"</a>
 </p>
