@@ -13,7 +13,6 @@ def extract_title(md_file):
     with open(md_file, 'r') as f:
         first_line = f.readline()
 
-
     # skip hash and any whitespace in beginning.
     for i, c in enumerate(first_line):
         if not c.isspace() and c != "#":
@@ -25,8 +24,21 @@ def extract_title(md_file):
 html_source += "<ul>"
 for md_file in site_common.posts:
 
+    post_title = ""
+    if len(md_file) == 2:
+        post_title = md_file[1]
+    else:
+        post_title = extract_title(md_file)
+
+    html_file = ""
+    if len(md_file) == 2:
+        html_file = "posts/"+md_file[0][4:-5] + '.html'
+    else:
+        html_file = site_common.get_html_file(md_file)
+
+
     html_source += "<li> <a href=\"{0}\">{1}</a>  </li>".format(
-        site_common.get_html_file(md_file), extract_title(md_file))
+        html_file,post_title )
 html_source += "</ul>"
 
 html_source += '</div>'

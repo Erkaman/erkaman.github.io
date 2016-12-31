@@ -60,20 +60,36 @@
   an article that explains how the code works. So in this article I
   shall do precisely that.</p>
 
+
 <p>
 
   Before I begin, I just want to warn you that I have mostly a computer
   science background, and mathematics is not my main area of
   expertise. As a result of this I may sometimes accidentally write
   things that are not entirely mathematically correct. But anyone who finds any such
-  mistakes are very much welcome to email me corrections
+  mistakes are very much welcome to email me corrections.
+
+</p>
+
+<p>
+
+  Below we can see an image of a mesh UV-mapped with harmonic mapping:
 
 </p>
 
 <p><a href="/img/harmonic_map/mask_gallery.png"><img class="article-img" src="/img/harmonic_map/mask_gallery.png"
 alt="Mask Gallery"
 title="Mask Gallery"
-/></a></p>
+                                                     /></a></p>
+
+<p>
+
+First image is the mesh without texture, second image is with checker
+texture, third image is with marble texture, and the fourth image is a
+visualization of the created UV map.
+
+</p>
+
 
 <h2>The Name of the Game</h2>
 
@@ -83,8 +99,8 @@ necessary that we precisely understand what UV-mapping is. UV-mapping is
 simply about finding a mapping from three dimensional space into two
 dimensional space. Given any point on the surface of some mesh in three dimensional
 space, we want to be able to find some corresponding point in two
-dimensional space. Let us denote this mapping by the function
-$f$. Since $f$ maps from the three dimensional space to two
+dimensional space. Basically, we want to flatten it. Let us denote this mapping by the function
+$f$. Since $f$ maps from three dimensional space to two
 dimensional space, the type of $f$ is $\myrt \mapsto
 \myrs$.
 
@@ -101,34 +117,35 @@ dimensional space, the type of $f$ is $\myrt \mapsto
   </p>
 
 <p>
-In UV-mapping we implement this mapping follow: In every vertex, in
+In UV-mapping we implement this mapping as follows: In every vertex, in
 addition to storing the three dimensional coordinates $(x,y,z) \in
 \myrt$, we also store the corresponding two dimensional coordinates
-$(u,v) \in \myrs$. With that, we can easily for some point on the mesh
+$(u,v) \in \myrs$ of the flattened mesh. With that, we can easily for some point on the mesh
 surface denoted $\vec{p} \in
 \myrt$ evaluate $f(\vec{p})$ as follows: since $\vec{p}$ is on the
 surface of the mesh, $\vec{p}$ will be inside some triangle on the
 mesh. We can now use the barycentric coordinates of $\vec{p}$
 within that triangle to interpolate between the UV-coordinates of the
-three vertices of that triangle. This is UV-mapping.
+three vertices of that same triangle. This is UV-mapping.
 </p>
 
 <p>
 The above procedure can easily be implemented in existing graphics
 APIs. The barycentric interpolation can be implemented simply by
-outputting the UV-coordinates of every vertex from the vertex
-shader. Then, for the fragments evaluated in the fragment shader, every
-fragment will now receive the interpolated UV coordinates.
+outputting the UV-coordinates of the vertex from the vertex shader(and
+obviously the vertex shader is evaluated for every vertex). Then, for
+the fragments evaluated in the fragment shader, every fragment will
+now receive the interpolated UV coordinates.
 </p>
 
 <p>
 
-  The above procedure is exact same way that is used to store normals
+  The above procedure is the exact same way that is used to store normals
   in a mesh. Usually, you do not store the normals for every single
   point on the mesh, but you only store the normals at the
   vertices. Because if you send those vertex normals out from the
   vertex shader, then the fragment shader will receive the normal that
-  results from from interpolating between the normals at the triangle
+  results from interpolating between the normals at the triangle
   vertices.
 
 </p>
@@ -144,7 +161,7 @@ distortion.
 
 <p>
 
-  I in the below image, to the left we can see a mask that we wish to
+  In the below image, to the left we can see a mask that we wish to
   perform UV-mapping on. And on the right we can see a UV-map of that
   mask constructed with harmonic mapping. I will be using this mask as
   an example throughout the article.
@@ -157,16 +174,16 @@ title="Mask Arrow"
 
 <p>
 
-In the above image, we can see also that for every triangle in the UV
+In the above image, we can see that for every triangle in the UV
 map, there is a corresponding triangle in the original mesh. For an UV
 mapping to be considered good, we want that the original triangles
 correspond as well as possible to the UV-mapped triangles. Because if
 some triangle in the original mesh is large, while its corresponding
 triangle in the UV-map is small, then there will not be enough pixels
 for that large triangle when applying a texture onto that mesh. So the
-texture would in that case become blurry! And we can see in the above
+texture would in that case become blurry on the mesh! And we can see in the above
 image that harmonic mapping does a pretty good job for the mask mesh;
-because we can see that triangle that form the lips in the original mesh are
+because we can see that the triangles that form the lips in the original mesh are
 smaller than the rest, and also in the UV map are those triangles of
 the lips smaller.
 
@@ -176,7 +193,7 @@ the lips smaller.
 <h2>Harmonic Mapping</h2>
 
 <p>
-Now I will implement one simple technique for finding such a
+Now I will implement one simple technique for finding a good
 mapping. There are several properties we would want such a mapping to
 have:
 
@@ -199,26 +216,26 @@ triangles. Obviously, we want to minimize the distortion.
 <p>
 Harmonic mapping works as follow: let us define a mathematical
 function whose value is small when there is little distortion. First,
-let us also assume that there are couple of vertices that form a
+let us assume that there are a couple of vertices that form a
 boundary on the mesh(what happens if we can't find any boundary? I will
 explain that later). The edges that are only adjacent to only one
 face are the boundary edges, and all vertices that are at the
 endpoints of these forms the boundary. For harmonic mapping to work,
 we must place these vertices onto a convex polygon. In other words,
 their UV-coordinates must be on some convex polygon. For simplicity,
-let us a put them on a unit circle. Below we can see the boundary formed by
+let us put them on a unit circle. Below we can see the boundary formed by
 the mask mesh.
 
 <p><a href="/img/harmonic_map/mask_border_together.svg"><img class="article-img" src="/img/harmonic_map/mask_border_together.png"
-alt="Mesh Border"
-title="Mesh Border"
+alt="Mesh Boundary"
+title="Mesh Boundary"
 /></a></p>
 
 </p>
 
 <p>
 
-At this point, we know the UV-coordinates of the border vertices, but
+At this point, we know the UV-coordinates of the boundary vertices, but
 we need to know the values for the interior vertices. So we want the
 UV-coordinates of the vertices within the red circle above. To find
 those, we will define a function that is minimal when the
@@ -239,14 +256,14 @@ edge between the vertices with indices $i$ and $j$, then $(i,j) \in E$
 and $(j, i) \in E$. Now we define the function
 
 \begin{align*}
-E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2
+E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{i, j} |\vec{v}_j - \vec{v}_i|^2
 \end{align*}
 
 So we are basically doing a weighted sum over all vertices based on
 the distances between the vertices that are connected by an edge. And
 we multiply by the factor $\frac{1}{2}$, because the sum counts every
 edge twice(can you see why?), so we need to divide by two to get the
-correct sum. If we cleverly choose the values of the weights $w_{ij}$,
+correct sum. If we cleverly choose the values of the weights $w_{i, j}$,
 minimizing $E$ will yield us a mappping that strives to be
 conformal. Later, I will describe how to choose the weights. But for
 now, I will show how we can minimize $E$. I will follow the recipe
@@ -257,9 +274,13 @@ now, I will show how we can minimize $E$. I will follow the recipe
   <li>We start with the expression for $E$</li>
   <li>Lots of math happens here in this step.</li>
   <li>We end up with two matrix equations $M\vec{u=\bar u}$ and
-  $M\vec{v= \bar v}$, where $\vec{u}$ and $\vec{v}$ are the values of the
-  UV-coordinates that minimize $E$. Now just solve both equations with
-  some linear solver(say, using a direct solver with <a href="https://en.wikipedia.org/wiki/LU_decomposition">LU decomposition
+  $M\vec{v= \bar v}$, where $\vec{u}$ and $\vec{v}$ are the values of
+  the UV-coordinates that minimize $E$. That is, they are vectors that
+  contains the values of the UV-coordinates that minimize $E$. Now
+  just solve both equations with some linear solver(say, using a
+  direct solver
+  with <a href="https://en.wikipedia.org/wiki/LU_decomposition">LU
+  decomposition
 </a> or a iterative solver based on <a href="https://en.wikipedia.org/wiki/Conjugate_gradient_method">Conjugate gradient</a>) and we are done.</li>
 </ol>
 
@@ -268,11 +289,11 @@ When minimizing functions like this, it is very common that you
 convert the problem of minimization into some kind of standard
 problem. Because often the function you wish to minimize is very
 specific for the problem at hand, and there are often no solvers that
-can help in solving them. However, if we convert the problem into well
-a well known problem, here the problem of solving a linear system,
-then we can simply feed the problem into some solver for that standard
+can help in solving them. However, if we convert the problem into
+a well studied problem, here the problem of solving a linear system,
+then we can simply feed the problem into some solver for that
 problem. If you have not seen this kind of pattern before, be sure to
-rememeber it! This is a very powerful pattern and used in scientific
+rememeber it! This is a very powerful pattern and is used in scientific
 papers all the time.
 </p>
 
@@ -283,17 +304,17 @@ expand the squared vector norm:
 
 \begin{align}
 E(\vec{v}_1,\dots,\vec{v}_{n}) =& \nonumber \\
-& \frac{1}{2} \sum_{(i, j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2 = \nonumber\\
-& \frac{1}{2} \sum_{(i, j)\in E} w_{ij} ((u_j - u_i)^2 + (v_j - v_i)^2)
+& \frac{1}{2} \sum_{(i, j)\in E} w_{i, j} |\vec{v}_j - \vec{v}_i|^2 = \nonumber\\
+& \frac{1}{2} \sum_{(i, j)\in E} w_{i, j} ((u_j - u_i)^2 + (v_j - v_i)^2)
 \label{eq:ebefore}
 \end{align}
 
 
-Now, the next step is a bit non-obvious. And most the literature don't
+Now, the next step is a bit non-obvious. And most of the literature don't
 really explain this part at all, so I shall carefully go
 through it. Observe that $E$ is a function of $2n$ variables:
 $u_1,\dots,u_n$ and $v_1,\dots,v_n$. We can compute the partial
-derivative of $E$ with respect to all the variables. Those partial
+derivatives of $E$ with respect to all the variables. Those partial
 derivatives are
 
 \begin{equation*}
@@ -309,28 +330,28 @@ point! I shall attempt giving an intuitive argument for this.
 Observe that $E$ is just a sum of terms on the form
 
 \begin{equation*}
-w_{ij}((u_j - u_i)^2 + (v_j - v_i)^2)
+w_{i, j}((u_j - u_i)^2 + (v_j - v_i)^2)
 \end{equation*}
 
-And  $w_{ij}$ is constant and not variable. We
-will be making sure that the weights $w_{ij}$ are positive
-later. Knowing that $w_{ij}>0$, what is then the graph of:
+And  $w_{i, j}$ is constant and not variable. We
+will be making sure that the weights $w_{i, j}$ are positive
+later. Knowing that $w_{i, j}>0$, what is then the graph of:
 
 \begin{equation*}
-y = w_{ij}((u_j - u_i)^2 + (v_j - v_i)^2)
+y = w_{i, j}((u_j - u_i)^2 + (v_j - v_i)^2)
 \end{equation*}
 
 if we plot with $u_j$ as the x-axis? Let us first expand the
 expression for $y$
 
 \begin{align*}
-y &= w_{ij}(u_j^2 - 2u_iu_j + u_i^2) + w_{ij}(v_j^2 - 2v_iv_j + v_i^2) \\
-  &= w_{ij}u_j^2 - (2u_iw_{ij})u_j + (w_{ij}u_j^2 + w_{ij}(v_j^2 - 2v_iv_j + v_i^2))
+y &= w_{i, j}(u_j^2 - 2u_iu_j + u_i^2) + w_{i, j}(v_j^2 - 2v_iv_j + v_i^2) \\
+  &= w_{i, j}u_j^2 - (2u_iw_{i, j})u_j + (w_{i, j}u_j^2 + w_{i, j}(v_j^2 - 2v_iv_j + v_i^2))
 \end{align*}
 
 
-Now let us assign $C = (w_{ij}u_j^2 + w_{ij}(v_j^2 - 2v_iv_j + v_i^2))$,
-$B = 2u_iw_{ij}$ and $A=w_{ij}$. And then we get
+Now let us assign $C = (w_{i, j}u_j^2 + w_{i, j}(v_j^2 - 2v_iv_j + v_i^2))$,
+$B = -2u_iw_{i, j}$ and $A=w_{i, j}$. And then we get
 
 \begin{equation*}
 y = Au_j^2 + Bu_j + C
@@ -339,19 +360,19 @@ y = Au_j^2 + Bu_j + C
 We do these assignments just to make the expression for $y$ less
 unwieldy. We can see that $y$ is the
 equation of a second grade equation. So $y$ is now either a
-hill-shaped or a valley-shaped parabola. But since $w_{ij} > 0$ we
+hill-shaped or a valley-shaped parabola. But since $w_{i, j} > 0$ we
 have $A > 0$, and therefore
 
 \begin{equation*}
-\frac{\partial^2 E}{\partial v_j^2} = 2A > 0
+\frac{\partial^2 E}{\partial u_j^2} = 2A > 0
 \end{equation*}
 
 so the second derivative is positive! But that means that if there is some
-extrema at some point, that means it must be a minima. But since
+extrema at some point, it must be a minima. But since
 $y$ is a second grade equation it has exactly one extrema, and so we must have that $y$
 has exactly one minimum point! And we find that point by finding the
 point at which the first derivative is 0. So, to put it in pictures,
-$y$ must look like this:
+$y$ must look something like this:
 
 </p>
 
@@ -365,8 +386,20 @@ title="uj plot"  width="52%" height="52%"
 and the minimum point of that picture is the point where the first
 derivative is zero.
 
+</p>
+<p>
+
 Now, the important thing here is that $E$ is just a sum of these
-valley-shaped parabolas. Observe that if we add together to such
+valley-shaped parabolas. Above we plotted the graph with respect to
+$u_j$. Also if we plot with respect to $u_i$ we get a valley-shaped
+parabola. And the same applies to $v_i$ and $v_j$. You can easily
+confirm this by yourself.
+
+</p>
+
+<p>
+
+Observe that if we add together two such
 valley-shaped parabolas, we just get another valley-shaped
 parabola. For if we let $Ax^2 + Bx + C, A > 0$ be one such parabola, and let
 $Dx^2 + Ex + F, D>0$ be another such parabola. Then the sum of them is
@@ -376,7 +409,7 @@ just
 (A+D)x^2 + (B+E)x + (C + F)
 \end{equation*}
 
-And this is sum is also a valley-shaped parabola, since $A+D > 0$.
+And this sum is also a valley-shaped parabola, since $A+D > 0$.
 
 </p>
 
@@ -401,23 +434,22 @@ Ok, so let $u_i$ be an arbitrary U-coordinate; it will be one of
 $u_1,\dots,u_n$. Let us find $\frac{\partial E}{\partial u_i}$. Observe,
 again, that $E$ is just a sum of terms in the form:
 
-\begin{equation}
-w_{ij}((u_j - u_i)^2 + (v_j - v_i)^2)
-\label{eq:form}
-\end{equation}
+\begin{equation*}
+w_{i, j}((u_j - u_i)^2 + (v_j - v_i)^2)
+\end{equation*}
 
 But $(v_j−v_i)^2$ will be considered a constant when we are partially
-differenriating with respect to $u_i$, so it will disappear. And we
+differentiating with respect to $u_i$, so it will disappear. And we
 apply the chain rule to differentiate $(u_j - u_i)^2$, and this causes
 the $2$ to be moved down, and the inner derivative is just 1, so
 
 \begin{equation*}
 \frac{\partial E}{\partial u_i} = \frac{1}{2} \sum_{j \in N(i)}
-2w_{ij} (u_j - u_i) = \sum_{j \in N(i)} w_{ij} (u_j - u_i)
+2w_{i, j} (u_j - u_i) = \sum_{j \in N(i)} w_{i, j} (u_j - u_i)
 \end{equation*}
 
 Also, note that I have replaced $(i,j) \in E$ with $j \in N(i)$, where
-$N(i)$ is the set of all neighbours of $i$. Because it is only in the
+$N(i)$ is the set of all neighbours of $i$. Because it is only the
 adjacent edges of $i$ that contribute a term to the sum. For all
 remaining edges, the variable $u_i$ will not appear anywhere, so they
 become zero when we take the partial derivative. Therefore, only the
@@ -432,19 +464,19 @@ together a nice matrix equation. First, if we want to minimize the
 harmonic energy, then for all $i=1,\dots,n$ we must have
 
 \begin{equation*}
-\frac{\partial E}{\partial u_i} = \sum_{j \in N(i)} w_{ij} (u_j - u_i)
+\frac{\partial E}{\partial u_i} = \sum_{j \in N(i)} w_{i, j} (u_j - u_i)
 = 0
 \end{equation*}
 
 because then $E$ is minimal. However, we also know that all the
 boundary vertices have been placed in a unit circle. So we can
 describe all the boundary vertices by polar coordinates as
-$(u_i,v_i)=(\cos\theta_i, \sin\theta_i), i=n+1,\dots,n+b$ and $\theta
+$(u_i,v_i)=(\cos\theta_i, \sin\theta_i), i=n+1,\dots,n+b$ and $\theta_i
 \in [0,2\pi]$. To
 summarize, we have
 
 \begin{align*}
-\sum_{j \in N(i)} w_{ij} (u_j - u_i)
+\sum_{j \in N(i)} w_{i, j} (u_j - u_i)
 &= 0, &i = &1,\dots,n \\
 u_i &= \cos\theta_i, &i = &n+1,\dots,n+b
 \end{align*}
@@ -464,41 +496,53 @@ such that $\vec{u} = (u_1,\dots,u_{n+b})$. So it is the vector of the
 U-coordinates of all the vertices. Let us now find a matrix $M$ that
 expresses the left-hand side of the equations above. Note that row $i$
 in the matrix $M$ should capture all the information on the left-hand
-side with respect to $i$.
+side with respect to equation number $i$.
 
 </p>
 
 <p>
 
 Let us first deal with the boundary vertices. We already know that these are
-projected onto the unit circle, so we can simply set $m_{ii}=1$ and
-let all other entires in row $i$ in $M$ be 0, when $i = n+1,\dots,n+b$. This
-has the result that $u_i$ is assigned to $\cos\theta_i$ for the border
-vertices, which is just what we want. Because we already know the
-U-coordinates of the border vertices, because we projected them onto the
-unit circle in the beginning.
+projected onto the unit circle, so we can simply set $m_{i, i}=1$ and
+let all other entires in row $i$ in $M$ be 0. So the equation for row
+$i$ when $i =
+n+1,\dots,n+b$ then becomes
+
+\begin{align*}
+m_{i, 1} u_1 + m_{i, 2} u_2 + \dots + m_{i, i} u_i + \dots + m_{i, n+b} u_{n+b}=\\
+0 u_1 + 0 u_2 + \dots + 1 u_i + \dots + 0 u_{n+b}=\\
+u_i
+\end{align*}
+
+
+So this has the result that $u_i$ is assigned to $\cos\theta_i$ for
+the boundary vertices, which is just what we want. Because we already
+know the U-coordinates of the boundary vertices, because we projected
+them onto the unit circle in the beginning.
 
 </p>
 
 <p>
 
 Now let us see how we deal with the internal vertices. I will explain
-through a toy example: Let all vertices be $\{0,1,2,3,4,5,6\}$, let
-$i=0$ and let the neighbours be $N(i)=\{1,2,3\}$. What does
+through a toy example: Let all vertices be $\{1,2,3,4,5,6\}$, let
+$i=1$ and let the neighbours be $N(i)=\{2,3,4\}$. What does
 row $i$ in $M$ look like? Let us expand the left-hand side for $i$:
 
 \begin{align*}
-&\sum_{j \in N(i)} w_{ij} (u_j - u_i) = \\
-&\sum_{j \in \{1,2,3\} } w_{0j} (u_j - u_0) = \\
-& w_{01}u_1 + w_{02}u_2 + w_{03}u_3 - (w_{01} + w_{02} + w_{03})u_0
+&\sum_{j \in N(i)} w_{i, j} (u_j - u_i) = \\
+&\sum_{j \in \{2,3,4\} } w_{1,j} (u_j - u_1) = \\
+& - (w_{1,2} + w_{1,3} + w_{1,4})u_1 + w_{1,2}u_2 + w_{1,3}u_3 +
+w_{1,4}u_4
 \end{align*}
 
-So, $m_{00}$ is the negative sum of all the
-weights of the adjacent edges. And $m_{01}=w_{01}$, $m_{02}=w_{02}$
-and $m_{03}=w_{03}$. Meaning that for the adjacent edges, the entry in
-the matrix is just the weight for those adjacent edges. Finally, since
-$u_4$, $u_5$ and $u_6$ doesn't appear in the above expression, for
-the remaining columns we have $m_{04} = m_{05} = m_{06} = 0$. So for
+So, $m_{1, 1}$ is the negative sum of all the
+weights of the adjacent edges. And $m_{1, 2}=w_{1, 2}$, $m_{1,
+3}=w_{1, 3}$
+and $m_{1, 4}=w_{1, 4}$. Meaning that for the adjacent vertices, the entry in
+the matrix is just the weight of the connecting edge. Finally, since
+$u_5$ and $u_6$ doesn't appear in the above expression, for
+the remaining columns we have $m_{1, 5} = m_{1, 6} = 0$. So for
 the vertices that are not connected to $i$, then the corresponding
 entry in the row is 0.
 
@@ -509,7 +553,10 @@ If we now repeat the same process for the remaining rows
 $i=2,\dots,n$, we will have formulated the matrix $M$. We can then
 solve the linear system $M\vec{u=\bar u}$ to find $\vec{u}$, the
 U-coordinates of both the internal and boundary vertices. And we can
-find the V-coordinates by doing the same process as above but for $v$.
+find the V-coordinates by doing the same process as above but for
+$v$. And the UV-coordinates that we find by solving these two linear
+systems are the UV-coordinates that minimizes $E$, and thus minimizes
+the distortion of the mapping.
 </p>
 
 <h2>Choosing the Weights</h2>
@@ -517,13 +564,13 @@ find the V-coordinates by doing the same process as above but for $v$.
 <p>
 
 One thing I have procrastinated explaining thus far is how to choose
-the weights $w_{ij}$. There are several kinds of weights that can be
+the weights $w_{i, j}$. There are several kinds of weights that can be
 used, but in my implementation I used the <i> discrete harmonic
   weights</i>. Recall that the weights are assigned to every single
 edge in the harmonic energy:
 
 \begin{equation*}
-E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{ij} |\vec{v}_j - \vec{v}_i|^2
+E(\vec{v}_1,\dots,\vec{v}_{n}) = \frac{1}{2} \sum_{(i,j)\in E} w_{i, j} |\vec{v}_j - \vec{v}_i|^2
 \end{equation*}
 
 every edge $(i,j)$ will be adjacent to two triangles. We now define the angles
@@ -541,7 +588,7 @@ And those angles are taken from the original mesh, so they are constant! The
 harmonic weights are now simply defined as
 
 \begin{equation*}
-w_{ij} = \frac{\cot\alpha + \cot\beta}{2}
+w_{i, j} = \frac{\cot\alpha + \cot\beta}{2}
 \end{equation*}
 
 $\cot$ is the cotangent function, which is
@@ -551,13 +598,13 @@ simply the inverse tangent function, so $\cot\alpha =
 </p>
 <p>
 
-Now, why should be define the weights in this way? The
+Now, why should we define the weights in this way? The
 cotangent-weights comes from the discretization of the
 Laplace-Beltrami operator. The Laplace-Beltrami operator is simply the
 Laplace operator generalized to operate on functions defined on
 surfaces.  The discretization of the Laplace-Beltrami operator allows
 you to take the Laplacian of the surface of a triangular
-mesh. And basically, the weights fall out during the derivation of the
+mesh. And basically, the cotangent-weights fall out during the derivation of the
 discretized Laplace-Beltrami operator. You can find a full derivation
 of the operator in chapter 3 of <a href="#refone">[1]</a>. But you can
 also find some hints on how to derive it
@@ -573,9 +620,8 @@ weights.
 
 Observe that the cotangent weights strive to be conformal, meaning
 that they try to create a mapping that, as best as possible, preserves
-the angles from the original mesh. Now, note that there be triangles
-with acute angles, and triangles with less acute angles in the
-original mesh:
+the angles from the original mesh. Now, note that in the original mesh there will be triangles
+with acute angles, and triangles with less acute angles:
 
 </p>
 
@@ -587,18 +633,18 @@ title="triangle types"  width="52%" height="52%"
 
 <p>
 
-  And again, note that $E$ is just a sum of terms on the form $w_{ij}
-|\vec{v}_j - \vec{v}_i|^2$. Now, if the angles a very acute, like in
-the second triangle above, then we want the weight to have a large
-value for the edge between the triangles. Why? Because if $w_{ij}$ is
-large, then we will need make sure that $|\vec{v}_j - \vec{v}_i|^2$ is
-small, if we want to minimize the contribution of this term to sum of $E$. In
+  And again, note that $E$ is just a sum of terms on the form $w_{i,
+j} |\vec{v}_j - \vec{v}_i|^2$. Now, if the angles are very acute, like
+in the second triangle above, then the edge between the triangles
+should have a large weight-value. Why? Because if $w_{i, j}$ is large,
+then we will need to make sure that $|\vec{v}_j - \vec{v}_i|^2$ is small,
+if we want to minimize the contribution of this term to the sum of $E$. In
 other words, if the weight is large, then the linear solver(that
 solves the matrix equation) will be very inclined towards pushing the
 UV-mapped vertices towards each other, thus minimizing the edge
-length. If we minimize the edge length, the angles of the UV-mapped triangles
-will also be acute, just the like acute triangles in the original
-mesh.
+length. If we minimize the edge length, the angles of the UV-mapped
+triangles will also very likely be acute, just the like acute triangles in the
+original mesh.
 
   </p>
 
@@ -606,18 +652,18 @@ mesh.
   In the same manner, we want the weight to be small if the angles are
   large, like in the first image above. Because then the linear solver
   will not be very inclined to minimize $|\vec{v}_j - \vec{v}_i|^2$,
-  because since the weight is small, $w_{ij} |\vec{v}_j -
+  because since the weight is small, $w_{i, j} |\vec{v}_j -
   \vec{v}_i|^2$ is already pretty small, so the contribution of this
   edge to the sum of $E$ is already pretty small. Thus, if the angles
   are large, then the linear solver will not be as inclined to push
-  the vertices away from each other in the UV-map, and so the larger
+  the vertices towards each other in the UV-map, and so the larger
   angles will be preserved in the UV-map.
 </p>
 
 <p>
   So, if we make the weight fulfill the requirements above, we will
   obtain an UV-mapping that strives to be conformal. And it turns out
-  that the cotanget-weight fulfills these requirements very
+  that the cotangent-weights fulfills these requirements very
   well. Because observe the graph of $\cot x$
 </p>
 
@@ -634,9 +680,9 @@ title="cotan"  width="52%" height="52%"
   want. However, we can also see that if $x \ge \frac{\pi}{2}$, then
   $\cot(x)\le 0$. So for obtuse angles, the cotangent weights may
   actually evaluate to negative values! This is not good, because
-  above we relied on the fact the weights are positive when deriving
-  the matrix equation the minimizes $E$. However, in practice, this is
-  not a good big deal, because we can just clamp the cotangent weights
+  above we relied on the fact that the weights are positive, when we were deriving
+  the matrix equation that minimizes $E$. However, in practice, this is
+  not a big deal, because we can just clamp the cotangent weights
   so that they are greater than or equal to zero.
 </p>
 
@@ -655,16 +701,16 @@ those situations, we must not use a concave polygon.
 <p>
 The reason for this is explained in chapter 5
 of <a href="#refone">[1]</a>. In section 5.3, the authors state that
-the entire reason why harmonic mapping works, is because because of
+the entire reason why harmonic mapping works, is because of
 <i>Tutte's barycentric mapping theorem</i>(henceforth abbreviated "Tutte's Theorem"). This is a theorem from graph
 theory that provides the mathematical foundations for harmonic
-mapping, and according the authors you can read more about this in
+mapping, and according to the authors you can read more about this in
 in <a href="#reffive">[5]</a>.
 </p>
 
 <p>
 The theorem gives exactly three conditions that must be
-fullfilled for harmonic mapping to yield a valid mapping: <b>(1)</b>
+fulfilled for harmonic mapping to yield a valid mapping: <b>(1)</b>
 the original mesh surface is homeomorphic to a disk. <b>(2)</b>
 the boundary vertices are on a convex polygon. <b>(3)</b> the
 coordinates of the internal vertices are a convex combination of their
@@ -673,18 +719,19 @@ neighbours.
 
 <p>
 But what does <i>valid mapping</i> mean? It means that the UV-mapped
-triangles do not cross each other, and none triangles have been
+triangles do not cross each other, and none of the triangles have been
 flipped by the mapping. If this is not fulfilled, we basically get a
 very weird UV-mapping. And we don't want that.
 </p>
 
 <p>
 
-The first condition basically means that the input mesh to the
-algorithm must be an object with <i>one</i> clearly defined
-border. The mask we have been working with thus far is homeomorphic to
-a disk, because it has one border, and no holes. If there were a hole
-in the mask, there would be <i>two</i> borders, and we would not be
+Now let's check that all the conditions of Tutte's theorem are
+satisfied. The first condition basically means that the input mesh to
+the algorithm must be an object with <i>one</i> clearly defined
+boundary. The mask we have been working with thus far is homeomorphic to
+a disk, because it has one boundary, and no holes. If there were a hole
+in the mask, there would be <i>two</i> boundaries, and we would not be
 able to use harmonic mapping anymore. Also, a sphere is not
 homeomorphic to a disk. However, if we cut the sphere into a northern
 and a southern hemisphere, then those two hemispheres are homeomorphic
@@ -711,52 +758,51 @@ the algorithm.
   showed that
 
 \begin{equation*}
-\frac{\partial E}{\partial u_i} = \sum_{j \in N(i)} w_{ij} (u_j - u_i)
+\frac{\partial E}{\partial u_i} = \sum_{j \in N(i)} w_{i, j} (u_j - u_i)
 = 0
   \end{equation*}
 
   for all internal vertices $i$. We can rewrite this as
 
 \begin{equation*}
-\sum_{j \in N(i)} w_{ij} u_j
-= \sum_{j \in N(i)} w_{ij} u_i
+\sum_{j \in N(i)} w_{i, j} u_j
+= \sum_{j \in N(i)} w_{i, j} u_i
   \end{equation*}
 
   But the $j$-indices on both sides are not the same, so let us
   relabel the one on the right-hand side
 
 \begin{equation*}
-\sum_{j \in N(i)} w_{ij} u_j
-= \sum_{k \in N(i)} w_{ik} u_i
+\sum_{j \in N(i)} w_{i, j} u_j
+= \sum_{k \in N(i)} w_{i, k} u_i
   \end{equation*}
 
   Now let us define
 
   \begin{equation*}
-  \lambda_{ij} = \frac{w_{ij}}{\sum_{k \in N(i)} w_{ik}}
+  \lambda_{i, j} = \frac{w_{i, j}}{\sum_{k \in N(i)} w_{i, k}}
   \end{equation*}
 
   If we solve for $u_i$, it turns out we can write
 
 \begin{equation*}
-  u_i = \sum_{j \in N(i)} \lambda_{ij} u_j
+  u_i = \sum_{j \in N(i)} \lambda_{i, j} u_j
   \end{equation*}
 
   As we can see from above, any internal U-coordinate $u_i$ can be
   expressed as a weighted sum of its neighbours. If all those weights
-  sum one:
+  sum to one:
 
 \begin{equation*}
-  \sum_{j \in N(i)} \lambda_{ij} = 1
+  \sum_{j \in N(i)} \lambda_{i, j} = 1
   \end{equation*}
 
   then we say that the internal U-coordinates are a <i>convex combination</i>
   of its neighbours. And if this condition is fulfilled, then also the
   third condition of Tutte's theorem is fulfulled. Fortunately, the
-  discrete harmonic weights are defined such that the weights sum to
+  discrete harmonic weights are defined such that the $\lambda_{i, j}$ weights sum to
   one, so the third condition of Tutte's theorem is thus fulfilled!
-  And certainly, it is fulfilled also for the V-coordinates. The argument
-  is the exact same as above.
+  And certainly, it is fulfilled also for the V-coordinates.
 
 </p>
 
@@ -783,7 +829,7 @@ dimensional representation of a three dimensional mesh. And this is called
  <i>Mesh Parameterization</i> by researchers, and Mesh
 Parameterization has many other applications. Indeed, in the paper where
 harmonic mapping was first introduced <a href="#refsix">[6]</a>,
-harmonic mapping was used an important component in an algorithm for
+harmonic mapping was used as an important component in an algorithm for
 obtaining a multiresolution representation of an arbitrary mesh. In
 section 4 of <a href="#refsix">[6]</a> you can read the original
 description of harmonic mapping. Also, in chapter 1
@@ -796,7 +842,7 @@ of <a href="#reftwo">[2]</a> you can read about other applications of
 
  If you wish to know even more about mesh parameterization techniques, you can
  read chapter 5 in <a href="#refone">[1]</a>. There is
- also <a href="#reftwo">[2]</a>, which an entire Siggraph course
+ also <a href="#reftwo">[2]</a>, which is an entire Siggraph course
  dedicated to the topic of Mesh Parameterization.
 
 </p>
