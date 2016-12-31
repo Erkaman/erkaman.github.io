@@ -1,5 +1,19 @@
 <list>
   <project>
+    <title>auto_uv_map</title>
+    <href>https://github.com/Erkaman/auto_uv_map</href>
+    <img>/img/gallery/head_uv.png</img>
+    <text>
+      <p>
+        A reference implementation of automatic UV-mapping using
+        Harmonic Mapping.  To my knowledge, there does not really
+        exist a readable reference implementation of harmonic mapping
+        that you can learn from. This implementation aims to solve
+        that problem. The details of the technique are described in my <a href="/posts/harmonic_map.html">article</a>.
+      </p>
+    </text>
+  </project>
+  <project>
     <title>regl</title>
     <href>https://github.com/regl-project/regl</href>
     <img>/img/gallery/regl.jpg</img>
