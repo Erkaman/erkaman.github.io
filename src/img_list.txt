@@ -43,3 +43,4 @@
 /img/gallery/dawn.png https://github.com/Erkaman/cloud_gen
 /img/gallery/blue_sky.png https://github.com/Erkaman/cloud_gen
 /img/gallery/spiky.png https://github.com/Erkaman/spiky-anim
+/img/gallery/image_load-store.jpg https://github.com/Erkaman/image-load-store-demo
