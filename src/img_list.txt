@@ -45,3 +45,6 @@
 /img/gallery/spiky.png https://github.com/Erkaman/spiky-anim
 /img/gallery/image_load-store.jpg https://github.com/Erkaman/image-load-store-demo
 /img/gallery/cute_deferred.jpg https://github.com/Erkaman/cute-deferred-shading
+/img/gallery/cute_deferred2.jpg https://github.com/Erkaman/cute-deferred-shading
+/img/gallery/cute_deferred3.jpg https://github.com/Erkaman/cute-deferred-shading
+/img/gallery/cute_deferred4.jpg https://github.com/Erkaman/cute-deferred-shading
