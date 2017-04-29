@@ -48,3 +48,4 @@
 /img/gallery/cute_deferred2.jpg https://github.com/Erkaman/cute-deferred-shading
 /img/gallery/cute_deferred3.jpg https://github.com/Erkaman/cute-deferred-shading
 /img/gallery/cute_deferred4.jpg https://github.com/Erkaman/cute-deferred-shading
+/img/gallery/webgl_rsm.jpg https://github.com/Erkaman/webgl-rsm
