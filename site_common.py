@@ -3,7 +3,6 @@ import markdown2
 import datetime
 
 posts = [
-    ("src/harmonic_map.html", "Automatic UV mapping using Harmonic Mapping: A tutorial and Introduction"),
     "src/regl_anim.md",
     "src/cuda_rle.md",
     "src/tess_opt.md",

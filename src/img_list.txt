@@ -38,8 +38,6 @@
 /img/gallery/smiley.jpg https://github.com/Erkaman/smiley
 /img/gallery/regl-fire.jpg https://github.com/Erkaman/regl-fire
 /img/gallery/physics.jpg https://twitter.com/erkaman2/status/775043341998231552
-/img/gallery/head_uv.png /projects.html#auto_uv_map
-/img/gallery/mask_uv.png /projects.html#auto_uv_map
 /img/gallery/dawn.png https://github.com/Erkaman/cloud_gen
 /img/gallery/blue_sky.png https://github.com/Erkaman/cloud_gen
 /img/gallery/spiky.png https://github.com/Erkaman/spiky-anim
