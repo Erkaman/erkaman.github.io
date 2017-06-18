@@ -47,3 +47,8 @@
 /img/gallery/cute_deferred3.jpg https://github.com/Erkaman/cute-deferred-shading
 /img/gallery/cute_deferred4.jpg https://github.com/Erkaman/cute-deferred-shading
 /img/gallery/webgl_rsm.jpg https://github.com/Erkaman/webgl-rsm
+/img/gallery/mtgallery0.jpg /posts/masters_thesis.html
+/img/gallery/mtgallery1.jpg /posts/masters_thesis.html
+/img/gallery/mtgallery2.jpg /posts/masters_thesis.html
+/img/gallery/mtgallery3.jpg /posts/masters_thesis.html
+/img/gallery/mtgallery4.jpg /posts/masters_thesis.html

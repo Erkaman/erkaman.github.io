@@ -1,11 +1,23 @@
 <list>
   <project>
+    <title>My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel
+  Octree for Global Illumination"</title>
+    <href>/posts/masters_thesis.html</href>
+    <img>/img/gallery/mtgallery0.jpg</img>
+    <text>
+      <p>
+        Read more about my master's thesis <a href="/posts/masters_thesis.html">here</a>
+      </p>
+    </text>
+  </project>
+
+  <project>
     <title>regl</title>
     <href>https://github.com/regl-project/regl</href>
     <img>/img/gallery/regl.jpg</img>
     <text>
       <p>
-        I am a very active contributor to the open source WebGL
+        I was once a very active contributor to the open source WebGL
         framework regl. My many contributions include: writing many
         code examples for the purpose of making the framework easier
         to learn for beginners, reporting and fixing many bugs,

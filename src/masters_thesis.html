@@ -1,0 +1,131 @@
+
+<h1>My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel
+  Octree for Global Illumination"</h1>
+
+<p><a href="/img/masters_thesis/masters_thesis.pdf"><img class="article-img" src="/img/masters_thesis/mtgallery0.png"
+        alt="Front Image" title="Front Image"/></a></p>
+
+<p>
+<a href="/img/masters_thesis/masters_thesis.pdf">Download(PDF, 33MB)</a>
+</p>
+
+
+<h2>Abstract</h2>
+
+<p>
+  Voxel cone tracing is a real-time method that approximates global
+  illumination using a voxel approximation of the original
+  scene. However, a high-resolution voxel approximation, which is
+  necessary for good quality, consumes much memory, and a compact data
+  structure for storing the voxels is necessary. In this thesis, as a
+  primary contribution, we provide a comparison of two such data
+  structures: a Sparse Voxel Octree, and a Clipmap.
+</p>
+
+<p>
+We implement these two data structures, and provide detailed
+descriptions of both with many important implementation details. These
+descriptions are much more complete than what exists in the current
+literature, and it is the secondary contribution of this thesis.
+</p>
+
+<p>
+In the comparison, we find that the octree performs worse than the
+clipmap with respect to memory consumption and performance, due to the
+overhead introduced by the complex octree data structure. However,
+with respect to visual quality, the octree is the superior choice,
+since the clipmap does not provide the same voxel resolution
+everywhere.
+</p>
+
+<h2>Author's Comments</h2>
+
+<p>
+  This is my master's thesis, where I performed a comparison between
+  the two data structures Clipmap and Sparse Voxel Octree for voxel cone
+  tracing. To do this comparison, I had to implement both of these two
+  data structures, and about half-way into the project I realized that
+  this was a vastly over-ambitious project. Many things took much more
+  time than I had initially anticipated, and so there simply was not
+  enough time to do everything I wanted to do in the end. The current
+  literature and scientific papers about this topic is very sparse on
+  details, and only describes the very tip of the iceberg. As a
+  result, you basically have to rediscover much of what the previous
+  authors did by trying different approaches and experimenting a
+  lot. This consumes much time, and resulted in my initial time
+  schedule not working out in the end.
+</p>
+
+<p>
+  I wanted to spend more time optimizing my implementation of both
+  data structures, but I was not able to do very much optimization due
+  to time constraints. I wanted to implement anisotropic voxels to
+  decrease issues with light-leakage, and I was able to implement it
+  for the clipmap, but not for the octree, so that part had to be
+  scrapped from my comparison. Implementing the octree and adding
+  features to it was a massive headache, because it is not difficult
+  to accidentaly create subtle bugs that only appear in large,
+  unwieldy octrees that are difficult debug. Many hours ended up being
+  spent on debugging the octree.
+</p>
+
+<p>
+  Unfortunately, my implementation of both data structures don't look
+  that great visually in my opinion, and that is because I couldn't
+  spend very much time on making it look good due to time
+  constraints. Because of this, my comparison is not very focused on
+  comparing the differences of visual quality of the data structures,
+  and instead it is mainly focused on performance comparisons.
+</p>
+
+<p>
+  I was, however, very satisfied with my final report. As I already
+  mentioned, the current literature on the topic can be very sparse,
+  and my report describes several important implementation details
+  that are not described anywhere else. I hope that my report shall
+  make it easier for people to implement these techniques in the
+  future.
+</p>
+
+<p>
+  While I probably sounded very negative in the above paragraphs, I am
+  overall satisfied with how my Master's Thesis turned out, and I
+  learned tons from this project. Hopefully, I will learn from this
+  project and become more skilled at making reasonable time
+  estimations in the future :-)
+</p>
+
+<p>
+  Finally, if you have any questions, I am most easily reachable
+  on <a href="https://twitter.com/erkaman2">Twitter</a>.
+</p>
+
+
+<h2>Images</h2>
+
+<p><img class="article-img" src="/img/masters_thesis/mtgallery1.jpg"
+        alt="Gallery 1" title="Gallery 1"/></p>
+
+<p><img class="article-img" src="/img/masters_thesis/mtgallery2.png"
+        alt="Gallery 2" title="Gallery 2"/></p>
+
+<p><img class="article-img" src="/img/masters_thesis/mtgallery3.png"
+        alt="Gallery 3" title="Gallery 3"/></p>
+
+<p><img class="article-img" src="/img/masters_thesis/mtgallery4.png"
+        alt="Gallery 4" title="Gallery 4"/></p>
+
+
+<h2>Videos</h2>
+
+<p>
+<div class="video-container">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ixHhhY4mCzs?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</p>
+
+<p>
+<div class="video-container">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NUhn4vlp87A?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</p>

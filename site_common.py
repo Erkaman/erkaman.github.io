@@ -3,6 +3,7 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/masters_thesis.html", "My Master's Thesis: \"Comparing a Clipmap to a Sparse Voxel Octree for Global Illumination\""),
     "src/regl_anim.md",
     "src/cuda_rle.md",
     "src/tess_opt.md",
