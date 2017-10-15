@@ -1,0 +1,187 @@
+<h1>Computing the Area of a Convex Polygon</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] }
+
+  });
+</script>
+<script type="text/javascript"
+  src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{eqcol2}{RGB}{114,0,172}\definecolor{eqcol1}{RGB}{172,0,114}\definecolor{eqcol3}{RGB}{0,172,114}\definecolor{eqcol4}{RGB}{230,190,120}$In
+  this article, we shall derive a formula that computes the area of a
+  convex polygon. That is, given the vertices $\mvec{v_0},
+  \mvec{v_1},\dots,\mvec{v_n}$ of some convex polygon $P$, we want to
+  compute its area, which we denote $A(P)$. We will use the below polygon for illustrations:
+
+</p>
+
+  <p><a href="/img/area_convex_polygon/target_polygon.svg"><img class="article-img"
+                                                            src="/img/area_convex_polygon/target_polygon.svg"
+alt="Polygon"
+                                                                title="Polygon"
+                                                                width="40%" height="40%"
+                                                     /></a></p>
+
+<p>
+
+  It is easy to compute the area of a triangle. Therefore, our
+  strategy will be to first triangulate $P$, and then calculate the
+  sum of the areas of all the triangles. We define
+  $\mvec{o}=(o_x,o_y,o_z)$ to be the centroid of the polygon. Since
+  $P$ is convex, we can simply triangulate $P$ by drawing edges from
+  $\mvec{o}$ to all the vertices. This algorithm yields the
+  triangulation $(\mvec{o},\mvec{v_0},\mvec{v_1}),
+  (\mvec{o},\mvec{v_1},\mvec{v_2}),\dots,
+  (\mvec{o},\mvec{v_{n-1}},\mvec{v_{n}}),(\mvec{o},\mvec{v_{n}},\mvec{v_{0}})$. The
+  below figure illustrates such a triangulation.
+
+</p>
+
+  <p><a href="/img/area_convex_polygon/polygon_tri.svg"><img class="article-img"
+                                                            src="/img/area_convex_polygon/polygon_tri.svg"
+alt="Triangulated Polygon"
+                                                                title="Triangulated
+                                                            Polygon"
+                                                                width="40%" height="40%"
+                                                     /></a></p>
+
+
+<p>
+  In the above case, the triangulation is
+
+\begin{equation*} (\mvec{o},\mvec{v_0},\mvec{v_1}),(\mvec{o},\mvec{v_1},\mvec{v_2}),(\mvec{o},\mvec{v_2},\mvec{v_3}),(\mvec{o},\mvec{v_3},\mvec{v_4}),(\mvec{o},\mvec{v_4},\mvec{v_5}), (\mvec{o},\mvec{v_5},\mvec{v_0}).
+\end{equation*}
+
+
+  Next, a formula for computing the area of a single triangle is
+  necessary.
+</p>
+
+
+<p><a href="/img/area_convex_polygon/tri_area.svg"><img class="article-img"
+                                                            src="/img/area_convex_polygon/tri_area.svg"
+alt="triangle and parallelogram area"
+title="triangle and parallelogram area" width="80%" height="80%"/></a></p>
+
+<p>
+
+Let us compute the area of the above triangle
+$(\mvec{v_0},\mvec{v_1},\mvec{v_2})$, and let us call it $T$. It is
+well-known
+that <a href="https://en.wikipedia.org/wiki/Cross_product#Geometric_meaning">the
+magnitude of the cross product computes the area of a
+parallelogram</a>. More precisely, $||\mvec{a} \times \mvec{b}||$ is
+the area of the parallelogram spanned by $\mvec{a}$ and
+$\mvec{b}$. But this means that $||(\mvec{v_1}-\mvec{v_0}) \times
+(\mvec{v_2}-\mvec{v_0})||$ is the area of the parallelogram to the
+right. We can also see that the triangle on the left side of the
+dashed diagonal is simply $T$, and the triangle on the right side is
+$T$ again, but this time mirrored along the diagonal. To conclude, the
+area of the parallelogram is twice the area of $T$. Therefore,
+
+\begin{equation*}
+A(T) = \frac{1}{2}||(\mvec{v_1}-\mvec{v_0}) \times (\mvec{v_2}-\mvec{v_0})||.
+\end{equation*}
+
+For the cross product to be defined, $\mvec{v_0}$,$\mvec{v_1}$ and
+$\mvec{v_2}$ must be three-dimensional vectors. So the $z$-component
+is set to $0$, so that we have $\mvec{v_0} = (x_0,y_0,0)$, $\mvec{v_1} =
+(x_1,y_1,0)$, $\mvec{v_2} = (x_2,y_2,0)$. Simplifying the expression
+for $A(T)$ gives
+
+\begin{align*}
+A(T) = \frac{1}{2}||(\mvec{v_1}-\mvec{v_0}) \times
+(\mvec{v_2}-\mvec{v_0})|| =\\
+\frac{1}{2} \left|\left|\begin{bmatrix}
+           0 \\
+0 \\
+(x_1-x_0)(y_2-y_0) - (x_2-x_0)(y_1-y_0)
+         \end{bmatrix}\right|\right| =\\ \frac{1}{2} (x_1 y_2 - x_1 y_0 -
+x_0 y_2 - x_2 y_1 + x_2 y_0 + x_0 y_1).
+\end{align*}
+
+The above formula may appear slightly unwieldy, but if we use it to
+compute the polygon area $A(P)$, a rather elegant formula falls
+out. As familiar, $A(P)$ is simply the sum of the areas of the
+triangles of its triangulation. We have already found this
+triangulation, so $A(P)$ is
+
+\begin{equation}
+A(P) = A(\mvec{o},\mvec{v_0},\mvec{v_1}) +
+A(\mvec{o},\mvec{v_1},\mvec{v_2}) + \dots +
+A(\mvec{o},\mvec{v_{n-1}},\mvec{v_{n}}) +
+A(\mvec{o},\mvec{v_{n}},\mvec{v_{0}}) =
+\sum_{i=0}^{n} A(\mvec{o},\mvec{v_{i}},\mvec{v_{i+1}}),
+\label{eq:apsum}
+\end{equation}
+
+where we have defined $\mvec{v_{n+1}} = \mvec{v_{0}}$, for the
+purpose of handling the wraparound from $\mvec{v_n}$ to
+$\mvec{v_0}$. Further, $A(\mvec{v_0},\mvec{v_1},\mvec{v_2})$ is the
+area of the triangle with vertices $\mvec{v_0}$, $\mvec{v_1}$, and
+$\mvec{v_2}$.
+
+</p>
+
+<p>
+
+Notice that the expression $\eqref{eq:apsum}$ is a large sum of terms. Term number $j$ is
+$A(\mvec{o},\mvec{v_{j}}, \mvec{v_{j+1}})$. Let now $j$ represent the
+number of an arbitrary term in the sum, so that it can be any of the
+terms. We will examine the terms with numbers $j-1$, $j$ and $j+1$, and
+calculate their sum:
+
+\begin{align*}
+A(\mvec{o},\mvec{v_{j-1}},\mvec{v_{j}}) +
+A(\mvec{o},\mvec{v_{j}},\mvec{v_{j+1}}) +
+A(\mvec{o},\mvec{v_{j+1}},\mvec{v_{j+2}}) = \\
+
+\frac{1}{2}(
+\color{black}{x_{j-1} y_{j}} \color{black}{- x_{j-1} o_y}
+\color{eqcol1}{- o_x y_{j}} \color{black}{- x_{j} y_{j-1}} \color{eqcol2}{+
+x_{j} o_y} \color{black}{+ o_x y_{j-1}}\color{black}{+}\\
+
+\color{black}{x_{j} y_{j+1}} \color{eqcol2}{- x_{j} o_y}
+\color{eqcol3}{- o_x y_{j+1}} \color{black}{- x_{j+1} y_{j}} \color{eqcol4}{+
+x_{j+1} o_y} \color{eqcol1}{+ o_x y_{j}}\color{black}{+}\\
+
+\color{black}{x_{j+1} y_{j+2}} \color{eqcol4}{- x_{j+1} o_y}
+\color{black}{- o_x y_{j+2}} \color{black}{- x_{j+2} y_{j+1}} \color{black}{+
+x_{j+2} o_y} \color{eqcol3}{+ o_x y_{j+1}}).
+\end{align*}
+
+It can be seen that for the term $j$(the middle term) only
+$\frac{1}{2}(x_{j} y_{j+1} - x_{j+1}y_{j})$ is remaining. The rest was
+cancelled out, as indicated by the colors. Recall that $j$ is an
+arbitrary index that represents an arbitrary term in
+$\eqref{eq:apsum}$, and thus the same cancellation will occur
+for all the terms in the sum for $A(P)$. So we have
+
+\begin{equation*}
+A(P) =
+\sum_{i=0}^{n} A(\mvec{o},\mvec{v_{i}},\mvec{v_{i+1}}) =
+\frac{1}{2}\sum_{i=0}^{n} (x_{i} y_{i+1}- x_{i+1}y_{i}).
+\end{equation*}
+
+This concludes our derivation. We have arrived at the
+famous <a href="https://en.wikipedia.org/wiki/Shoelace_formula">Shoelace
+formula</a>. The attractive part of this derivation is that it
+requires no knowledge of calculus; the only utilized tools were some
+elementary geometry and vector algebra. If, on the other hand, the
+powerful tools of calculus are at our disposal, the Shoelace formula
+can be found
+using <a href="https://en.wikipedia.org/wiki/Green%27s_theorem">Green's
+theorem</a> with relative ease.
+
+</p>
+
+<p>
+  Source code that implements the derived Shoelace formula is included
+  in
+  a <a href="https://gist.github.com/Erkaman/3c82bdfeaa6087228fd1903798c5f18e">gist</a>.
+</p>

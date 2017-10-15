@@ -52,3 +52,4 @@
 /img/gallery/mtgallery2.jpg /posts/masters_thesis.html
 /img/gallery/mtgallery3.jpg /posts/masters_thesis.html
 /img/gallery/mtgallery4.jpg /posts/masters_thesis.html
+/img/gallery/polygon_tri.png /posts/area_convex_polygon.html

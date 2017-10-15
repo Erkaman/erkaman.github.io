@@ -1,0 +1,39 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing}
+\begin{tikzpicture}[shift={(10.0,0.0)}]
+
+
+  \input{common.tex}
+  %% triangle shift.
+  \coordinate (tris) at (-5.0,0.0);
+
+  \filldraw[polstl] (o) -- (v0) -- (r) -- (v1) -- cycle;
+
+  \draw (o) node[left] {$\mvec{v_0}$};
+
+  \draw (o) node[below right,xshift=-13.0,yshift=-5.0] {$A=||(\mvec{v_1}-\mvec{v_0}) \times (\mvec{v_2}-\mvec{v_0})||$};
+
+  \draw[dashed] (v0) -- (v1);
+
+  \draw (v0) node[below] {$\mvec{v_1}$};
+
+  \draw (v1) node[above] {$\mvec{v_2}$};
+
+
+
+
+  \filldraw[polstl] (tris) ++ (o) --  +(v0) --
+  +(v1) -- cycle;
+
+  \draw (tris) ++ (o) node[left] {$\mvec{v_0}$};
+  \draw (tris) ++ (v0) node[right] {$\mvec{v_1}$};
+  \draw (tris) ++ (v1) node[above left] {$\mvec{v_2}$};
+
+  \draw (tris) ++ (o) node[below right,xshift=-24.0,yshift=-5.0] {$A=\frac{1}{2}||(\mvec{v_1}-\mvec{v_0}) \times\\ (\mvec{v_2}-\mvec{v_0})||$};
+
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,5 +1,4 @@
 auto/
-*.svg
 *.pdf
 *.aux
 *.log
@@ -8,3 +7,8 @@ src/**/*.png
 
 *.pyc
 .DS_Store
+
+
+posts/rotation_matrix_derivation.html
+src/rotation_matrix_derivation/
+src/rotation_matrix_derivation.html
