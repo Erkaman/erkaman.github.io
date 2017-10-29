@@ -1,0 +1,310 @@
+<h1>The Gauss-Seidel and Jacobi Methods for Solving Linear Systems</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] }
+
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{eqcol2}{RGB}{114,0,172}\definecolor{eqcol1}{RGB}{172,0,114}\definecolor{eqcol3}{RGB}{0,172,114}\definecolor{eqcol4}{RGB}{230,190,120}$In
+  this article, we shall explain the Jacobi and Gauss-Seidel methods,
+  which are two iterative methods used for
+  solving <a href="https://en.wikipedia.org/wiki/System_of_linear_equations">systems
+  of linear equations</a>. Our main objective is to describe how the
+  Gauss-Seidel method can be made into a highly parallel algorithm, thus
+  making it feasable for implementation on the GPU, or even on the
+  CPU using SIMD intrinsics. But before we can do that, it is
+  necessary to describe the Gauss-Seidel and Jacobi methods to the
+  reader.
+
+  </p>
+
+  <p>
+
+  In the domain of computer graphics, there are several applications
+  where being able to solve a linear system quickly is important. Some
+  such applications are fluid simulation, rigid body dynamics, and
+  geometry processing. And by being able to quickly solve linear
+  systems on the GPU, great performance boosts can be achieved.
+
+  </p>
+
+  <p>
+
+  Let us first consider the simple linear system
+
+  \begin{align*}
+  3x_1 + 1x_2 &= 8 \\
+  5x_1 + 5x_2 &= 20. \\
+  \end{align*}
+
+  It has the solution $x_1=2, x_2=2$. How can we solve such a system
+  on the computer? One approach is to use an iterative method, which
+  means that we first guess an initial solution, and then repeatedly
+  perform an algorithm that improves our guess, bringing it closer to
+  the solution. One of the simplest such schemes is the Jacobi
+  method, which shall now be explained.
+  </p>
+
+  <p>
+
+  Assume our initial guess is $x_1^{(1)} = 0, x_2^{(1)} = 0$. The
+  first guess is denoted $x_1^{(1)}$, the improved second guess is
+  denoted $x_1^{(2)}$, and so on. How can we move this guess closer to
+  the solution?  Clearly, our guess does not satisfy the first
+  equation in the system, since $3 \cdot 0 + 1 \cdot 0 \neq 8$. So we
+  update our guess and try to move closer to the solution: first, look
+  at the first equation, and assume that $x_2^{(1)} = 0$ is actually
+  the solution. What is then the value of $x_1$, if we want the first
+  equation to be satisfied? We can simply solve for it:
+
+  \begin{align*}
+  x_1 = \frac{8 - 1x_2}{3} = \frac{8 - 0}{3} = 2.666666.
+  \end{align*}
+
+  This yields our improved guess $x_1^{(2)} = 2.6666666$. Now consider
+  instead the second equation. In this case, assume that $x_1^{(1)}=0$
+  is the solution. Solve for $x_2$:
+
+  \begin{align*}
+  x_2 = \frac{20 - 5x_1}{5} = \frac{20 - 0}{5} = 4.
+  \end{align*}
+
+  Giving our improved guess $x_2^{(2)} = 4$. With that, we have
+  performed a single iteration of the Jacobi method. If we now perform
+  the same algorithm above again, but this time using $x_1^{(2)},
+  x_2^{(2)}$ instead of $x_1^{(1)}, x_2^{(1)}$ as our guess, we will have
+  performed a second iteration.
+
+  </p>
+  <p>
+
+  This iterative scheme can be used to solve linear systems on the
+  form $A\mvec{x} = \mvec{b}$(For the system above, we have
+
+  \begin{equation*}
+  A= \begin{bmatrix}
+  3 & 1 \\
+  5 & 5 \\
+  \end{bmatrix},
+
+  \mvec{x} = \begin{bmatrix}
+  x_1 \\
+  x_2
+  \end{bmatrix},
+
+  \mvec{b} = \begin{bmatrix}
+  8 \\
+  20
+  \end{bmatrix},
+  \end{equation*}).
+
+  As long as $A$ is a
+  symmetric <a href="https://en.wikipedia.org/wiki/Positive-definite_matrix">positive
+  definite matrix</a>, the method will converge towards a solution. In
+  practical applications, many matrices fulfill this property, so this
+  condition rarely poses any problems.
+
+  </p>
+  <p>
+
+  In the Jacobi method, iterations are repeatedly performed until we
+  are close enough to the solution. Thus, some form of stopping
+  criterion is necessary, so that the algorithm halts once we are
+  close enough to the solution. A simple criterion is checking whether
+  the residual is close enough to zero. We shall define the residual:
+  let $\mvec{x}$ be the solution. It will satisfy
+
+  \begin{equation*}
+  A\mvec{x} = \mvec{b}.
+  \end{equation*}
+
+  We can rewrite this as
+
+  \begin{equation*}
+  A\mvec{x} - \mvec{b} = \mvec{0}.
+  \end{equation*}
+
+  Consequently, only if the vector $A\mvec{x} - \mvec{b}$, which is
+  called the <i>residual</i>, is the zero vector, is $\mvec{x}$ a
+  solution. Therefore, if the residual of our guess is close enough to
+  the zero vector, then we can stop. Let $\mvec{x^{(i)}}$ be our guess
+  in iteration number $i$. Then we should stop iterating in that
+  iteration, if the length of the residual is smaller than some
+  tolerance value $\epsilon$. To be specific, our criterion is
+
+  \begin{equation*}
+  ||A\mvec{x^{(i)}} - \mvec{b}|| < \epsilon
+  \end{equation*}
+
+
+  So far, we have only described the Jacobi method for the simple case
+  where $A$ is a $2 \times 2$ matrix. But it is simple to generalize
+  the algorithm to a $N \times N$ matrix. To obtain the value of $x_i$
+  in some iteration $j$, denoted $x_i^{(j)}$, we simply solve for
+  $x_i$ in equation number $i$ in the linear systems of
+  equations. When solving for $x_i$, set the values of all the
+  variables that are not $x_i$ to their values in the previous
+  iteration $j-1$. Note that this is simply a generalization of the
+  method we described earlier. Below we give C code that implements a
+  single iteration of the Jacobi method
+</p>
+
+<p>
+
+
+<div class="codehilite"><pre><span></span><code><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0f</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">s</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+
+As can be observed, it is necessary that our next guess is written to
+a temporary vector, because we are using our previous guess when
+calculating our next guess. It is not possible to implement the method
+without such a temporary vector.
+</p>
+
+<p>
+
+  However, what if we do not use a temporary vector at all, and
+  instead overwrite the values of our previous guess when calculating
+  our next guess? This is slightly slimilar to the Jacobi method, but
+  it is <i>not</i> the Jacobi method. It has a name of its own: The
+  Gauss-Seidel method. Code that implements a single iteration of the
+  method is given below
+
+</p>
+
+<p>
+
+<div class="codehilite"><pre><span></span><code><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0f</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">s</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</p>
+
+<p>
+
+  Essentially, it is just the Jacobi method without a temporary
+  vector. We will also demonstrate one iteration of this method by
+  hand calculation. Consider again the system
+
+  \begin{align*}
+  3x_1 + 1x_2 &= 8 \\
+  5x_1 + 5x_2 &= 20 \\
+  \end{align*}
+
+  Assume our original guess is $x_1 = 0, x_2 = 0$. Just like in the
+  Jacobi method, we solve for $x_1$ in the first equation
+
+  \begin{align*}
+  x_1 = \frac{8 - 1x_2}{3} = \frac{8 - 0}{3} = 2.666666.
+  \end{align*}
+
+  So our improved guess for $x_1$ will be $2.666666$. However, we will
+  now use this improved guess when solving for $x_2$ in the second
+  equation:
+
+  \begin{align*}
+  x_2 = \frac{20 - 5x_1}{5} = \frac{20 - 5 \cdot 2.666666}{5} = 1.333333.
+  \end{align*}
+
+  Meaning that our improved guess for $x_2$ is $1.333333$.This is
+  different from the Jacobi-method, where we used the value of $x_1$
+  in the original guess when solving for $x_2$. In the Jacobi method,
+  our guess is not actually improved until the <i>end</i> of the
+  iteration, since we are using a temporary vector. But with the
+  Gauss-Seidel method, our guess is improved <i>during</i> the
+  iteration. It turns out that the Gauss-Seidel method converges to a
+  solution more quickly than the Jacobi method. This is illustrated by
+  the below image
+
+</p>
+
+<p><a href="/img/jacobi_and_gauss_seidel/jacobi_vs_gauss_seidel.svg"><img class="article-img"
+                                                            src="/img/jacobi_and_gauss_seidel/jacobi_vs_gauss_seidel.svg"
+alt="Jacobi Vs Gauss-Seidel"
+title="Jacobi Gauss-Seidel" width="50%" height="50%"/></a></p>
+
+<p>
+
+The image demonstrates how the two methods converge towards a
+solution, for the simple linear system we have been using for our
+explanation. The vertices of the colored paths represents the improved
+guesses obtained by the two methods. Both methods started at $x_1=0,
+x_2=0$, and converged towards the solution $x_1 = 2, x_2=2$, with a
+tolerance value of $\epsilon=0.01$. However, the Gauss-Seidel method
+converged in only 5 iterations(it is making very small steps at the
+end, that are not visible in the graph), while the Jacobi method took
+$11$ iterations. We can also see that the Gauss-Seidel method took a
+much more direct path to the solution, while the Jacobi method
+struggled a lot more with finding the way the solution.
+
+</p>
+<p>
+
+In general, the Gauss-Seidel method will converge faster. For
+instance, the source code included in the end generates a random
+system of linear equations, where $A$ has size $300 \times 300$, and
+for this case the Gauss-Seidel method converges in 6 iterations, while
+the Jacobi method takes 14 iterations.
+</p>
+<p>
+However, the Gauss-Seidel method also has a major drawback: it is a
+very serial algorithm. In the Jacobi method, the
+variable <code class="inline-code">x</code> from the code is never
+updated when we are computing our new guess. It is not until the very
+end of the iteration that this variable is updated. And this means
+that the calculation of the new guess for $x_2$ is not at all
+dependent on the results of the calculation of the new guess for
+$x_1$, and the same is true for all the $N$ unknowns in the linear
+system. In other words, the new guesses for all the $N$ unknowns can
+be computed completely in parallell. This makes it easy to efficiently
+implement the algorithm on the GPU.
+</p>
+
+<p>
+However, it is not at all obvious how to parallellize the Gauss-Seidel
+method. Because once we have computed our new guess for $x_1$, this
+value is then used to compute our new guess for $x_2$, and so on. At
+first sight, this is an extremely serial algorithm, and difficult to
+efficiently implement on the GPU. However, if we place a condition on
+the matrix $A$, it is possible to parallelize the algorithm, and we
+can then implement the Gauss Seidel method on the GPU. However, we will not
+explain how this is done in this article, but instead leave it as a
+cliffhanger for the next article in this series.
+
+</p>
+
+<p>
+  Source code that implements both methods discussed in the article
+  can be found in
+  a <a href="https://gist.github.com/Erkaman/19b9916c6d00e9c54446bce6075769b5">gist</a>. In
+  the code, a random linear system where $A$ has size $300 \times 300$
+  is generated, and solved with both methods
+</p>

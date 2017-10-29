@@ -53,3 +53,4 @@
 /img/gallery/mtgallery3.jpg /posts/masters_thesis.html
 /img/gallery/mtgallery4.jpg /posts/masters_thesis.html
 /img/gallery/polygon_tri.png /posts/area_convex_polygon.html
+/img/gallery/jacobi_vs_gauss_seidel.png /posts/jacobi_and_gauss_seidel.html

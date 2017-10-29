@@ -3,6 +3,7 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/jacobi_and_gauss_seidel.html", "The Gauss-Seidel and Jacobi Methods for Solving Linear Systems"),
     ("src/area_convex_polygon.html", "Computing the Area of a Convex Polygon"),
     ("src/masters_thesis.html", "My Master's Thesis: \"Comparing a Clipmap to a Sparse Voxel Octree for Global Illumination\""),
 
