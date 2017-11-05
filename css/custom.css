@@ -425,3 +425,12 @@ h2 a{
 	width:100%;
 	height:100%;
 }
+
+.feed-button {
+    display: inline;
+    vertical-align: middle;
+    float: right;
+    height: auto;
+    width: 0.8em;
+    margin: 0;
+}

@@ -5,8 +5,10 @@ import site_common as site_common
 
 html_source = ''
 html_source += '<div class="container">'
-html_source += "<h1>Articles</h1>"
+html_source += """<h1>Articles <a href="/rss.xml" title="RSS feed"><img src="/img/rss.png" alt="RSS" class="feed-button"></a></h1>"""
 html_source += "<p>Below are some small articles and tutorials I have written.</p>"
+
+html_source += """"""
 
 def extract_title(md_file):
     # extract the title of a post, from the first line in the file.

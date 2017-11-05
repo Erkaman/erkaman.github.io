@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+
+<channel>
+  <title>Articles by Eric Arneb&#xe4;ck</title>
+  <link>https://erkaman.github.io/articles.html</link>
+  <description>Some small articles and tutorials written by Eric Arneb&#xe4;ck</description>
+  <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
+
+  <item>
+    <title>Showing the Correctness of Quaternion Rotation</title>
+    <link>https://erkaman.github.io/posts/quaternion_rotation.html</link>
+    <guid>https://erkaman.github.io/posts/quaternion_rotation.html</guid>
+    <description>
+      $In this article, we shall provide an algebraic proof that shows
+      that quaternion rotation is correct. As is well-known, we can
+      rotate a vector $\vec{v}$ by an angle $\theta$ around the
+      rotation axis $\vec{u}$ using quaternions. This is done with the
+      calculation
+    </description>
+  </item>
+
+  <item>
+    <title>The Gauss-Seidel and Jacobi Methods for Solving Linear Systems</title>
+    <link>https://erkaman.github.io/posts/jacobi_and_gauss_seidel.html</link>
+    <guid>https://erkaman.github.io/posts/jacobi_and_gauss_seidel.html</guid>
+    <description>
+      In this article, we shall explain the Jacobi and Gauss-Seidel
+      methods, which are two iterative methods used for solving
+      systems of linear equations. Our main objective is to describe
+      how the Gauss-Seidel method can be made into a highly parallel
+      algorithm, thus making it feasable for implementation on the
+      GPU, or even on the CPU using SIMD intrinsics. But before we can
+      do that, it is necessary to describe the Gauss-Seidel and Jacobi
+      methods to the reader.
+    </description>
+  </item>
+
+  <item>
+    <title>Computing the Area of a Convex Polygon</title>
+    <link>https://erkaman.github.io/posts/area_convex_polygon.html</link>
+    <guid>https://erkaman.github.io/posts/area_convex_polygon.html</guid>
+    <description>
+      In this article, we shall derive a formula that computes the
+      area of a convex polygon. That is, given the vertices
+      $\mvec{v_0}, \mvec{v_1},\dots,\mvec{v_n}$ of some convex polygon
+      $P$, we want to compute its area, which we denote $A(P)$. We
+      will use the below polygon for illustrations:
+    </description>
+  </item>
+
+
+  <item>
+    <title>My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel Octree for Global Illumination"</title>
+    <link>https://erkaman.github.io/posts/masters_thesis.html</link>
+    <guid>https://erkaman.github.io/posts/masters_thesis.html</guid>
+    <description>
+      Voxel cone tracing is a real-time method that approximates
+      global illumination using a voxel approximation of the original
+      scene. However, a high-resolution voxel approximation, which is
+      necessary for good quality, consumes much memory, and a compact
+      data structure for storing the voxels is necessary. In this
+      thesis, as a primary contribution, we provide a comparison of
+      two such data structures: a Sparse Voxel Octree, and a Clipmap.
+    </description>
+  </item>
+
+  <item>
+    <title>Implementing Run-length encoding in CUDA</title>
+    <link>https://erkaman.github.io/posts/cuda_rle.html</link>
+    <guid>https://erkaman.github.io/posts/cuda_rle.html</guid>
+    <description>In the paper Fine-Grain Parallelization of Entropy
+    Coding on GPGPUs, Ana Balevic describes how Run-length
+    encoding(hereafter abbreviated RLE) can be implemented on the
+    GPU. Although the paper is very sparse on details, I have been
+    able to implement her approach in CUDA. For the purpose of
+    providing a supplementary document to her paper, I would now like
+    to go through how I implemented this technique in CUDA.
+</description>
+  </item>
+
+  <item>
+    <title>Making Faster Fragment Shaders by Using Tessellation Shaders</title>
+    <link>https://erkaman.github.io/posts/tess_opt.html</link>
+    <guid>https://erkaman.github.io/posts/tess_opt.html</guid>
+    <description>In the paper Automatic Shader Simplification using
+    Surface Signal Approximation, Wang et al. describes an algorithm
+    that does automatic shader simplification. Put briefly, the
+    algorithm automatically rewrites shaders so that they become much,
+    much faster. They are using several techniques to achieve this,
+    and one of those techniques I'd like to describe in this post. The
+    technique is that they are moving expensive operations from the
+    fragment shader into some earlier shader stage, and by doing so
+    they greatly reduce the number of times said operation has to be
+    evaluated. In this article, I shall in much detail describe this
+    technique.
+</description>
+  </item>
+
+
+</channel>
+
+</rss>

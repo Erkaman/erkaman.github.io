@@ -1,0 +1,281 @@
+<h1>Showing the Correctness of Quaternion Rotation</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+
+
+<p>$\newcommand{\mq}[1]{\mathbf{#1}}\newcommand{\gvq}[1]{\boldsymbol{#1}}\newcommand{\thetatwo}{\left(\frac{\theta}{2}\right)}\newcommand{\vv}{\vec{v}}\newcommand{\uv}{\vec{u}}\definecolor{zerocol}{RGB}{114,0,172}$In
+  this article, we shall provide an algebraic proof that shows that
+  quaternion rotation is correct. As is well-known, we can rotate a
+  vector $\vec{v}$ by an angle $\theta$ around the rotation axis
+  $\vec{u}$ using quaternions. This is done with the calculation
+
+  \begin{align*}
+  \mq{q} \vec{v} \mq{q}^{-1}.
+  \end{align*}
+
+  where $\mq{q}$ is a quaternion
+
+  \begin{align}
+  \mq{q} = \cos\left(\frac{\theta}{2}\right) +
+  \vec{u}\sin\left(\frac{\theta}{2}\right)
+  \label{eq:quatrot}
+  \end{align}
+
+  However, it is far from obvious why this calculation would result in
+  such a rotation. In this article, we shall show that this
+  calculation indeed results in the desired rotation. This shall be done
+  by showing that $\eqref{eq:quatrot}$ is equivalent to the
+  <a href="https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula">Rodrigues'
+  rotation formula</a>. The rotation of $\eqref{eq:quatrot}$ can be
+  calculated using Rodrigues' formula as
+
+  \begin{equation}
+  \vec{v} \cos(\theta) + (\vec{u} \times \vec{v}) \sin(\theta) +
+  \vec{u}(\vec{u} \cdot \vec{v})(1 - \cos(\theta))
+  \label{eq:rodri}
+  \end{equation}
+
+  It is much more obvious why equation $\eqref{eq:rodri}$ results in
+  our wanted
+  rotation(see <a href="https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula#Derivation">wikipedia</a>
+  for a derivation). Therefore, we shall show the equivalence of
+  $\eqref{eq:quatrot}$ and $\eqref{eq:rodri}$, and thus convinence
+  ourselves that quaternion rotation does what we expect.
+
+
+</p>
+
+<h2>Quaternion Product </h2>
+
+<p>
+  As a stepping stone, a formula for the product of two quaternions is
+  necessary. The product of two quaternions is
+
+  \begin{align*}
+  (a + b \mq{i} + c\mq{j} + d\mq{k})(e + f \mq{i} + g\mq{j} +h\mq{k})& =\\
+
+  &(ae + af\mq{i} + ag\mq{j} + ah\mq{k}) + \\
+  &(be\mq{i} +bf \mq{i}\mq{i} + bg \mq{i}\mq{j} + bh \mq{i}\mq{k} + \\
+  &(ce\mq{j} +cf \mq{j}\mq{i} + cg \mq{j}\mq{j} + ch \mq{j}\mq{k} + \\
+  &(de\mq{k} +df \mq{k}\mq{i} + dg \mq{k}\mq{j} + dh \mq{k}\mq{k} \\
+
+  \end{align*}
+
+  It is possible to simplify $\mq{i}\mq{i}, \mq{i}\mq{j},
+  \mq{i}\mq{k},\dots$. Recall the famous fact $\mq{i}\mq{i} =
+  \mq{j}\mq{j} = \mq{k}\mq{k} = \mq{i}\mq{j}\mq{k} = -1$. So the
+  simplications for $\mq{i}\mq{i}$, $\mq{j}\mq{j}$, and $\mq{k}\mq{k}$
+  are already obvious. What about $\mq{i}\mq{j}$? We have
+
+  \begin{align*}
+  \mq{i}\mq{j}\mq{k} &= -1 \\
+  \mq{i}\mq{j}\mq{k}\mq{k} &= -\mq{k} \\
+  -\mq{i}\mq{j} &= -\mq{k} \\
+  \mq{i}\mq{j} &= \mq{k}. \\
+  \end{align*}
+
+  Similarily,
+
+  \begin{align*}
+  \mq{i}\mq{j}\mq{k} &= -1 \\
+  \mq{i}\mq{i}\mq{j}\mq{k} &= -\mq{i} \\
+  \mq{j}\mq{k} &= \mq{i}. \\
+  \end{align*}
+
+  Using the above fact, it follows that
+
+  \begin{align*}
+  \mq{i} &= \mq{j}\mq{k} \\
+
+  \mq{j}\mq{i} &= \mq{j}\mq{j}\mq{k} \\
+
+  \mq{j}\mq{i} &= -\mq{k}. \\
+  \end{align*}
+
+  In particular, note that $\mq{i}\mq{j} \neq \mq{j}\mq{i}$. It is
+  left as an exercise to the reader to prove the remaining three identities:
+  $\mq{k}\mq{j} = -\mq{i}$, $\mq{i}\mq{k} = -\mq{j}$, $\mq{k}\mq{i} =
+  \mq{j}$.
+
+  With these identities in our toolbox, the quaternion product can be
+  siginificantly simplified
+
+  \begin{align*}
+  &(ae + af\mq{i} + ag\mq{j} + ah\mq{k}) + \\
+  &(be\mq{i} +bf \mq{i}\mq{i} + bg \mq{i}\mq{j} + bh \mq{i}\mq{k} + \\
+  &(ce\mq{j} +cf \mq{j}\mq{i} + cg \mq{j}\mq{j} + ch \mq{j}\mq{k} + \\
+  &(de\mq{k} +df \mq{k}\mq{i} + dg \mq{k}\mq{j} + dh \mq{k}\mq{k} = \\
+
+  &ae - (bf + cg + dh) + \\
+  &(be + af + ch - dg)\mq{i} + \\
+  &(ce + ag + df - bh)\mq{j} + \\
+
+  &(de + ah + bg - cf)\mq{k}. \\
+
+  \end{align*}
+
+  It is useful to consider a quaternion to be the sum of a scalar and
+  a vector. For instance, the quaternion $a + b \mq{i} + c\mq{j} +
+  d\mq{k}$ is simply the scalar $a$ plus the three-dimensional vector
+  $b\mq{i} + c\mq{j} + d\mq{k}$. This notation means that $b$ is the
+  $x$-component of the vector, $c$ is the $y$-component, and so on. We
+  shall denote that vector $\vec{v} = b\mq{i} + c\mq{j} + d\mq{k}$, so
+  that we can write $a + b \mq{i} + c\mq{j} + d\mq{k} = a +
+  \vec{v}$. Similarily, we write $e + f \mq{i} + g\mq{j} +h\mq{k} = e
+  + \vec{w}$. Now observe that
+
+  \begin{align*}
+  &ae - (bf + cg + dh) + \\
+  &(be + af + ch - dg)\mq{i} + \\
+  &(ce + ag + df - bh)\mq{j} + \\
+  &(de + ah + bg - cf)\mq{k} =  \\
+
+
+
+  &ae - (bf + cg + dh) +
+  \begin{bmatrix}
+    be + af + ch - dg \\
+  ce + ag + df - bh \\
+  de + ah + bg - cf \\
+  \end{bmatrix} = \\
+
+
+
+  &ae - (bf + cg + dh) +
+  e\begin{bmatrix} b \\ c \\ d  \end{bmatrix} +
+  a\begin{bmatrix} f \\ g \\ h  \end{bmatrix} +
+  \begin{bmatrix} ch - dg \\ df - bh \\ bg - cf  \end{bmatrix} =
+
+
+  ae - \vec{v} \cdot \vec{w} + e\vec{v} + a \vec{w} +
+  \vec{u}\times\vec{w}
+  \end{align*}
+
+  Thus, if a quaternion is viewed as the sum of a scalar and a vector,
+  then an elegant result emerges:
+
+  \begin{equation}
+  (a + \vec{v})(e + \vec{w}) = (ae - \vec{v} \cdot \vec{w}) + (e\vec{v} + a \vec{w} +
+  \vec{u}\times\vec{w})
+  \label{eq:quatprod}
+  \end{equation}
+
+  So the scalar part of the quaternion product is $(ae - \vec{v} \cdot
+  \vec{w})$, and the vector part is $(e\vec{v} + a \vec{w} +
+  \vec{u}\times\vec{w})$. As expected, the product of two quaternions
+  yields another quaternion. This formula shall be applied extensively
+  in the next section.
+
+</p>
+
+<h2>Simplifying Quaternion Rotation</h2>
+
+We start with the formula for quaternion rotation
+
+  \begin{align*}
+  \mq{q} \vec{v} \mq{q}^{-1} =
+\left(\cos\left(\frac{\theta}{2}\right) + \vec{u}\sin\left(\frac{\theta}{2}\right)\right)
+\vec{v}
+\left(\cos\left(\frac{\theta}{2}\right) - \vec{u}\sin\left(\frac{\theta}{2}\right)\right)
+
+\end{align*}
+
+Equation $\eqref{eq:quatprod}$ is utilized twice to expand the product:
+
+\begin{align*}
+\mq{q} \vec{v} \mq{q}^{-1} =
+
+&\left(\cos\left(\frac{\theta}{2}\right) + \vec{u}\sin\left(\frac{\theta}{2}\right)\right)
+\vec{v}
+\left(\cos\left(\frac{\theta}{2}\right) - \vec{u}\sin\left(\frac{\theta}{2}\right)\right) &= \\
+
+&\left(\left(-\sin\thetatwo{} \uv\cdot\vv \right) + \cos\thetatwo{}\vv +
+\sin\thetatwo{}(\uv\times\vv)  \right) \left(\cos\left(\frac{\theta}{2}\right) -
+\vec{u}\sin\left(\frac{\theta}{2}\right)\right) &= \\
+
+&\color{zerocol}{-\sin\thetatwo{}\cos\thetatwo{} \uv \cdot \vv + \left(
+\cos\thetatwo{}\vv + \sin\thetatwo{}(\uv\times\vv)\right) \cdot
+\left(\uv\sin\thetatwo{}\right)+} \\
+
+&\color{black}{}\left(-\sin\thetatwo{}\uv\cdot\vv\right)\left(-\uv\sin\thetatwo{}\right)+ \\
+
+&\cos\thetatwo{}\left(\cos\thetatwo{}\vv +
+\sin\thetatwo(\uv\times\vv)\right) + \\
+
+&\left(\cos\thetatwo{}\vv+ \sin\thetatwo{}(\uv \times \vv)\right) \times
+\left(-\uv \sin\thetatwo{}\right)
+
+\end{align*}
+
+Observe that the purple part ends up evaluating to zero. This is
+because the dot product is distributive under addition($a \cdot(b +c)
+= a \cdot b + a \cdot c$), and since $(\uv \times \vv) \cdot \uv =
+0$. It is easy to see why: the vector $\uv \times \vv$ is a vector
+perpendicular to both $\uv$ and $\vv$. But then $(\uv \times \vv)
+\cdot \uv$ is simply the dot product of two vectors that are
+perpendicular. Ergo, this dot product is zero. The geometric situation
+is illustrated in the below image.
+
+</p>
+
+<p><a href="/img/quaternion_rotation/crossprod.svg">
+    <img class="article-img"
+         src="/img/quaternion_rotation/crossprod.svg"
+         alt="Geometry Situation"
+title="Geometric Situation" width="20%" height="20%"/></a></p>
+
+<p>
+
+So we obtain the
+simplified expression:
+
+\begin{align*}
+
+&\sin^2\thetatwo{} (\uv \cdot \vv)\uv + \\
+
+&\cos^2\thetatwo{}\vv +
+\sin\thetatwo\cos\thetatwo(\uv\times\vv) \\
+
+&+\sin\thetatwo{}\cos\thetatwo{} (\uv \times \vv) - \sin^2\thetatwo{}
+(\uv\times\vv) \times \uv
+
+\end{align*}
+
+Where we have applied the distributive property of the cross product:
+$(\vec{a} + \vec{b})\times\vec{c} = \vec{a}\times\vec{c} +
+\vec{b}\times\vec{c}$. From the double angle formula $\sin(x) =
+2\sin\left(\frac{x}{2}\right)\cos\left(\frac{x}{2}\right)$, it simplifies to
+
+\begin{align*}
+
+&\sin^2\thetatwo{} (\uv \cdot \vv)\uv + \cos^2\thetatwo \vv +  \sin(\theta)(\uv \times \vv) -\sin^2\thetatwo{} (\uv\times\vv) \times \uv
+\end{align*}
+<p>
+
+Some more simplifications are then performed using the vector triple
+product($\vec{a}\times(\vec{b}\times\vec{c}) =
+\vec{b}(\vec{a}\cdot\vec{c}) - \vec{c}(\vec{a}\cdot\vec{b})$) and a
+couple more double angle formulas. This is not shown here, but left as
+a small exercise to the reader. After the simplifications are done,
+what remains is
+
+\begin{align*}
+\vv\cos(\theta) + (\uv\times\vv)\sin(\theta) + (\uv\cdot\vv)\uv(1 - \cos(\theta)).
+\end{align*}
+
+But this is simply equation $\eqref{eq:rodri}$. And with that, the proof is
+done. It has been shown that quaternion rotation is equivalent to the
+Rodrigues' formula, and this means that quaternion rotation does indeed
+do what we expect it to.
+
+</p>

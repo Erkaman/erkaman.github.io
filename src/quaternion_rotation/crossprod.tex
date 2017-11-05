@@ -1,0 +1,21 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz-3dplot}
+
+\begin{document}
+\tdplotsetmaincoords{60}{110}
+%
+\pgfmathsetmacro{\rvec}{.8}
+\pgfmathsetmacro{\thetavec}{30}
+\pgfmathsetmacro{\phivec}{60}
+%
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+    \filldraw[fill=red!20!white,draw=red!30!white,thick] (0,0,0) -- (-0.035,0.035,0) -- (-0.035,0.035,
+    0.07) -- (0.0,0.00, 0.07) -- (0,0,0);
+
+    \coordinate (O) at (0,0,0);
+    \draw[thick,->] (0,0,0) -- (-0.35,0.35,0) node[anchor=west]{$\vec{v}$};
+    \draw[thick,->] (0,0,0) -- (+0.2,0.45,0) node[anchor=west]{$\vec{u}$};
+\draw[thick,->] (0,0,0) -- (0,0,0.5) node[anchor=south]{$\vec{u}\times\vec{v}$};
+
+\end{tikzpicture}
+\end{document}
