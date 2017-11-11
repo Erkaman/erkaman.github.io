@@ -1,0 +1,20 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing,graphs,positioning}
+\begin{tikzpicture}
+  \input{./common.tex}
+
+  \node[main node,fill=c1] (1) {$x_1$};
+  \node[main node,fill=c1] (2) [right = 1cm of 1]  {$x_2$};
+  \node[main node,fill=c1] (3) [right = 1cm of 2]  {$x_3$};
+  \node[main node,fill=c1] (4) [right = 1cm of 3]  {$x_4$};
+
+  \path[draw,thick]
+  (1) edge node {} (2)
+  (2) edge node {} (3)
+  (3) edge node {} (4);
+
+\end{tikzpicture}
+\end{document}

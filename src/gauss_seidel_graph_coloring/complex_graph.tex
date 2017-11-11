@@ -1,0 +1,43 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing,graphs,positioning}
+\begin{tikzpicture}
+  \input{./common.tex}
+
+  \node[main node,fill=c0] (9) {$x_9$};
+  \node[main node,fill=c2] (3) [right = 1cm of 9]  {$x_3$};
+
+  \node[main node,fill=c1] (5) [right = 1cm of 3]  {$x_5$};
+
+  \node[main node,fill=c0] (8) [above right = 0.7cm and 0.7cm of 5]  {$x_8$};
+
+  \node[main node,fill=c1] (1) [above right = 0.7cm and 0.7cm of 8]  {$x_1$};
+
+  \node[main node,fill=c0] (10) [below right = 0.7cm and 0.7cm of 5]  {$x_{10}$};
+
+  \node[main node,fill=c1] (6) [below right = 0.7cm and 0.7cm of 10]  {$x_{6}$};
+
+  \node[main node,fill=c1] (4) [above right = 0.5cm and 0.35cm of 9]  {$x_{4}$};
+
+  \node[main node, fill=c1] (7) [below = 0.5 of 9]  {$x_{7}$};
+
+  \node[main node, fill=c0] (2) [below = 0.5 of 3]  {$x_{2}$};
+
+  \path[draw,thick]
+  (3) edge node {} (9)
+  (3) edge node {} (5)
+  (5) edge node {} (8)
+  (8) edge node {} (1)
+  (5) edge node {} (10)
+  (10) edge node {} (6)
+  (9) edge node {} (4)
+  (3) edge node {} (4)
+  (9) edge node {} (7)
+  (3) edge node {} (2)
+  (7) edge node {} (2);
+
+\end{tikzpicture}
+
+\end{document}

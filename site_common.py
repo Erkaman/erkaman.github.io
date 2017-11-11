@@ -3,6 +3,7 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/gauss_seidel_graph_coloring.html", "Gauss Seidel graph coloring"),
     ("src/quaternion_rotation.html", "Showing the Correctness of Quaternion Rotation"),
     ("src/jacobi_and_gauss_seidel.html", "The Gauss-Seidel and Jacobi Methods for Solving Linear Systems"),
     ("src/area_convex_polygon.html", "Computing the Area of a Convex Polygon"),

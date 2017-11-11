@@ -1,0 +1,253 @@
+<h1>The Gauss-Seidel and Jacobi Methods for Solving Linear Systems</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] }
+
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{eqcol2}{RGB}{114,0,172}\definecolor{eqcol1}{RGB}{172,0,114}\definecolor{eqcol3}{RGB}{0,172,114}\definecolor{eqcol4}{RGB}{230,190,120}$In
+  a <a href="jacobi_and_gauss_seidel.html">previous article</a>, we introduced the Jacobi and Gauss-Seidel
+  methods, which are iterative methods for solving linear systems of
+  equation. Specifically, we noted that the Gauss-Seidel will in
+  general converge towards a solution much quicker than the Jacobi
+  method. However, the main issue with the Gauss-Seidel method is that
+  it is non-trivial to make into a parallel algorithm. However, it
+  turns out that for a certain class matrices, it is pretty simple to
+  implement a parallel Gauss-Seidel method. Consider the below system
+
+  \begin{align*}
+  2x_1 - 1x_2 + 0x_3 + 0x_4 &= 3 \\
+  -1x_1 - 2x_2 - 1x_3 + 0x_4 &= -4 \\
+  0x_1 - 1x_2 + 2x_3 - 1x_4 &= 4 \\
+  0x_1 + 0x_2 - 1x_3 + 2x_4 &= -3 \\
+  \end{align*}
+
+  Assume our initial guess for a solution is $x_1 = 0, x_2=0, x_3 = 0,
+  x_4=0$. If we perform a Gauss-Seidel iteration on this system, first
+  we will solve for $x_1$ in the first equation. We obtain
+
+  \begin{align*}
+  x_1 = \frac{1}{2}(3 - 0x_4 - 0x_3 + x_2 - 2x_1) = \frac{3}{2} = 1.5\\
+  \end{align*}
+
+  We thus obtain our improved guess $x_1 = 1.5, x_2=0, x_3 = 0,
+  x_4=0$. Traditionally, we would now solve for $x_2$ in the second
+  equation, but we will not do that. Consider instead the third
+  equation in the above system. In order to obtain our improved guess
+  for $x_3$, we would solve for $x_3$ in the third equation in this
+  manner:
+
+  \begin{align*}
+  x_3 = \frac{1}{2}(4 + x_4 + x_2 - 0x_1) = \frac{4}{2} = 2\\
+  \end{align*}
+
+  However, note that the value of $x_1$ has no impact on the
+  calculated value of $x_3$, because of the zero. Further, the value
+  of $x_3$ had no impact on the improved guess for $x_1$. The order of
+  these two calculations does not matter, and thus these two
+  calculations can be executed entirely in parallel. It is also not
+  hard to see that we can compute the improved guesses of $x_2$ and
+  $x_4$ in parallel. Thus, a parallelized single iteration for the
+  above system is easy to implement: first compute thpe improved
+  guesses for $x_1$ and $x_3$ in parallel, and then do likewise
+  for $x_2$ and $x_4$ in parallel.
+
+</p>
+
+<p>
+
+  What we have found is that is if we can find partitions of variables
+  that can be solved for independently, then Gauss-Seidel can be
+  indeed be parallelized. Our next task is to invent an algorithm that
+  finds such partitions. First, rewrite the linear system in matrix
+  form:
+
+  \begin{equation*}
+  \begin{bmatrix}
+  2 & -1 & 0 & 0 \\
+  -1 & 2 & -1 & 0 \\
+  0 & -1 & 2 & -1 \\
+  0 & 0 & -1 & 2 \\
+
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\
+  x_2 \\
+  x_3 \\
+  x_4 \\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  3 \\
+  -4 \\
+  4 \\
+  -3 \\
+  \end{bmatrix}
+  \end{equation*}
+
+  where we denote the matrix as $M$. The reason that $x_1$ and $x_3$
+  can be solved for independently, is because $m_{1,3} = 0$ and
+  $m_{3,1} = 0$. But clearly, $x_1$ and $x_2$ cannot be solved for
+  independently, since $m_{1,2} \neq 0$ and $m_{2,1} \neq 0$. Imagine
+  that we let two different threads solve for $x_1$ and $x_2$ in
+  parellel. Then a race condition will occur, since the improved guess
+  of $x_2$ is dependent on the value of $x_1$, and vice versa.
+
+  To conclude, if $m_{i,j}$ is non-zero, then the variables $x_i$ and
+  $x_j$ must not be solved for in parallel. This situation can be
+  visualized with
+  a <a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">graph</a>. Let
+  the variables $x_1, x_2, x_3, x_4$ be the nodes of this graph. There
+  will be an edge between $x_i$ and $x_j$ only if $m_{i,j} \neq
+  0$. This graph is decipted below.
+  </p>
+
+</p>
+
+<p><a href="/img/gauss_seidel_graph_coloring/no_color_simple_graph.svg">
+    <img class="article-img"
+         src="/img/gauss_seidel_graph_coloring/no_color_simple_graph.svg"
+         alt="No color graph"
+         title="No color graph" width="50%" height="50%"/></a></p>
+<p>
+
+In this graph, it can clearly be seen that $x_1$ and $x_3$ are not
+connected by an edge, and therefore form a <i>partition</i> of
+variables that can be independently solved for. An algorithm that
+finds all partitions is an algorithm that finds all nodes that
+are <i>not</i> connected. It is certainly possible to create a new
+algorithm that performs this task, but there is no need: an algorithm
+that does the job already exists. The following is a famous problem of
+computer science:
+</p>
+
+<b>Graph Coloring: </b> All nodes in a graph are assigned
+colors. However, neighbouring nodes(nodes sharing an edges)
+must <i></i> share the same colors. A valid graph coloring of the
+above graph is given below.
+
+</p>
+
+<p><a href="/img/gauss_seidel_graph_coloring/simple_graph.svg">
+    <img class="article-img"
+         src="/img/gauss_seidel_graph_coloring/simple_graph.svg"
+         alt="No color graph"
+         title="No color graph" width="50%" height="50%"/></a></p>
+<p>
+
+  As can be observed, nodes with the same colors form partitions. Two
+  nodes that are adjacent cannot share the same color, and this
+  ensures that variables that are not indepenent are not put in the
+  same partition. To conclude, finding a valid graph coloring is
+  equivalent to partitioning the variables.
+</p>
+
+<p>
+
+  There are many algorithms for solving the graph coloring problem,
+  but in the source code of this article, we have chosen to implement,
+  the randomized graph coloring algorithm described by Fratarcangeli∗
+  et al.<a href="#refone">[1]</a>. This algorithm is extremely simple,
+  and the authors claim it is easy to parallelize. The authors use
+  Gauss-Seidel and this randomized graph coloring algorithm to
+  implement stable soft body dynamics in real-time framerates.
+
+  The randomized graph coloring algorithm is very simple: Put all
+  nodes in a set $U$. <b>(1)</b>Now assign random colors to all nodes in
+  $U$. Every node whose color is distinict from all its neighbours is
+  now removed from $U$, since such a has a valid coloring. Now
+  return <b>(1)</b>, and keep looping until $U$ is the empty set.
+
+  Consider now the more the complex matrix
+
+  \begin{equation*}
+  \begin{bmatrix}
+3.0& 0.0& 0.0& 0.0& 0.0& 0.0& 0.0& 3.0& 0.0& 0.0\\
+0.0& 15.0& 7.0& 0.0& 0.0& 0.0& 8.0& 0.0& 0.0& 0.0\\
+0.0& 7.0& 28.0& 9.0& 9.0& 0.0& 0.0& 0.0& 3.0& 0.0\\
+0.0& 0.0& 9.0& 18.0& 0.0& 0.0& 0.0& 0.0& 9.0& 0.0\\
+0.0& 0.0& 9.0& 0.0& 20.0& 0.0& 0.0& 8.0& 0.0& 3.0\\
+0.0& 0.0& 0.0& 0.0& 0.0& 8.0& 0.0& 0.0& 0.0& 8.0\\
+0.0& 8.0& 0.0& 0.0& 0.0& 0.0& 14.0& 0.0& 6.0& 0.0\\
+3.0& 0.0& 0.0& 0.0& 8.0& 0.0& 0.0& 11.0& 0.0& 0.0\\
+0.0& 0.0& 3.0& 9.0& 0.0& 0.0& 6.0& 0.0& 18.0& 0.0\\
+0.0& 0.0& 0.0& 0.0& 3.0& 8.0& 0.0& 0.0& 0.0& 11.0\\
+  \end{bmatrix}
+\end{equation*}
+
+</p>
+
+This the solution to the graph coloring problem of this matrix is
+given below
+
+<p><a href="/img/gauss_seidel_graph_coloring/complex_graph.svg">
+    <img class="article-img"
+         src="/img/gauss_seidel_graph_coloring/complex_graph.svg"
+         alt="No color graph"
+         title="No color graph" width="50%" height="50%"/></a></p>
+<p>
+
+As can be observed, since the matrix has many zeroes, there are few
+connections between the nodes, and therefore the necessary number of
+partitions is low. A matrix with many zeroes is denoted <i>sparse</i>,
+and such matrices are very common in practical applications.
+
+</p>
+
+<p>
+
+  The above graph has three partitions. and each partition can be
+  solved for in parallel. This is much better than the very serial
+  Gauss-Seidel algorithm we described in the previous
+  article. However, note if we used the Jacobi-method to solve for the
+  ten unknown $x_1,\dots,x_{10}$, then all ten could be found in a
+  single parallel step. With the Gauss-Seidel method, first we
+  dispatch a parallel computation the solves for the unknowns in the
+  first partition, then have wait for this computation to finish,
+  before we can dispatch another computation for the second
+  partition. It can be seen from this that our parallelized
+  Gauss-Seidel method does not exhibit the same degree of parallelism
+  as the Jacobi-method, but the faster rate of convergence will make
+  up for this.
+
+  This concludes this part of the series. In the next part, the
+  parallelized Jacobi and Gauss-Seidel method will be implemented on
+  the GPU, and these two methods will then be used to solve a real
+  world problem: fluid simulation.
+</p>
+
+<p>
+  Source code that implements the described parallelized Gauss-Seidel
+  method and the randomized graph coloring algorithm is provided in
+  a <a href="https://gist.github.com/Erkaman/19b9916c6d00e9c54446bce6075769b5">gist</a>. In
+  the code, a random, sparse, linear system with a matrix of size 100
+  \times 100$ is generated, and solved with the Gauss-Seidel
+  method. For the purpose of readability, the Gauss-Seidel method is
+  still implemented using a serial algorithm in the CPU. The
+  final parallization step is discussed in the next article.
+</p>
+
+<h2>References</h2>
+
+<p>
+Below, literature that was consulted when writing this article is
+listed.
+</p>
+
+<p id="refone">
+   [1] Marco Fratarcangeli, Valentina Tibaldo, Fabio Pellacini
+   "Vivace: a Practical Gauss-Seidel Method for Stable Soft Body
+   Dynamics". <a href="http://pellacini.di.uniroma1.it/publications/vivace16/vivace16-paper.pdf">Link</a>.
+</p>
+
+<p id="reftwo">
+   [2] Yousef Saad, "Iterative Methods for Sparse Linear Systems",
+   Section 12.4. <a href="http://www-users.cs.umn.edu/~saad/IterMethBook_2ndEd.pdf">Link</a>.
+</p>
