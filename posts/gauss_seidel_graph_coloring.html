@@ -246,7 +246,7 @@ and such matrices are very common in practical applications.
   solved for in parallel. This is much better than the very serial
   Gauss-Seidel algorithm we described in the previous
   article. However, note if we used the Jacobi-method to solve for the
-  ten unknown $x_1,\dots,\x_{10}$, then all ten could be found in a
+  ten unknown $x_1,\dots,x_{10}$, then all ten could be found in a
   single parallel step. With the Gauss-Seidel method, first we
   dispatch a parallel computation the solves for the unknowns in the
   first partition, then have wait for this computation to finish,
@@ -260,6 +260,17 @@ and such matrices are very common in practical applications.
   parallelized Jacobi and Gauss-Seidel method will be implemented on
   the GPU, and these two methods will then be used to solve a real
   world problem: fluid simulation.
+</p>
+
+<p>
+  Source code that implements the described parallelized Gauss-Seidel
+  method and the randomized graph coloring algorithm is provided in
+  a <a href="https://gist.github.com/Erkaman/19b9916c6d00e9c54446bce6075769b5">gist</a>. In
+  the code, a random, sparse, linear system with a matrix of size 100
+  \times 100$ is generated, and solved with the Gauss-Seidel
+  method. For the purpose of readability, the Gauss-Seidel method is
+  still implemented using a serial algorithm in the CPU. The
+  final parallization step is discussed in the next article.
 </p>
 
 <h2>References</h2>

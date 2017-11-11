@@ -73,7 +73,7 @@
   However, it is far from obvious why this calculation would result in
   such a rotation. In this article, we shall show that this
   calculation indeed results in the desired rotation. This shall be done
-  by showing that $\eqref{eq:quatrot}$ is equivalent to the
+  by showing that $\eqref{eq:quatrot}$ is equivalent to
   <a href="https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula">Rodrigues'
   rotation formula</a>. The rotation of $\eqref{eq:quatrot}$ can be
   calculated using Rodrigues' formula as
@@ -148,7 +148,7 @@
   \mq{j}$.
 
   With these identities in our toolbox, the quaternion product can be
-  siginificantly simplified
+  significantly simplified
 
   \begin{align*}
   &(ae + af\mq{i} + ag\mq{j} + ah\mq{k}) + \\
@@ -198,7 +198,7 @@
 
 
   ae - \vec{v} \cdot \vec{w} + e\vec{v} + a \vec{w} +
-  \vec{u}\times\vec{w}
+  \vec{v}\times\vec{w}
   \end{align*}
 
   Thus, if a quaternion is viewed as the sum of a scalar and a vector,
@@ -206,13 +206,13 @@
 
   \begin{equation}
   (a + \vec{v})(e + \vec{w}) = (ae - \vec{v} \cdot \vec{w}) + (e\vec{v} + a \vec{w} +
-  \vec{u}\times\vec{w})
+  \vec{v}\times\vec{w})
   \label{eq:quatprod}
   \end{equation}
 
   So the scalar part of the quaternion product is $(ae - \vec{v} \cdot
   \vec{w})$, and the vector part is $(e\vec{v} + a \vec{w} +
-  \vec{u}\times\vec{w})$. As expected, the product of two quaternions
+  \vec{v}\times\vec{w})$. As expected, the product of two quaternions
   yields another quaternion. This formula shall be applied extensively
   in the next section.
 
@@ -314,7 +314,7 @@ what remains is
 \end{align*}
 
 But this is simply equation $\eqref{eq:rodri}$. And with that, the proof is
-done. It has been shown that quaternion rotation is equivalent to the
+done. It has been shown that quaternion rotation is equivalent to
 Rodrigues' formula, and this means that quaternion rotation does indeed
 do what we expect it to.
 
