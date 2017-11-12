@@ -55,3 +55,4 @@
 /img/gallery/polygon_tri.png /posts/area_convex_polygon.html
 /img/gallery/jacobi_vs_gauss_seidel.png /posts/jacobi_and_gauss_seidel.html
 /img/gallery/crossprod.png /posts/quaternion_rotation.html
+/img/gallery/complex_graph.png /posts/gauss_seidel_graph_coloring.html

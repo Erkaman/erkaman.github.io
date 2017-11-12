@@ -8,11 +8,29 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>Parallelizing the Gauss-Seidel Method using Graph Coloring</title>
+    <link>https://erkaman.github.io/posts/gauss_seidel_graph_coloring.html</link>
+    <guid>https://erkaman.github.io/posts/gauss_seidel_graph_coloring.html</guid>
+    <description>
+      In a previous article, we introduced the Jacobi and Gauss-Seidel
+      methods, which are iterative methods for solving linear systems
+      of equation. Specifically, we noted that the Gauss-Seidel method
+      will in general converge towards a solution much quicker than
+      the Jacobi method. The main issue with the Gauss-Seidel method
+      is that it is non-trivial to make into a parallel
+      algorithm. However, it turns out that for a certain class of
+      matrices, it is pretty simple to implement a parallel
+      Gauss-Seidel method. Consider the below linear system
+    </description>
+  </item>
+
+
+  <item>
     <title>Showing the Correctness of Quaternion Rotation</title>
     <link>https://erkaman.github.io/posts/quaternion_rotation.html</link>
     <guid>https://erkaman.github.io/posts/quaternion_rotation.html</guid>
     <description>
-      $In this article, we shall provide an algebraic proof that shows
+      In this article, we shall provide an algebraic proof that shows
       that quaternion rotation is correct. As is well-known, we can
       rotate a vector $\vec{v}$ by an angle $\theta$ around the
       rotation axis $\vec{u}$ using quaternions. This is done with the
