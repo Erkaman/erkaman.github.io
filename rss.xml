@@ -8,6 +8,17 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>Simple Curve Fitting with the Gauss-Newton Algorithm</title>
+    <link>https://erkaman.github.io/posts/gauss_newton.html</link>
+    <guid>https://erkaman.github.io/posts/gauss_newton.html</guid>
+    <description>
+      In the description of the physically based rendering
+      implementation of Unreal Engine 4[1], Karis states that instead
+      of using the classical Fresnel formula
+    </description>
+  </item>
+
+  <item>
     <title>Parallelizing the Gauss-Seidel Method using Graph Coloring</title>
     <link>https://erkaman.github.io/posts/gauss_seidel_graph_coloring.html</link>
     <guid>https://erkaman.github.io/posts/gauss_seidel_graph_coloring.html</guid>
