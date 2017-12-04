@@ -6,7 +6,7 @@ import site_common as site_common
 html_source = ''
 html_source += '<div class="container">'
 html_source += """<h1>Articles <a href="/rss.xml" title="RSS feed"><img src="/img/rss.png" alt="RSS" class="feed-button"></a></h1>"""
-html_source += "<p>Below are some small articles and tutorials I have written.</p>"
+html_source += "<p>Below are some small articles and tutorials I have written. They are mostly about computer graphics, and mathematics that is useful in computer graphics. </p>"
 
 html_source += """"""
 
