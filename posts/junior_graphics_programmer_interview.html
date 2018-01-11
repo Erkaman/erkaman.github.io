@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Eric Arnebäck</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Articles by Eric Arneb&#xe4;ck"/>
+
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
+  </head>
+  <body>
+
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="container"><h1>Interviewing for your First Job as a Graphics Programmer: a
+  Checklist of Common Interview Questions</h1>
+
+<p>
+
+I have recently been interviewing at game companies, trying to land a
+job as a junior graphics programmer. Having done so, I gained
+knowledge of what skills game companies expect of a newly graduated
+graphics programmer, and what questions they are likely to ask during
+interviews. I will in this article compile these findings into a handy
+checklist. The intention is that other newly graduated programmers can
+use this list as a way to prepare, by providing them with a list of
+topics that they should rehearse before going into their first
+interview. However, as a disclaimer, <b>I do not recommend just
+memorizing a bunch of answers to these questions</b>. The topics in
+this list are topics that you need to understand and master in order
+to solve the programming problems that you will encounter as a
+professional graphics programmer. Always strive to understand, not to
+memorize.
+
+</p>
+
+<p>
+
+The questions that will probably be asked during the interview can be
+organized into the categories
+of <b>C++</b>, <b>Mathematics</b>, <b>Optimization</b> and <b>Computer
+Graphics</b>. As can be observed, these categories are topics that are
+central to the day-to-day work of a graphics programmer; C++ is a
+language that is pretty commonly used in graphics programming jobs, so
+it is natural that there are many questions about this language during
+the interview. Further, graphics programming requires a better handle
+of math than most other types of programming, so math skills are
+paramount. Finally, in order to achieve 60FPS while still rendering a
+game with high graphical fidelity, strong optimization skills are a
+must. Let us go through a number of common questions in each category.
+
+</p>
+
+<h2>C++ Questions</h2>
+
+<p>
+<ul>
+
+  <li>When should you use virtual destructors?(interviewers absolutely
+    love this question!)</li>
+
+  <li>What is the difference between allocating memory on the heap
+  versus the stack?</li>
+
+  <li>What C++11 and C++14 features are you using?</li>
+
+  <li>What are templates used for?</li>
+
+  <li>Explain the <code>inline</code> keyword</li>
+
+  <li>What is little and big endian?</li>
+
+  <li>Explain what const-correctness is?</li>
+
+  <li>What overhead is associated with calling a virtual function?</li>
+
+  <li>There will probably be some question where you are asked to
+  perform some bit twiddling tricks, using operators such as <code>&</code> and <code>|</code> and
+  friends</li>
+
+  <li>There will probably be one question where you are asked to do
+  something with a linked list</li>
+
+</ul>
+</p>
+
+<p>
+
+As a general rule, none of the questions were about advanced language
+features. I was for instance never asked to do any template
+metaprogramming, which was a relief.
+
+</p>
+
+<h2>Mathematics Questions</h2>
+
+<p>
+  There was actually not much variety when it came to the math questions:
+</p>
+
+<p>
+<ul>
+  <li>What is a dot product?</li>
+  <li>What is a cross product?</li>
+  <li>Why should you use quaternions over euler angles?</li>
+</ul>
+</p>
+
+<p>
+
+You will probably also be asked to solve some practical,
+graphics-related problems using the above three concepts. But if you
+are an experienced graphics programmer, this should pose no issues.
+
+</p>
+
+<h2>Optimization Questions</h2>
+
+<p>
+<ul>
+  <li>How can we use a Bounding Volume Hierarchy(or an octree, or
+  something similar) to speed up a raytracer?</li>
+
+  <li>Explain about Cache Memory(L1 and L2 caches, and so on) </li>
+
+  <li>What
+  is <a href="https://en.wikipedia.org/wiki/Data-oriented_design">Data
+      Oriented Design?</a></li>
+
+  <li>Do you have experience with using performance profiling
+  tools for the GPU?</li>
+
+</ul>
+</p>
+
+<p>
+
+Game companies seem to expect you to have experience with profiling and
+optimizing your code using tools such as NVIDIA Nsight, so do get
+familiar with them.
+
+</p>
+
+<h2>Computer Graphics Questions</h2>
+
+<p>
+
+<ul>
+  <li>What anti-aliasing techniques do you know about?(some possible
+  techniques are MSAA, MLAA, FXAA and TXAA)</li>
+
+  <li>What shadow rendering techniques do you know about?(there are
+  TONS of shadow rendering techniques out there. Some examples are variance
+  shadow mapping and exponential shadow mapping, and the newer <a href="http://cg.cs.uni-bonn.de/aigaion2root/attachments/MomentShadowMapping.pdf">moment
+  shadow mapping</a>)</li>
+
+  <li>What are the pros and cons of a deferred renderer?</li>
+
+  <li>Explain to me physically based rendering?</li>
+
+  <li>What is a BRDF?</li>
+
+  <li>What is the last graphics paper you read, and can you explain
+  it to me?(this was a pretty common question)</li>
+
+  <li>Describe to me the
+  entire <a href="https://en.wikipedia.org/wiki/Graphics_pipeline">graphics
+  pipeline?</a>(your answer will probably be pretty long. You will
+  explain about the vertex shader and the fragment shader, about perspective
+  correct interpolation, about the z-buffer, about double buffering
+  the framebuffer, about alpha blending, about transformation
+  matrices, about homogeneous coordinates, about reflection models in
+  the fragment shader and so on.)</li>
+
+</ul>
+
+</p>
+
+<p>
+
+The last question in particular seems to be pretty common in
+interviews for graphics programming jobs. If you are not entirely
+confident on all parts of the pipeline, then my general advice is that
+you write a small software rasterizer. This is an exercise that allows you
+to gain a deep understanding of the pipeline, because writing a software
+rasterizer is in many ways similar to implementing the graphics
+pipeline from scratch.
+
+</p>
+
+<p>
+
+In general, you are not expected to know about every single subtopic
+of computer graphics .The label "computer graphics" covers a vast
+array of subtopics, such as global illumination, occlusion culling,
+shadow rendering, pathtracing, fluid simulation, geometry processing,
+GPGPU, physically based rendering, and so on. Expecting a junior
+programmer to know all these topics in detail would be
+unreasonable. However, if you put something on your CV, do be prepared
+to give detailed answers related to this topic.
+
+</p>
+
+<p>
+
+So you are not expected to know EVERYTHING there is to know about
+computer graphics. Instead, what often will happen is that you are
+asked to explain about major computer graphics projects that you have worked
+on. Then the interviewer will be asking plenty of follow-up questions, and
+make you explain your project in detail. So my advice is that, before
+the interview, you pick out a couple of projects that you are
+especially proud over, and prepare yourself for giving a detailed
+explanation of these projects.
+
+</p>
+
+<p>
+
+In my opinion, the best way to prepare for the interview, is to work
+on plenty of side projects in your spare time. Showcasing the projects
+you have worked on is a good way of selling yourself to the
+interviewer, and it allows you to show that you are truly passionate
+for this field. Finally, working on these side projects will allow you
+to sharpen your programming skills, and this in turn makes it much
+easier to answer all the questions I have listed in this article.
+
+</p>
+</div>
+
+
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </body>
+</html>

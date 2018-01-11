@@ -8,6 +8,30 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>Interviewing for your First Job as a Graphics Programmer: a
+  Checklist of Common Interview Questions</title>
+    <link>https://erkaman.github.io/posts/junior_graphics_programmer_interview.html</link>
+    <guid>https://erkaman.github.io/posts/junior_graphics_programmer_interview.html</guid>
+    <description>
+      I have recently been interviewing at game companies, trying to
+      land a job as a junior graphics programmer. Having done so, I
+      gained knowledge of what skills game companies expect of a newly
+      graduated graphics programmer, and what questions they are
+      likely to ask during interviews. I will in this article compile
+      these findings into a handy checklist. The intention is that
+      other newly graduated programmers can use this list as a way to
+      prepare, by providing them with a list of topics that they
+      should rehearse before going into their first
+      interview. However, as a disclaimer, I do not recommend just
+      memorizing a bunch of answers to these questions. The topics in
+      this list are topics that you need to understand and master in
+      order to solve the programming problems that you will encounter
+      as a professional graphics programmer. Always strive to
+      understand, not to memorize.
+    </description>
+  </item>
+
+  <item>
     <title>Simple Curve Fitting with the Gauss-Newton Algorithm</title>
     <link>https://erkaman.github.io/posts/gauss_newton.html</link>
     <guid>https://erkaman.github.io/posts/gauss_newton.html</guid>

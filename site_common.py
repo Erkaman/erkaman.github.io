@@ -3,6 +3,8 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/junior_graphics_programmer_interview.html", "Interviewing for your First Job as a Graphics Programmer: a Checklist of Common Interview Questions"),
+
     ("src/gauss_newton.html", "Simple Curve Fitting with the Gauss-Newton Algorithm"),
     ("src/gauss_seidel_graph_coloring.html", "Parallelizing the Gauss-Seidel Method using Graph Coloring"),
     ("src/quaternion_rotation.html", "Showing the Correctness of Quaternion Rotation"),
