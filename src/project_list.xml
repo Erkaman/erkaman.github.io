@@ -1,5 +1,20 @@
 <list>
   <project>
+    <title>Hair Rendering</title>
+    <href>/img/gallery/hair_highres.jpg</href>
+    <img>/img/gallery/hair_lowres.jpg</img>
+    <text>
+      <p>
+        A hobby project where I am attempting to render beautiful
+        hair in real-time framerates. In the image, the shading model used is
+        <a href="http://web.engr.oregonstate.edu/~mjb/cs519/Projects/Papers/HairRendering.pdf">Kajiya-Kay</a>, and the self-shadows are rendered using Opacity
+        Shadow Maps. The project is still a work in progress, and I
+        have not yet published the source code.
+      </p>
+    </text>
+  </project>
+
+  <project>
     <title>My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel
   Octree for Global Illumination"</title>
     <href>/posts/masters_thesis.html</href>

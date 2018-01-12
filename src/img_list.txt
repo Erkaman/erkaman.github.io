@@ -56,3 +56,4 @@
 /img/gallery/jacobi_vs_gauss_seidel.png /posts/jacobi_and_gauss_seidel.html
 /img/gallery/crossprod.png /posts/quaternion_rotation.html
 /img/gallery/complex_graph.png /posts/gauss_seidel_graph_coloring.html
+/img/gallery/hair_lowres.jpg /projects.html#hair
