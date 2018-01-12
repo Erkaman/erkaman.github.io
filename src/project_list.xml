@@ -19,7 +19,6 @@
     </text>
   </project>
 
-
   <project>
     <title>Hair Rendering</title>
     <href>/img/gallery/hair_highres.jpg</href>
@@ -34,6 +33,29 @@
       </p>
     </text>
   </project>
+
+
+  <project>
+    <title>Reflections using Light Field Probes</title>
+    <href>/img/gallery/light_probe_reflection.jpg</href>
+    <img>/img/gallery/light_probe_reflection.jpg</img>
+    <text>
+      <p>
+        A hobby project where I am attempting to render reflections
+        using a field of light probes, inspired by the paper <a
+        href="http://research.nvidia.com/sites/default/files/pubs/2017-02_Real-Time-Global-Illumination/light-field-probes-final.pdf">Real-Time
+        Global Illumination using Precomputed Light Field
+        Probes</a>. I am hoping to use the technique for rendering
+        reflections from light probes that are of higher quality than
+        parallax corrected environment maps. I also think that it may
+        be usable as a better alternative to screen space reflections,
+        and it would further allow reflections from off-screen
+        objects, which SSR is not capable of.
+      </p>
+    </text>
+  </project>
+
+
 
   <project>
     <title>My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel
