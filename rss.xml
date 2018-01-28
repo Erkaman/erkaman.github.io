@@ -8,6 +8,22 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>A Simple, and Trivially Parallelizable Triangle Rasterization Approach</title>
+    <link>https://erkaman.github.io/posts/fast_triangle_rasterization.html</link>
+    <guid>https://erkaman.github.io/posts/fast_triangle_rasterization.html</guid>
+    <description>
+      In this article, a triangle rasterization algorithm that is easy
+      to implement, yet trivial to parallelize is described. The
+      algorithm is as follows: it turns out that it is not difficult
+      to test whether an arbitrary point is inside a triangle. Armed
+      with such a test, a triangle can easily be rasterized by first
+      finding the bounding box of the triangle, and then only
+      rasterizing the pixels inside this bounding box that pass the
+      test.
+    </description>
+  </item>
+
+  <item>
     <title>Interviewing for your First Job as a Graphics Programmer: a
   Checklist of Common Interview Questions</title>
     <link>https://erkaman.github.io/posts/junior_graphics_programmer_interview.html</link>

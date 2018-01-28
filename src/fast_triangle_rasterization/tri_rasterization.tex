@@ -1,0 +1,36 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing}
+\begin{tikzpicture}
+
+\input{common.tex}
+ \clip (-2.0,-0.5) rectangle(+2.0,+3.0);
+
+ \draw[thin,gray,step=0.1] (-1.21,+0.5) grid(+1.2,+2.0);
+
+ \fill[clipstl] (-1.20,+0.5) rectangle (+1.2,+0.6);
+ \fill[clipstl] (-1.1,+0.6) rectangle (+1.1,+0.7);
+ \fill[clipstl] (-1.0,+0.7) rectangle (+1.1,+0.8);
+ \fill[clipstl] (-0.9,+0.8) rectangle (+1.0,+0.9);
+ \fill[clipstl] (-0.8,+0.9) rectangle (+1.0,+1.0);
+ \fill[clipstl] (-0.7,+1.0) rectangle (+0.9,+1.1);
+ \fill[clipstl] (-0.6,+1.1) rectangle (+0.9,+1.2);
+ \fill[clipstl] (-0.5,+1.2) rectangle (+0.8,+1.3);
+ \fill[clipstl] (-0.3,+1.3) rectangle (+0.8,+1.4);
+ \fill[clipstl] (-0.2,+1.4) rectangle (+0.7,+1.5);
+ \fill[clipstl] (-0.1,+1.5) rectangle (+0.7,+1.6);
+ \fill[clipstl] (-0.0,+1.6) rectangle (+0.6,+1.7);
+ \fill[clipstl] (+0.1,+1.7) rectangle (+0.6,+1.8);
+ \fill[clipstl] (+0.2,+1.8) rectangle (+0.5,+1.9);
+ \fill[clipstl] (+0.3,+1.9) rectangle (+0.4,+2.0);
+
+  \draw[polstl] (v0) -- (v1) -- (v2) -- cycle;
+
+ \draw (v0) node[right] {$\mvec{v_0}$};
+ \draw (v1) node[above] {$\mvec{v_1}$};
+ \draw (v2) node[left] {$\mvec{v_2}$};
+
+\end{tikzpicture}
+
+\end{document}

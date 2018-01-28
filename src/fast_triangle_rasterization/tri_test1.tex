@@ -1,0 +1,20 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing}
+\begin{tikzpicture}
+
+\input{common.tex}
+ \clip (-2.0,-0.5) rectangle(+2.0,+3.0);
+
+  \fill[clipstl] (16.4,-28.0) -- (-15.6,32.0) -- (-10.0,-10.0) -- cycle;
+
+  \draw[polstl] (v0) -- (v1) -- (v2) -- cycle;
+
+ \draw (v0) node[right] {$\mvec{v_0}$};
+ \draw (v1) node[above] {$\mvec{v_1}$};
+ \draw (v2) node[left] {$\mvec{v_2}$};
+
+\end{tikzpicture}
+
+\end{document}

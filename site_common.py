@@ -3,6 +3,8 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/fast_triangle_rasterization.html", "A Simple, and Trivially Parallelizable Triangle Rasterization Approach"),
+
     ("src/junior_graphics_programmer_interview.html", "Interviewing for your First Job as a Graphics Programmer: a Checklist of Common Interview Questions"),
 
     ("src/gauss_newton.html", "Simple Curve Fitting with the Gauss-Newton Algorithm"),

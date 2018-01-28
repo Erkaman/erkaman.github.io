@@ -59,3 +59,4 @@
 /img/gallery/light_probe_reflection.jpg /projects.html#reflections-using-light-field-probes
 /img/gallery/hair_lowres.jpg /projects.html#hair-rendering
 /img/gallery/laplacian_deformation.png /projects.html#laplacian_deformation.js
+/img/gallery/tri_rasterization.png /posts/fast_triangle_rasterization.html

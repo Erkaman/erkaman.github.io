@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Eric Arnebäck</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Articles by Eric Arneb&#xe4;ck"/>
+
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
+  </head>
+  <body>
+
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="container"><h1>A Simple, and Trivially Parallelizable Triangle Rasterization Approach</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{eqcol2}{RGB}{114,0,172}\definecolor{eqcol1}{RGB}{172,0,114}\definecolor{eqcol3}{RGB}{0,172,114}\definecolor{eqcol4}{RGB}{230,190,120}$In
+  this article, a triangle rasterization algorithm that is easy to
+  implement, yet trivial to parallelize is described. The algorithm is
+  as follows: it turns out that it is not difficult to test whether an
+  arbitrary point is inside a triangle. Armed with such a test, a
+  triangle can easily be rasterized by first finding the bounding box
+  of the triangle, and then only rasterizing the pixels inside this
+  bounding box that pass the test.
+</p>
+
+<p>
+
+  Thus, we first need to derive a test that allows us to check whether
+  some point is inside a triangle. Consider the triangle with the
+  vertices $\mvec{v_0}$, $\mvec{v_1}$, $\mvec{v_2}$
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_original.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_original.svg"
+         alt="original triangle" title="original triangle"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+Let us in particular consider the edge $(\mvec{v_0}, \mvec{v_1})$. A
+point is either on one side of the edge, or on the other side. The
+points on the correct side will be in the red area
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_test1.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_test1.svg"
+         alt="edge test 1" title="edge test 1"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+Certainly, a point that is not in the red area cannot be inside the
+triangle. However, observe that not all points in the red area will be
+inside the triangle, For instance, the points on the wrong side of the
+edge $(\mvec{v_1}, \mvec{v_2})$ will be outside the triangle. The
+points that are on the correct sides of the edges $(\mvec{v_0},
+\mvec{v_1})$ <i>and</i> $(\mvec{v_1}, \mvec{v_2})$ are in the below red area
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_test2.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_test2.svg"
+         alt="edge test 2" title="edge test 2"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+However, we are not yet satisfied; the red area still
+contains areas that are outside the triangle. In our final red area,
+only points that are on the correct side of $(\mvec{v_0},
+\mvec{v_1})$, $(\mvec{v_1}, \mvec{v_2})$, <i>and</i> $(\mvec{v_2},
+\mvec{v_0})$ are in the red area:
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_test3.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_test3.svg"
+         alt="edge test 3" title="edge test 3"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+So we have described a simple test that allows us to check whether a
+point is inside the triangle: it must be on the correct side of all
+the three edges. Next, we need a way to check whether some point is on the correct
+side of a single edge.
+
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_point_inside.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_point_inside.svg"
+         alt="point inside triangle" title="point inside triangle"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+The point $\mvec{p}$ is clearly on the correct side of the edge
+$(\mvec{v_0},\mvec{v_1})$, and it is easy to check for this. We define
+$\mvec{p} = (p_x, p_y, 0)$, $\mvec{v_0} = (v_{0x}, v_{0y}, 0)$,
+$\mvec{v_1} = (v_{1x}, v_{1y}, 0)$, so that the $z$-component is
+always zero. Consider now the cross product $(\mvec{v_1}-\mvec{v_0})
+\times (\mvec{p}-\mvec{v_0})$:
+
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_point_cross_product.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_point_cross_product.svg"
+         alt="edge test 3" title="edge test 3"
+         width="60%" height="60%"/></a>
+</p>
+
+<p>
+by
+the <a href="https://en.wikipedia.org/wiki/Cross_product#Definition">right-hand
+rule</a>, the $z$-component of this cross product must be positive if
+$\mvec{p}$ is on the correct side of the edge. If it is on the wrong
+side, the below situation will occur.
+
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_point_cross_product_outside.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_point_cross_product_outside.svg"
+         alt="cross product for outside point" title="cross product for
+         outside point"
+         width="60%" height="60%"/></a>
+</p>
+
+<p>
+
+Thus, if the $z$-component of the cross product is negative, then the
+point cannot possibly be inside the triangle. Finally, the
+$z$-component of this cross product is calculated as
+
+\[
+((\mvec{v_1}-\mvec{v_0}) \times (\mvec{p}-\mvec{v_0}))_z =
+(v_{1x}-v_{0x})(p_{y}-v_{0y}) - (v_{1y} - v_{0y})(p_{x}-v_{0x})
+\]
+
+if this value is positive, then the point is on the correct side, otherwise, it
+is not inside the triangle. We repeat this test for all the three
+edges, if it passes all three, the point must be contained in the
+triangle.
+
+</p>
+
+<p>
+
+Finally, we can now use this test to implement a rasterization
+algorithm. We find the smallest axis-aligned bounding box that
+contains the triangle, and then loop over all pixels contained in the
+box. For each pixel center, we perform the three edge tests, and if all
+three pass, the pixel is rasterized.
+</p>
+
+<p>
+  <a href="/img/fast_triangle_rasterization/tri_rasterization.svg">
+    <img class="article-img"
+         src="/img/fast_triangle_rasterization/tri_rasterization.svg"
+         alt="triangle rasterization" title="triangle rasterization"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+
+This rasterization algorithm has the advantage that it is trivial to
+parallelize. It can be implemented in a compute shader or CUDA kernel
+as follows: for every pixel in the bounding box, a GPU-thread is
+launched. Every thread checks whether all three edge tests pass, and
+if so, rasterize the pixel. This algorithm requires no synchronization
+between the threads whatsoever, and thus it will be very fast. It is
+also possible to implement a parallel algorithm on the CPU using
+SSE or AVX. Such an implementation is provided in the <a href="google.com">source code</a>
+accompanying this article.
+
+</p>
+
+One possible application of this rasterization algorithm is Software
+Occlusion Culling. This algorithm is actually used in
+the <a href="https://software.intel.com/en-us/articles/software-occlusion-culling">Software
+  Occlusion Culling Demo provided by Intel</a>.
+</div>
+
+
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </body>
+</html>

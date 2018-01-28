@@ -1,0 +1,31 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz-3dplot}
+
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing}
+
+\tdplotsetmaincoords{70}{40}
+\begin{tikzpicture}[tdplot_main_coords]
+  \input{common.tex}
+
+%\draw[polstl] (+1.2,+0.5,0.0) -- (+0.4,+2.0,0.0) -- (-1.2,+0.5,0.0) -- cycle;
+%\draw[polstl] (+1.2,+0.5,0.0) -- (0.02,1.2,0.0);
+
+% 0.13333, 1
+
+\draw[polstl] (+1.067,-0.5,0.0) -- (+0.267,+1.0,0.0) -- (-1.333,-0.5,0.0) -- cycle;
+\draw[polstl,->] (+1.067,-0.5,0.0) -- (+1.313,0.3,0.0) node[right]{\tiny $\mvec{p}$};
+
+\draw[polstl,->] (+1.067,-0.5,0.0) -- (+0.267,+1.0,0.0) ;
+
+\draw[polstl,->,red!80!white] (+1.067,-0.5,0.0) -- (+1.067,-0.5,-1.0)
+node[below,red!80!white]{\tiny $(\mvec{v_1}-\mvec{v_0}) \times (\mvec{p}-\mvec{v_0})  $};
+
+ \draw (+1.067,-0.5,0.0) node[below] {\tiny $\mvec{v_0}$};
+ \draw (+0.267,+1.0,0.0) node[right] {\tiny  $\mvec{v_1}$};
+ \draw (-1.333,-0.5,0.0) node[left] {\tiny  $\mvec{v_2}$};
+
+\end{tikzpicture}
+
+\end{document}
