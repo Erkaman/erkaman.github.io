@@ -60,3 +60,6 @@
 /img/gallery/hair_lowres.jpg /projects.html#hair-rendering
 /img/gallery/laplacian_deformation.png /projects.html#laplacian_deformation.js
 /img/gallery/tri_rasterization.png /posts/fast_triangle_rasterization.html
+/img/gallery/kitten_library.jpg /projects.html#poisson_blend
+/img/gallery/watereagle_lake.jpg /projects.html#poisson_blend
+/img/gallery/moon_gothenburg.jpg /projects.html#poisson_blend

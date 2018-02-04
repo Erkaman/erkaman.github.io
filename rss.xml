@@ -8,6 +8,27 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>An Intuitive Explanation of using Poisson Blending for
+  Seamless Copy-and-Paste of Images</title>
+    <link>https://erkaman.github.io/posts/poisson_blending.html</link>
+    <guid>https://erkaman.github.io/posts/poisson_blending.html</guid>
+    <description>
+      In this article, we explain the intuition behind an image
+      processing technique called Poisson Blending. This technique is
+      an image processing operator that allows the user to insert one
+      image into another, without introducing any visually unappealing
+      seams. Furthermore, this technique also makes sure that the
+      color of the inserted image is also shifted, so that the
+      inserted object feels as if it is part of the environment of the
+      target image. So a bright object copy-and-pasted into a rather
+      dark image, will have its color shifted to a darker color. In
+      the below image, an image of a kitten has been copy-and-pasted
+      into an image of a library using poisson blending, and as can be
+      observed, there are no visible seams.
+    </description>
+  </item>
+
+  <item>
     <title>A Simple, and Trivially Parallelizable Triangle Rasterization Approach</title>
     <link>https://erkaman.github.io/posts/fast_triangle_rasterization.html</link>
     <guid>https://erkaman.github.io/posts/fast_triangle_rasterization.html</guid>

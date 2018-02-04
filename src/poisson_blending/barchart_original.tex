@@ -1,0 +1,27 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+
+\usetikzlibrary{decorations.pathreplacing}
+\begin{tikzpicture}
+
+  \input{common.tex}
+
+
+   % invisible rectangle hack. so that the arrow doesnt get cut off..
+ \fill[fill=red,opacity=0.0] (-0.1in,0.0in) rectangle ++(0.1in,0.1in);
+
+ \draw[->,arrstl] (0.0, 0.0) -- (1.9in, 0.0)node[right]{$x$};
+ \draw[->,arrstl] (0.0, 0.0) -- (0.0, 1.0in);
+
+ \filldraw[rbarstl] (0.0in,0.0in) node[below right]{$f_1$} rectangle ++(0.2in,0.6in) node[above left,xshift=\bxs{}]{$6$};
+ \filldraw[rbarstl] (0.2in,0.0in) node[below right]{$f_2$} rectangle ++(0.2in,0.4in) node[above left,xshift=\bxs{}]{$4$};
+ \filldraw[ybarstl] (0.4in,0.0in) node[below right]{$f_3$} rectangle ++(0.2in,0.3in)node[above left,xshift=\bxs{}]{$3$};
+ \filldraw[ybarstl] (0.6in,0.0in) node[below right]{$f_4$} rectangle ++(0.2in,0.5in)node[above left,xshift=\bxs{}]{$5$};
+ \filldraw[ybarstl] (0.8in,0.0in) node[below right]{$f_5$} rectangle ++(0.2in,0.4in)node[above left,xshift=\bxs{}]{$4$};
+ \filldraw[ybarstl] (1.0in,0.0in) node[below right]{$f_6$} rectangle ++(0.2in,0.6in)node[above left,xshift=\bxs{}]{$6$};
+ \filldraw[rbarstl] (1.2in,0.0in) node[below right]{$f_7$} rectangle ++(0.2in,0.8in)node[above left,xshift=\bxs{}]{$8$};
+ \filldraw[rbarstl] (1.4in,0.0in) node[below right]{$f_8$} rectangle ++(0.2in,0.7in)node[above left,xshift=\bxs{}]{$7$};
+
+\end{tikzpicture}
+
+\end{document}

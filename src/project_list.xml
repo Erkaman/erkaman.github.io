@@ -1,6 +1,24 @@
 <list>
 
   <project>
+    <title>Poisson Blending</title>
+    <href>https://github.com/Erkaman/poisson_blend</href>
+    <img>/img/gallery/kitten_library.jpg</img>
+    <text>
+      <p>
+        This is my implementation of a technique called Poisson
+        Blending. This technique allows you to copy-and-paste one
+        image into another, without any ugly seams. In the right
+        image, a cute kitten has been copy-and-pasted into a library,
+        without any ugly seams whatsoever. I have written an <a
+        href="/posts/poisson_blending.html">article</a> about how it
+        works.
+      </p>
+    </text>
+  </project>
+
+
+  <project>
     <title>laplacian_deformation.js</title>
     <href>https://github.com/mikolalysenko/laplacian-deformation</href>
     <img>/img/gallery/laplacian_deformation.png</img>
