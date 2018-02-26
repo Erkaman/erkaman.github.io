@@ -8,6 +8,24 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing</title>
+    <link>https://erkaman.github.io/posts/hole_filling.html</link>
+    <guid>https://erkaman.github.io/posts/hole_filling.html</guid>
+    <description>
+      In this article, we describe an approach to smoothly filling
+      holes in broken meshes that is based on variational
+      calculus. However, do note that it is not assumed that the
+      reader has experience in variational calculus, and we will
+      instead introduce the necessary concepts from this topic when
+      they are needed. Most of the techniques described in this
+      article are based the description of Surface Fairing in section
+      4.3 of [1]. In the below image, it is shown how our described
+      algorithm can be used to smoothly and naturally fill holes in a
+      broken mesh
+    </description>
+  </item>
+
+  <item>
     <title>An Intuitive Explanation of using Poisson Blending for
   Seamless Copy-and-Paste of Images</title>
     <link>https://erkaman.github.io/posts/poisson_blending.html</link>

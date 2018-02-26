@@ -61,5 +61,7 @@
 /img/gallery/laplacian_deformation.png /projects.html#laplacian_deformation.js
 /img/gallery/tri_rasterization.png /posts/fast_triangle_rasterization.html
 /img/gallery/kitten_library.jpg /projects.html#poisson_blend
-/img/gallery/watereagle_lake.jpg /projects.html#poisson_blend
-/img/gallery/moon_gothenburg.jpg /projects.html#poisson_blend
+/img/gallery/watereagle_lake.jpg /projects.html#poisson-blending
+/img/gallery/moon_gothenburg.jpg /projects.html#poisson-blending
+/img/gallery/spheremontage.jpg /projects.html#hole-fixer
+/img/gallery/bunnymontage.jpg /projects.html#hole-fixer

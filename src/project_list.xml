@@ -1,6 +1,22 @@
 <list>
 
   <project>
+    <title>Hole Fixer</title>
+    <href>https://github.com/Erkaman/hole_fixer</href>
+    <img>/img/gallery/bunnymontage.jpg</img>
+    <text>
+      <p>
+        This is a demo application that demonstrates how to smoothly
+        and naturally fill holes in broken 3D meshes. It uses
+        techniques from variational calculus and surface fairing to
+        achieve this. I have written an <a
+        href="/posts/hole_filling.html">article</a> about how it works.
+      </p>
+    </text>
+  </project>
+
+
+  <project>
     <title>Poisson Blending</title>
     <href>https://github.com/Erkaman/poisson_blend</href>
     <img>/img/gallery/kitten_library.jpg</img>

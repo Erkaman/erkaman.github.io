@@ -1,0 +1,555 @@
+<h1>Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing</h1>
+
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{eqcol2}{RGB}{114,0,172}\definecolor{eqcol1}{RGB}{172,0,114}\definecolor{eqcol3}{RGB}{0,172,114}\definecolor{eqcol4}{RGB}{230,190,120}$In
+  this article, we describe an approach to smoothly filling holes in
+  broken meshes that is based
+  on <a href="https://en.wikipedia.org/wiki/Calculus_of_variations">variational
+  calculus</a>. However, do note that it is not assumed that the
+  reader has experience in variational calculus, and we will instead
+  introduce the necessary concepts from this topic when they are
+  needed. Most of the techniques described in this article are based
+  the description of Surface Fairing in section 4.3
+  of <a href="#refone">[1]</a>. In the below image, it is shown how
+  our described algorithm can be used to smoothly and naturally fill
+  holes in a broken mesh.
+</p>
+
+<p>
+  <a href="/img/hole_filling/bunnymontage.png">
+    <img class="article-img"
+         src="/img/hole_filling/bunnymontage.png"
+         alt="bunny montage" title="bunny montage"
+         width="80%" height="80%"/></a>
+</p>
+
+<h2>Our Approach</h2>
+
+<p>
+
+First, we shall describe our general approach to solving the
+problem. Let us say we have some geometry with a hole, and from the
+side, it looks like this
+
+</p>
+
+<p>
+  <a href="/img/hole_filling/barchart_hole.svg">
+    <img class="article-img"
+         src="/img/hole_filling/barchart_hole.svg"
+         alt="barchart with hole" title="barchart with hole"
+         width="40%" height="40%"/></a>
+</p>
+
+
+<p>
+
+As can be observed, we describe the height at every point with a
+function $f$, so that $f(1)$ is the height of the first vertex, and so
+on. At $x=1$, $x=2$, $x=7$ and $x=8$ there are vertices, but in
+between, there is a hole at $x=3$, $x=4$, $x=5$, $x=6$. We wish to add
+a <i>patch</i> of four vertices at these four points that fills the hole, and we also want
+to ensure the height of these vertices follows the general curvature
+around the hole. We will find these four heights by formulating a
+system of equations, and then solving it, so that the obtained
+solution is the values of $f(3)$, $f(4)$, $f(5)$ and $f(6)$.
+
+</p>
+
+<p>
+
+What kind of solution would be a good and desirable
+solution? We claim a solution like the below is a good solution
+
+</p>
+
+<p>
+  <a href="/img/hole_filling/barchart_good_solution.svg">
+    <img class="article-img"
+         src="/img/hole_filling/barchart_good_solution.svg"
+         alt="barchart with good solution" title="barchart with good solution"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+  While the below solution is a bad solution
+</p>
+
+<p>
+  <a href="/img/hole_filling/barchart_bad_solution.svg">
+    <img class="article-img"
+         src="/img/hole_filling/barchart_bad_solution.svg"
+         alt="barchart with bad solution" title="barchart with bad solution"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+
+In the bad solution, the patch that fills the hole, is simply a linear
+interpolation from $x=2$ to $x=7$. The issue with such a solution is
+that it poorly preserves the slopes(that is, the derivatives) of the
+surroundings of the patch. The derivative at some point $x$ can be
+approximated as
+
+\[
+f_x(x) =  \frac{f(x + h) - f(x)}{h} = f(x + 1) - f(x)
+\]
+
+where we have let the step size be $h = 1$, and where we are using the
+notation $f_x(x) = \frac{\partial f}{\partial x}$ to denote the first
+derivative with respect to $x$, and then the second derivative is denoted
+$f_{xx}(x)$. Observe that $f_x(1) = 5 - 2 = 3$. In the good
+solution, we have that $f_x(2) = 2.1$, but in the bad solution we have
+$f_x(2) = 0.2$. The derivative at $f_x(2)$ is much closer to the
+derivative at $f_x(1)$ in the good solution compared to the bad. The
+change in derivative is smaller for the good solution, and this
+results in the transition from $f(2)$ to $f(3)$ being a much more
+natural transition, since this transition is more consistent with the
+derivatives of the surrounding vertices. To summarize, we desire a
+small change in the value of the derivative, as we go from one vertex
+to its neighbour. The change of derivative is simply the second
+derivative, and we wish to minimize this quantity over the patch.
+
+</p>
+
+<p>
+
+  This point is very important and the key of the technique, so let us
+  clarify it even more: the first derivative, $f_x(x)$, measures how
+  the function $f(x)$ changes as we go from $x$ to $x+1$. Then the
+  definition of the second derivative, $f_{xx}(x)$ , is obvious: it
+  measures the change of $f_x(x)$ as we go from $x$ to $x+1$. In order
+  to create a smooth patch that naturally follows the curvature around
+  the hole, we will create a patch that minimizes the second
+  derivative.
+
+</p>
+
+<h2>Minimizing the Second-Derivative with Variational Calculus</h2>
+
+<p>
+
+In this section, we will implement the approach described in the
+previous section. Our objective is to find some function $f(x)$, that
+describes a patch that has the requirements we described in the
+previous section. For the case of our example, we already know the
+values of this function for $x=1$, $x=2$, $x=7$ and $x=8$, but we need
+to solve and find the values for $x=3$, $x=4$, $x=5$ and $x=6$. The example
+function we have been dealing with up until this point has been a
+discrete function $f(x)$, that is only defined at the integers. We
+will now temporarily move from the discrete domain into the continuous
+domain, since this allows us to use the powerful tools of variational
+calculus. Henceforth, $f$ is not only defined for values such as $x=2$
+and $x=6$, but also for values such as $x=1.2$ and $x=1.5$.
+
+</p>
+
+<p>
+
+  We wish to find a function $f(x)$, such that the second derivative
+  is minimal at all points in the patch. Then it is natural to define the energy function
+
+  \[
+  E(f) = \int_a^b (f_{xx})^2\ dx
+  \]
+
+  (This integral would not have been possible in the discrete
+  domain!)The above integral can be seen as a sum. Put in a simplified
+  way, it evaluates the value of $(f_{xx})^2$ at many, many points in
+  the interval $[a, b]$, and then adds all these evaluations together
+  into one large sum. If this integral is small, then the second
+  derivatives in the interval $[a, b]$ will be small, and this means
+  $f$ is a good patch by our requirements. Note that $a$ and $b$ are
+  the boundary points of the patch, and the boundary is $x=2$ and
+  $x=7$ for the example function.
+
+</p>
+
+<p>
+
+  In order to find the $f$ that minimizes $E(f)$, we utilize a
+  common approach of variational calculus: First, we assume that
+  $f$ is the minimizer of $E(f)$. Further, let $u(x)$ be any function
+  that is defined in the interval $[a,b]$, and is once differentiable in
+  this interval(this means that we can compute its first derivative in this
+  interval), and that further satisfies $u(a) = u(b) = 0$ and $u_x(a) =
+  u_x(b) = 0$. It will soon become clear why we are doing this.
+
+</p>
+<p>
+
+  Consider now the function $E(f(x) + u(x)\lambda)$. This is a
+  function where we are adding a certain amount of $u(x)$ to $f(x)$
+  and then giving this sum to $E()$. How much of $u(x)$ that we add to
+  $f(x)$ is controlled by the scalar $\lambda$. We assumed that $f(x)$
+  is the minimizer of $E(f)$, and this implies that $\lambda=0$ is the
+  minimizer of $E(f(x) + u(x)\lambda)$. But this means that the
+  derivative of $E(f(x) + u(x)\lambda)$ with respect to $\lambda$ must
+  be $0$ when $\lambda = 0$(since the derivative is zero at the
+  minimum point). That is
+
+  \[
+  \frac{\partial E(f(x) + u(x)\lambda)}{\partial\lambda}
+
+   \bigg\rvert_{\lambda = 0}= 0
+  \]
+
+  We shall now expand and simplify the left-hand side. For
+  convenience, we will onward write $u(x)$ as $u$ and $f(x)$ as
+  $f$. First observe that
+
+  \[
+
+  E(f + u\lambda) = \int_b^a ( (f + u\lambda)_{xx} )^2\ dx = \int_b^a
+  (f_{xx} + u_{xx}\lambda)^2\ dx
+
+  \]
+
+  Next we compute the derivative with respect to $\lambda$.
+
+  \[
+  \frac{\partial E(f + u\lambda)}{\partial\lambda} =
+
+  \frac{\partial}{\partial\lambda}\left(\int_b^a (f_{xx} +
+  u_{xx}\lambda)^2\ dx\right) = \int_a^b 2(f_{xx} +
+  u_{xx}\lambda)u_{xx}\ dx
+  \]
+
+  (we have here performed differentiation under the integral, and this
+  is completely acceptable by
+  the <a href="https://en.wikipedia.org/wiki/Leibniz_integral_rule">Leibniz's
+  rule</a>). When $\lambda=0$, the right-hand side must equal zero,
+  and thus it follows
+
+
+  \[
+    \int_a^b f_{xx}u_{xx}\ dx = 0
+  \]
+
+  Recall that $u(a) = u(b) = 0$ and $u_x(a) = u_x(b) = 0$. By using
+  these facts and integration by parts, it is possible to simplify the
+  above even further. Integration by parts yields
+
+  \[
+  \int_a^b f_{xx}u_{xx} dx = [f_{xx}u_x]^b_a - \int_a^b f_{xxx} u_x\ dx = 0
+  \]
+
+  However, $u_x(a) = u_x(b) = 0$, and thus it simplifies to
+
+  \[
+    \int_a^b f_{xxx} u_x\ dx = 0
+  \]
+
+  Integrate by parts again
+
+  \[
+  \int_a^b f_{xxx} u_x dx = [f_{xxx}u]^b_a - \int_a^b f_{xxxx}u\ dx = 0
+  \]
+
+  But $u(a) = u(b) = 0$, so we can simplify as
+
+  \[
+  \int_a^b f_{xxxx}u\ dx = 0
+  \]
+
+  Finally, here comes the coup de grace. Recall our definition of
+  $u(x)$: it is <i>any</i> function that satisfies $u(a) = u(b) = 0$
+  and $u_x(a) = u_x(b) = 0$, and is once differentiable. How can we
+  ensure that the above equality is satisfied, while still letting
+  $u(x)$ be any function? The only possible way to satisfy such a
+  strong condition, is by requiring that
+
+  \[
+  f_{xxxx} = 0
+  \]
+
+  That is, $f_{xxxx}$ must <i>always</i> be zero within our domain
+  $[a,b]$. This implies that the minimizer of $E(f)$ is a function whose fourth
+  derivative is always zero within the domain. We will use this fact
+  to solve for the minimizer $f$ in the following section.
+
+</p>
+
+<p>
+  However, note that instead of solving for the $f$ whose fourth
+  derivative with respect to $x$ is zero, we will find the $f$ whose
+  bi-laplacian is zero, which is of course equivalent to the
+  former. We are in this example dealing with only one dimension, and
+  the laplacian in one dimension is simply $\Delta f = f_{xx}$. This
+  means that our condition $f_{xxxx} = 0$ is equivalent to
+
+  \[
+  \Delta\Delta f = \Delta^2 f = 0
+  \]
+
+  where $\Delta^2$ is often called the bi-laplacian or the
+  bi-harmonic operator, which is just the laplacian of the
+  laplacian. The laplacian is more commonly used in notation than the
+  fourth derivative, so this is why we are formulating our condition
+  in terms of the laplacian.
+
+</p>
+
+<h2>Discretizing and Solving for the Minimizer </h2>
+
+<p>
+
+In the beginning, we showed a function with bar charts with a hole in
+it, and now we will show how to find the minimizer that fills this
+hole, and at the same time make sure that the second derivatives are
+minimal. The minimizer $f$ must satisfy the condition
+
+\[
+\Delta\Delta f = \Delta^2 f = 0
+\]
+
+However, this condition is in the continuous domain, and our bar chart
+is in the discrete domain, and so is a 3D mesh. In practical
+applications, discrete domains are very common, and so the
+bi-laplacian must be discretized. We will demonstrate how this can be
+done in the one-dimensional case. The bi-laplacian is the fourth
+derivative in one dimension. The first step is to discretize the first
+derivative, using central differences.
+
+\[
+f_x(x) = \frac{f(x + 0.5h) - f(x - 0.5h)}{h} = f(x+0.5) - f(x-0.5)
+\]
+
+Where we used a step length of $h=1$, the smallest possible step length
+in our discrete problem. The second derivative, is the
+derivative of the first derivative
+
+\[
+\Delta f(x) = f_{xx}(x) = f_x(x+0.5) - f_x(x-0.5) = f(x-1) - 2f(x) + f(x+1)
+\]
+
+Finally, the bi-laplacian is just the laplacian of the laplacian
+
+\[
+\Delta^2 f(x) = f_{xxxx}(x) = f_{xx}(x-1) - 2f_{xx}(x) + f_{xx}(x+1) =
+f(x-2) - 4f(x-1) + 6f(x) - 4f(x+1) + f(x+2)
+\]
+
+Now we can finally solve for $f$ in our bar chart problem. First,
+observe that we desire to have $\Delta^2 f(3) = 0$. Using our
+discretization scheme, this can be simplified to
+
+\[
+f(1) - 4f(2) + 6f(3) - 4f(4) + f(5) = 0
+\]
+
+And same type of linear equation also holds for $f(4)$, $f(5)$, and
+$f(6)$. We summarize all these linear equations into a single matrix
+equation
+
+\[
+  \begin{bmatrix}
+  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  1 & -4 & 6 & -4 & 1 & 0 & 0 & 0 \\
+  0 & 1 & -4 & 6 & -4 & 1 & 0 & 0 \\
+  0 & 0 & 1 & -4 & 6 & -4 & 1 & 0 \\
+  0 & 0 & 0 & 1 & -4 & 6 & -4 & 1 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+
+  \end{bmatrix}
+\begin{bmatrix}
+  f(1) \\
+  f(2) \\
+  f(3) \\
+  f(4) \\
+  f(5) \\
+  f(6) \\
+  f(7) \\
+  f(8) \\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  2 \\
+  5 \\
+  0 \\
+  0 \\
+  0 \\
+  0 \\
+  6 \\
+  3 \\
+
+ \end{bmatrix}
+\]
+
+Note that rows 1, 2, 7 and 8 simply specify the values at the
+boundaries of the bar chart. These are the boundary conditions of our
+problem, and must be specified in order to create a solvable
+equation. The remaining rows specify that the bi-laplacians of the
+unknown variables $f(3)$, $f(4)$, $f(5)$, $f(6)$ must equal
+zero. However, this matrix equation can be simplified. For row 3,
+we have
+
+\[
+f(1) - 4f(2) + 6f(3) - 4f(4) + f(5) = 0
+\]
+
+But since the values of $f(1)=2.0$ and $f(2)=5.0$ are known, we can
+move some constant values to the right-hand side, keeping only the
+variables on the left side:
+
+\[
+6f(3) - 4f(4) + f(5) = 18
+\]
+
+We do the same for the other three linear equations, and remove rows
+1,2, 7 and 8, since these rows are now redundant. Our simplified matrix
+equation is
+
+\[
+  \begin{bmatrix}
+  6 & -4 & 1 & 0 \\
+  -4 & 6 & -4 & 1 \\
+  1 & -4 & 6 & -4 \\
+  0 & 1 & -4 & 6 \\
+  \end{bmatrix}
+\begin{bmatrix}
+  f(3) \\
+  f(4) \\
+  f(5) \\
+  f(6) \\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  18 \\
+  -5 \\
+  -6 \\
+  21 \\
+ \end{bmatrix}
+\]
+
+If we solve, we obtain our solution below, which is also the good
+solution that we showed earlier.
+
+</p>
+
+<p>
+  <a href="/img/hole_filling/barchart_good_solution.svg">
+    <img class="article-img"
+         src="/img/hole_filling/barchart_good_solution.svg"
+         alt="barchart with good solution" title="barchart with good solution"
+         width="40%" height="40%"/></a>
+</p>
+
+<h2>Smooth 3D Hole-Filling Surface Patches</h2>
+
+<p>
+
+We have shown how to smoothly fill holes in the one-dimensional
+case. We will now briefly discuss how to smoothly fill holes in 3D
+meshes. Most of the reasoning from the one-dimensional case carries
+over to the 3D case, so this discussion will be more brief.
+
+</p>
+
+<p>
+First, we locate the hole in the mesh. The below image illustrates
+this hole
+</p>
+
+<p>
+  <a href="/img/hole_filling/bunnyhole1.png">
+    <img class="article-img"
+         src="/img/hole_filling/bunnyhole1.png"
+         alt="bunny hole" title="bunny hole"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+and then compute the center position of the vertices in the hole
+boundary(this is the average of the vertex positions). The vertices in
+the boundary are connected with a newly created vertex at the center
+position, thus creating a surface patch that fills the hole. The
+triangles in this patch are also upsampled(subdivided), so that we
+have more vertices to manipulate for when we will be making the patch
+more smooth. The result can be seen below
+
+</p>
+
+<p>
+  <a href="/img/hole_filling/bunnyhole2.png">
+    <img class="article-img"
+         src="/img/hole_filling/bunnyhole2.png"
+         alt="bunny hole filled with flat patch" title="bunny hole
+         filled with flat patch"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+  Note that we also upsampled the triangles of the original bunny
+  mesh, since this makes it very easy to fuse together the vertices of the
+  original patch and the original geometry. By "fuse", we mean that we
+  ensure that the boundary of the original mesh, and the boundary of
+  the patch share the same vertices.
+</p>
+
+<p>
+
+Next, we create a smooth patch by solving the equation $\Delta^2 f =
+0$ on the patch. We need to discretize the laplace operator to achieve this,
+and the discretization of the laplace operator on the surface of a
+mesh is called
+the <a href="https://en.wikipedia.org/wiki/Laplace%E2%80%93Beltrami_operator">Laplace-Beltrami</a>
+operator. This is a topic that is too large to be covered in this
+article, and will probably be the subject of a future
+article. Instead, we mention
+that <a href="https://github.com/libigl/libigl">libigl</a> provides
+code that creates the discretized Laplace-Beltrami operator, and then
+solves the equation $\Delta^2 f = 0$. This is what we used in our demo
+implementation of the technique. We solve for $f$, and the results can
+be seen below
+
+</p>
+
+<p>
+  <a href="/img/hole_filling/bunnyhole3.png">
+    <img class="article-img"
+         src="/img/hole_filling/bunnyhole3.png"
+         alt="bunny hole filled with smoothed patch" title="bunny hole
+         filled with smoothed patch"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+  Finally, we downsample the mesh, using a mesh decimation algorithm.
+</p>
+
+<p>
+  <a href="/img/hole_filling/bunnyhole4.png">
+    <img class="article-img"
+         src="/img/hole_filling/bunnyhole4.png"
+         alt="bunny hole filled with smoothed patch" title="bunny hole
+         filled with smoothed patch"
+         width="40%" height="40%"/></a>
+</p>
+
+<p>
+  This concludes the article. In
+  a <a href="https://github.com/Erkaman/hole_fixer">github
+  repository</a>, we provide a commented implementation of the
+  technique implemented with libigl and Eigen.
+
+</p>
+
+<h2>References</h2>
+
+<p id="refone">
+   [1] Mario Botsch, Leif Kobbelt, Mark Pauly, Pierre Alliez, Bruno Lévy., "Polygon Mesh Processing".
+</p>

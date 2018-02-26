@@ -3,6 +3,8 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/hole_filling.html", "Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing"),
+
     ("src/poisson_blending.html", "An Intuitive Explanation of using Poisson Blending for Seamless Copy-and-Paste of Images"),
 
     ("src/fast_triangle_rasterization.html", "A Simple, and Trivially Parallelizable Triangle Rasterization Approach"),
