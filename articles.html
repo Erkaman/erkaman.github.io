@@ -37,9 +37,129 @@
       <hr>
     </div>
 
-    <div class="container"><h1>Articles <a href="/rss.xml" title="RSS feed"><img src="/img/rss.png" alt="RSS" class="feed-button"></a></h1><p>Below are some small articles and tutorials I have written. They are mostly about computer graphics, and mathematics that is useful in computer graphics. </p><ul><li> <a href="posts/hole_filling.html">Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing</a>  </li><li> <a href="posts/poisson_blending.html">An Intuitive Explanation of using Poisson Blending for Seamless Copy-and-Paste of Images</a>  </li><li> <a href="posts/fast_triangle_rasterization.html">A Simple, and Trivially Parallelizable Triangle Rasterization Approach</a>  </li><li> <a href="posts/junior_graphics_programmer_interview.html">Interviewing for your First Job as a Graphics Programmer: a Checklist of Common Interview Questions</a>  </li><li> <a href="posts/gauss_newton.html">Simple Curve Fitting with the Gauss-Newton Algorithm</a>  </li><li> <a href="posts/gauss_seidel_graph_coloring.html">Parallelizing the Gauss-Seidel Method using Graph Coloring</a>  </li><li> <a href="posts/quaternion_rotation.html">Showing the Correctness of Quaternion Rotation</a>  </li><li> <a href="posts/jacobi_and_gauss_seidel.html">The Gauss-Seidel and Jacobi Methods for Solving Linear Systems</a>  </li><li> <a href="posts/area_convex_polygon.html">Computing the Area of a Convex Polygon</a>  </li><li> <a href="posts/masters_thesis.html">My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel Octree for Global Illumination"</a>  </li><li> <a href="posts/cuda_rle.html">Implementing Run-length encoding in CUDA
-</a>  </li><li> <a href="posts/tess_opt.html">Making Faster Fragment Shaders by Using Tessellation Shaders
-</a>  </li></ul></div>
+    <div class="container"><div class="row"><div class="twelve columns"><h1>Articles <a href="/rss.xml" title="RSS feed"><img src="/img/rss.png" alt="RSS" class="feed-button"></a></h1><p>Below are some small articles and tutorials I have written. They are mostly about computer graphics, and mathematics that is useful in computer graphics. </p></div></div><hr><hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/hole_filling.html">Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing</a></h2>
+    In this article, we describe an approach to smoothly filling holes in broken meshes that is based on variational calculus. However, do note that it is not assumed that the reader has experience in variational calculus, and we will instead introduce the necessary concepts from this topic when they are needed
+    </div>
+    <div class="one-third column">
+    <a href="posts/hole_filling.html"><img src="/img/gallery/bunnymontage.jpg" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/poisson_blending.html">An Intuitive Explanation of using Poisson Blending for Seamless Copy-and-Paste of Images</a></h2>
+    In this article, we explain the intuition behind an image processing technique called Poisson Blending. This technique is an image processing operator that allows the user to insert one image into another, without introducing any visually unappealing seams.
+    </div>
+    <div class="one-third column">
+    <a href="posts/poisson_blending.html"><img src="/img/gallery/kitten_library.jpg" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/fast_triangle_rasterization.html">A Simple, and Trivially Parallelizable Triangle Rasterization Approach</a></h2>
+    In this article, a triangle rasterization algorithm that is easy to implement, yet trivial to parallelize is described.
+    </div>
+    <div class="one-third column">
+    <a href="posts/fast_triangle_rasterization.html"><img src="/img/gallery/tri_rasterization.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/junior_graphics_programmer_interview.html">Interviewing for your First Job as a Graphics Programmer: a Checklist of Common Interview Questions</a></h2>
+    I have recently been interviewing at game companies, trying to land a job as a junior graphics programmer. Having done so, I gained knowledge of what skills game companies expect of a newly graduated graphics programmer, and what questions they are likely to ask during interviews. I will in this article compile these findings into a handy checklist. 
+    </div>
+    <div class="one-third column">
+    <a href="posts/junior_graphics_programmer_interview.html"><img src="/img/gallery/graphics_interview.jpg" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/gauss_newton.html">Simple Curve Fitting with the Gauss-Newton Algorithm</a></h2>
+    It is shown how the Gauss-Newton Algorithm can be used to perform simple curve fitting.
+    </div>
+    <div class="one-third column">
+    <a href="posts/gauss_newton.html"><img src="img/gauss_newton/plot_karis.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/gauss_seidel_graph_coloring.html">Parallelizing the Gauss-Seidel Method using Graph Coloring</a></h2>
+    In a previous article, we introduced the Jacobi and Gauss-Seidel methods, which are iterative methods for solving linear systems of equation. Specifically, we noted that the Gauss-Seidel method will in general converge towards a solution much quicker than the Jacobi method. The main issue with the Gauss-Seidel method is that it is non-trivial to make into a parallel algorithm. However, it turns out that for a certain class of matrices, it is pretty simple to implement a parallel Gauss-Seidel method.
+    </div>
+    <div class="one-third column">
+    <a href="posts/gauss_seidel_graph_coloring.html"><img src="/img/gallery/complex_graph.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/quaternion_rotation.html">Showing the Correctness of Quaternion Rotation</a></h2>
+    In this article, we shall provide an algebraic proof that shows that quaternion rotation is correct.
+    </div>
+    <div class="one-third column">
+    <a href="posts/quaternion_rotation.html"><img src="/img/gallery/crossprod.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/jacobi_and_gauss_seidel.html">The Gauss-Seidel and Jacobi Methods for Solving Linear Systems</a></h2>
+    In this article, we shall explain the Jacobi and Gauss-Seidel methods, which are two iterative methods used for solving systems of linear equations. Our main objective is to describe how the Gauss-Seidel method can be made into a highly parallel algorithm, thus making it feasable for implementation on the GPU, or even on the CPU using SIMD intrinsics.
+    </div>
+    <div class="one-third column">
+    <a href="posts/jacobi_and_gauss_seidel.html"><img src="/img/gallery/jacobi_vs_gauss_seidel.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/area_convex_polygon.html">Computing the Area of a Convex Polygon</a></h2>
+    In this article, we shall derive a formula that computes the area of a convex polygon
+    </div>
+    <div class="one-third column">
+    <a href="posts/area_convex_polygon.html"><img src="/img/gallery/polygon_tri.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/masters_thesis.html">My Master's Thesis: "Comparing a Clipmap to a Sparse Voxel Octree for Global Illumination"</a></h2>
+    I describe my master's thesis, give a couple of comments, and provide an image gallery.
+    </div>
+    <div class="one-third column">
+    <a href="posts/masters_thesis.html"><img src="/img/gallery/mtgallery0.jpg" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/cuda_rle.html">Implementing Run-length encoding in CUDA
+</a></h2>
+    In the paper Fine-Grain Parallelization of Entropy Coding on GPGPUs, Ana Balevic describes how Run-length encoding(hereafter abbreviated RLE) can be implemented on the GPU. Although the paper is very sparse on details, I have been able to implement her approach in CUDA.
+    </div>
+    <div class="one-third column">
+    <a href="posts/cuda_rle.html"><img src="/img/gallery/parle_scatter.png" alt="img"></a>
+    </div>
+    </div>
+    <hr>
+    <div class="row project-row">
+    <div class="two-thirds column">
+    <h2><a href="posts/tess_opt.html">Making Faster Fragment Shaders by Using Tessellation Shaders
+</a></h2>
+    In the paper Automatic Shader Simplification using Surface Signal Approximation, Wang et al. describes an algorithm that does automatic shader simplification. Put briefly, the algorithm automatically rewrites shaders so that they become much, much faster. They are using several techniques to achieve this, and one of those techniques I'd like to describe in this post.
+    </div>
+    <div class="one-third column">
+    <a href="posts/tess_opt.html"><img src="/img/gallery/tess_opt.jpg" alt="img"></a>
+    </div>
+    </div>
+    </div>
 
 
     <div class="container">
