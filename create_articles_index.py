@@ -16,7 +16,6 @@ html_source += """"""
 
 html_source += '</div>'
 html_source += '</div>'
-html_source += '<hr>'
 
 def extract_title(md_file):
     # extract the title of a post, from the first line in the file.
