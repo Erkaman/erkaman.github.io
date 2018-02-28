@@ -65,3 +65,4 @@
 /img/gallery/moon_gothenburg.jpg /projects.html#poisson-blending
 /img/gallery/spheremontage.jpg /projects.html#hole-fixer
 /img/gallery/bunnymontage.jpg /projects.html#hole-fixer
+/img/gallery/teapotshooter.jpg https://github.com/Erkaman/teapot_shooter
