@@ -40,6 +40,10 @@
     <div class="container"><h1>Interviewing for your First Job as a Graphics Programmer: a
   Checklist of Common Interview Questions</h1>
 
+<p><b>Update 18/3-2018: </b>After posting this article on Twitter and receiving some
+  feedback, I added some additional questions that I
+  realized I had forgotten about </p>
+
 <p>
 
 I have recently been interviewing at game companies, trying to land a
@@ -104,7 +108,12 @@ must. Let us go through a number of common questions in each category.
   friends</li>
 
   <li>There will probably be one question where you are asked to do
-  something with a linked list</li>
+    something with a linked list, or some other pointer-based data
+    structured like a tree. For instance, reversing a linked
+    list.</li>
+
+  <li>What is the size of a pointer in C++?(that is, the result
+  of <code>sizeof</code> for a pointer)</li>
 
 </ul>
 </p>
@@ -128,15 +137,22 @@ metaprogramming, which was a relief.
   <li>What is a dot product?</li>
   <li>What is a cross product?</li>
   <li>Why should you use quaternions over euler angles?</li>
+  <li>How do you use matrices to apply transformations to an object?
+  For instance, how do you scale, translate and rotate an object
+  with matrices?</li>
+  <li>How do you calculate the intersection between a ray and a plane/sphere/triangle?</li>
+  <li>Explain concepts like world space, object space and camera space.</li>
+
 </ul>
 </p>
 
 <p>
 
 You will probably also be asked to solve some practical,
-graphics-related problems using the above three concepts. But if you
-are an experienced graphics programmer, this should pose no issues.
-
+graphics-related problems that will involve using dot products, cross
+products, and quaternions. But if you are an experienced graphics
+programmer, this should pose no
+issues.
 </p>
 
 <h2>Optimization Questions</h2>
@@ -152,6 +168,12 @@ are an experienced graphics programmer, this should pose no issues.
   is <a href="https://en.wikipedia.org/wiki/Data-oriented_design">Data
       Oriented Design?</a></li>
 
+  <li>Explain how view frustum culling can be optimized using
+  multithreading and SIMD(see e.g. the blog
+  post by <a href="http://bitsquid.blogspot.se/2016/10/the-implementation-of-frustum-culling.html">Andreas
+  Asplund</a>)</li>
+
+
   <li>Do you have experience with using performance profiling
   tools for the GPU?</li>
 
@@ -160,9 +182,13 @@ are an experienced graphics programmer, this should pose no issues.
 
 <p>
 
-Game companies seem to expect you to have experience with profiling and
-optimizing your code using tools such as NVIDIA Nsight, so do get
-familiar with them.
+Game companies seem to expect you to have experience with profiling
+and optimizing your code using tools such as NVIDIA Nsight, so do get
+familiar with
+them. Also, <a href="http://pages.tacc.utexas.edu/~eijkhout/Articles/EijkhoutIntroToHPC.pdf">this</a>
+is a good book for brushing up on computer architecture topics such as
+cache memory.
+
 
 </p>
 
@@ -172,7 +198,13 @@ familiar with them.
 
 <ul>
   <li>What anti-aliasing techniques do you know about?(some possible
-  techniques are MSAA, MLAA, FXAA and TXAA)</li>
+    techniques are MSAA, MLAA, FXAA and TXAA)</li>
+
+  <li>What are the most common elements of a rendering engine?(common
+  elements will be things like a system for handling culling,
+  rendering of shadows, handling of light sources with something like
+  deferred/forward shading, how materials are handled in the engine,
+  and so on)</li>
 
   <li>What shadow rendering techniques do you know about?(there are
   TONS of shadow rendering techniques out there. Some examples are variance
@@ -183,10 +215,23 @@ familiar with them.
 
   <li>Explain to me physically based rendering?</li>
 
-  <li>What is a BRDF?</li>
+  <li>Can you give an explanation of how
+  the <a href="https://en.wikipedia.org/wiki/Rendering_equation">Rendering
+  Equation</a> works?</li>
+
+  <li>What is a BRDF? What does it mean to say that a BRDF is "energy
+    conserving"?</li>
+
+  <li>What are the performance implications of branching in a
+  shader?(hint: read up on the concept of a warp in GPU
+  architecture)</li>
+
+  <li>What advantages does newer API:s like Vulkan and DirectX 12
+  offer over old API:s like OpenGL and DirectX 11?(hint: primary
+  reason is lower driver-overhead)</li>
 
   <li>What is the last graphics paper you read, and can you explain
-  it to me?(this was a pretty common question)</li>
+    it to me?(this was a pretty common question)</li>
 
   <li>Describe to me the
   entire <a href="https://en.wikipedia.org/wiki/Graphics_pipeline">graphics
@@ -212,6 +257,35 @@ rasterizer is in many ways similar to implementing the graphics
 pipeline from scratch.
 
 </p>
+
+<p>
+  Many of the above questions should primarily be considered as
+  warm-up questions. There will probably be some more detailed and
+  involved questions after them(but I will not disclose them here,
+  since the companies I interviewed for would probably not appreciate
+  that). However, the above list of questions should give the reader a
+  good understanding of what topics he/she will be expected to be
+  proficient in.
+</p>
+
+<p>
+  Some readers may still be in school, and are unsure which courses
+  they should be reading, if they are interested in a career in computer
+  graphics. My recommendation is to primarily focus your efforts on
+  courses that involve High Performance Computing, and Applied
+  Mathematics. Regarding programming courses, try to read courses
+  involving topics like multithreading, computer architecture, and
+  GPGPU, and other topics that are related to High Performance
+  Computing. As for math courses, primarily courses with names like
+  "Linear Algebra", "Multivariable Calculus"(in USA, this course is
+  called "Calculus III" I think), "Probability
+  Theory", "Numerical Optimization", "Differential Equations", and
+  "Computational Geometry" will be of interest to you. Primarily focus
+  your attention on very applied mathematics, and not on more abstract
+  math topics such as Topology and Abstract Algebra, as they are not
+  that useful in computer graphics.
+
+  </p>
 
 <p>
 
