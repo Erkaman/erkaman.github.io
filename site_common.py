@@ -48,7 +48,7 @@ def create_post(input_file):
 
         output_file = "posts/"+input_file[4:-5] + '.html'
 
-        print output_file
+       # print output_file
 
         with open(output_file, 'w') as f:
             f.write(src)

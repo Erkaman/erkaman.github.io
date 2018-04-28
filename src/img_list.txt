@@ -60,9 +60,12 @@
 /img/gallery/hair_lowres.jpg /projects.html#hair-rendering
 /img/gallery/laplacian_deformation.png /projects.html#laplacian_deformation.js
 /img/gallery/tri_rasterization.png /posts/fast_triangle_rasterization.html
-/img/gallery/kitten_library.jpg /projects.html#poisson_blend
+/img/gallery/kitten_library.jpg /projects.html#poisson-blending
 /img/gallery/watereagle_lake.jpg /projects.html#poisson-blending
 /img/gallery/moon_gothenburg.jpg /projects.html#poisson-blending
 /img/gallery/spheremontage.jpg /projects.html#hole-fixer
 /img/gallery/bunnymontage.jpg /projects.html#hole-fixer
-/img/gallery/teapotshooter.jpg https://github.com/Erkaman/teapot_shooter
+/img/gallery/fluidsimg1.jpg /projects.html#colorful-fluid-simulations
+/img/gallery/fluidsimg2.jpg /projects.html#colorful-fluid-simulations
+/img/gallery/fluidsimg3.jpg /projects.html#colorful-fluid-simulations
+/img/gallery/fluidsimg4.jpg /projects.html#colorful-fluid-simulations
