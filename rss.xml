@@ -7,7 +7,16 @@
   <description>Some small articles and tutorials written by Eric Arneb&#xe4;ck</description>
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
-    <item>
+   <item>
+    <title>"TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'</title>
+    <link>https://erkaman.github.io/posts/jeruzalski2018_tldr.html.html</link>
+    <guid>https://erkaman.github.io/posts/jeruzalski2018_tldr.html.html</guid>
+    <description>
+	   I will in this post write down a TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'
+    </description>
+  </item>
+  
+  <item>
     <title>"TL;DR of the paper 'Cube-to-sphere projections for procedural texturing and beyond'</title>
     <link>https://erkaman.github.io/posts/zucker2018_tldr.html</link>
     <guid>https://erkaman.github.io/posts/zucker2018_tldr.html</guid>

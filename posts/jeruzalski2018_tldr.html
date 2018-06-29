@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Eric Arnebäck</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Articles by Eric Arneb&#xe4;ck"/>
+
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
+  </head>
+  <body>
+
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="container"><h1>TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down a TL;DR of the paper <a href="http://www.dgp.toronto.edu/projects/rigid-body-compression/">'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'</a>
+Observe that all images are from the paper, and do not belong to me
+
+</p>
+
+<p><a href="/img/jeruzalski2018_tldr/img1.png">
+    <img class="article-img"
+         src="/img/jeruzalski2018_tldr/img1.png"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+<p>
+
+Storing a rigid body simulation, requires storing the rotations
+and translations of all rigid bodies in the simulation, and with many
+bodies and small time steps, this can quickly become a huge amount of data.
+
+</p>
+
+<p>
+Such a huge amount of data is a big inconvenience, since it takes time to
+load from the disk, and time to transmit and share. Compressing it is
+desirable.
+</p>
+
+<p>
+The paper describes an online compression method; that is, it performs
+the compression while the simulation is being performed. So it doesn't require
+all the simulation data to be in memory when compressing, which is a big plus.
+</p>
+
+<p>
+Here's how we compress the trajectory(that is, the translations over time),
+of a rigid body: we fit several spline polynomials that follows the trajectory as close as
+possible. Basic Algorithm: get translation for next timestep, refit our current polynomial to the trajectory,
+now that we are aware of another timestep.
+Get next translation, refit polynomial again, and so on.
+</p>
+
+<p>
+The algorithm keeps track of the error(difference) between the polynomial(that approximated the trajectory)
+and the true trajectory. If error grows too large => output current polynomial, and then
+start a new polynomial.
+</p>
+
+<p>
+They also need to do fitting on the rotations over time.
+For this, they found that it worked better to use a modified slerp formula,
+instead of polynomials.
+</p>
+</div>
+
+
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </body>
+</html>

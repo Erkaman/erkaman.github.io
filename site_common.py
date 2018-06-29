@@ -3,6 +3,8 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/jeruzalski2018_tldr.html", "TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'", "/img/jeruzalski2018_tldr/img1.png", "I will in this post write down a TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'"),
+
     ("src/zucker2018_tldr.html", "TL;DR of the paper 'Cube-to-sphere projections for procedural texturing and beyond'", "/img/zucker2018_tldr/img1.png", "I will in this post write down a TL;DR of the paper 'Cube-to-sphere projections for procedural texturing and beyond'"),
 
     ("src/hole_filling.html", "Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing", "/img/gallery/bunnymontage.jpg", "In this article, we describe an approach to smoothly filling holes in broken meshes that is based on variational calculus. However, do note that it is not assumed that the reader has experience in variational calculus, and we will instead introduce the necessary concepts from this topic when they are needed"),
