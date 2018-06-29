@@ -3,7 +3,7 @@ import markdown2
 import datetime
 
 posts = [
-    ("src/whelan2018_tldr.html", "TL;DR of the paper 'Reconstructing Scenes with Mirror and Glass Surfaces'", "/img/whelan2018_tldr/img1.png", "I will in this post write down a TL;DR of the paper 'Reconstructing Scenes with Mirror and Glass Surfaces'"),
+    ("src/whelan2018_tldr.html", "TL;DR of the paper 'Reconstructing Scenes with Mirror and Glass Surfaces'", "/img/whelan2018_tldr/img2.png", "I will in this post write down a TL;DR of the paper 'Reconstructing Scenes with Mirror and Glass Surfaces'"),
 
     ("src/jeruzalski2018_tldr.html", "TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'", "/img/jeruzalski2018_tldr/img1.png", "I will in this post write down a TL;DR of the paper 'Collision-Aware and Online Compression of Rigid Body Simulations via Integrated Error Minimization'"),
 
