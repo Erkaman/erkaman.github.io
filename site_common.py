@@ -3,6 +3,8 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/zucker2018_tldr.html", "TL;DR of the paper 'Cube-to-sphere projections for procedural texturing and beyond'", "/img/zucker2018_tldr/img1.png", "I will in this post write down a TL;DR of the paper 'Cube-to-sphere projections for procedural texturing and beyond'"),
+
     ("src/hole_filling.html", "Smoothly Filling Holes in 3D meshes using Variational Calculus and Surface Fairing", "/img/gallery/bunnymontage.jpg", "In this article, we describe an approach to smoothly filling holes in broken meshes that is based on variational calculus. However, do note that it is not assumed that the reader has experience in variational calculus, and we will instead introduce the necessary concepts from this topic when they are needed"),
 
     ("src/poisson_blending.html", "An Intuitive Explanation of using Poisson Blending for Seamless Copy-and-Paste of Images", "/img/gallery/kitten_library.jpg", "In this article, we explain the intuition behind an image processing technique called Poisson Blending. This technique is an image processing operator that allows the user to insert one image into another, without introducing any visually unappealing seams."),
