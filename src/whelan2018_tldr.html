@@ -1,0 +1,94 @@
+<h1>TL;DR of the paper 'Reconstructing Scenes with Mirror and Glass Surfaces'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down a TL;DR of the paper <a href="https://www.gcc.tu-darmstadt.de/home/proj/mirror_reconstruction/mirror_reconstruction.en.jsp">'Reconstructing Scenes with Mirror and Glass Surfaces'</a>.
+Observe that all images are from the paper, and do not belong to me
+
+</p>
+
+<p><a href="/img/whelan2018_tldr/img1.png">
+    <img class="article-img"
+         src="/img/whelan2018_tldr/img1.png"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+<p>
+3D Scene reconstruction(where we are scanning in a real world scene, with some scanner hardware,
+and making a digital 3d scene representation from it) have problems with scenes with mirrors.	
+We need ways of detecting mirrors, so that this issue can be amended. 
+The paper describes a technique for this. And it only deals with planar mirrors btw.
+</p>
+
+
+<p>
+First, we find the 3D surface of the mirror. That is, we find the
+plane equation of the mirror. To our scanner, we attach a tag,a so-called
+AprilTag.
+The cool thing is that this tag will only be visible in the image seen from the scanner,
+if the scanner is facing the mirror. Since the tag is reflected by the mirror, of course.
+</p>
+
+
+<p>
+So if this tag is visible in the scanner image, we have found a mirror. Now let's find it's
+plane equation:
+We keep moving the scanner, so that the tag changes its reflected position in the mirror.
+We end up with a list of mirror positions, and every such mirror position has
+a corresponding real-world tag position(the physical tag position on the scanner hardware.)
+</p>
+
+<p>
+Every real-world tag position is basically projected onto the mirror plane,
+and become positions on the mirror. These are the positions seen by the scanner.
+So we just need to find a plane equation where every real-world tag position
+is projected on the approximately the same position, as the mirror position
+captured by the scanner.
+From this, we can formulate an optimization problem that we can solve, and thus
+find the plane  that best mimics how the tag is projected
+onto the mirror.
+</p>
+
+<p>
+So now we have the plane equation of our mirror. But we don't know the boundaries of the 
+mirror yet though. From the image seen by the scanner, we calculate a whole bunch of features now.
+There is of course likely to be a depth discontinuity between the mirror boundary and the reflective
+mirror surface, so we capture this feature.
+Also, we look at the intensity of the image. The reflected mirror surface is 
+likely to have much more intensity variance, compared to the boring-looking mirror borders.
+So the mirror area is likely to have high intensity variance.
+Also, if a tag is visible, then that is also strong evidence that a point is part of the 
+reflective mirror surface.
+Also, geometry that is far away from the mirror plane equation, is also likely to not be part of
+the mirror surface, so that is another way of finding areas not part of the mirror.
+As I have demonstrated above, we define a whole bunch of features that describes how likely
+a point is to be part of the mirror. And then we run an optimization that 
+minimizes these feature values, and it thus finds the mirror surface, and its boundaries.
+</p>
+
+
+
+<p>
+
+</p>
+
+
+
+
+<p>
+
+</p>
+
+
