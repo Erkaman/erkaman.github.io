@@ -1,0 +1,159 @@
+<h1>TL;DR of the paper 'Stratified Sampling of Projected Spherical Caps'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down a TL;DR of the paper <a href="http://www.iliyan.com/publications/ProjectedSphericalCaps">'Stratified Sampling of Projected Spherical Caps'</a>.
+Observe that all images are from the paper, and do not belong to me
+
+</p>
+
+<p><a href="/img/urena2018_tldr/img1.jpeg">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img1.jpeg"
+         alt="Image"
+title="Image" width="60%" height="60%"/></a>
+</p>
+
+<p>
+
+The paper describes an importance sampling strategy for spherical light sources, useful for implementing a path tracer.
+
+When rendering a light source in a path tracer, we need a way of getting a random position on that light source.
+This is necessary for implementing the Monte Carlo method, which is an important part of speeding up the path tracing process.
+
+</p>
+
+
+<p><a href="/img/urena2018_tldr/img2.png">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img2.png"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+<p>
+
+The above image illustrates the situation. From every point $p$, we want to determine the final color.
+In order to do this, we must send out and trace many rays. These rays are all from the green hemisphere that covers the point.
+As part of the monte carlo method, we want a sampling strategy that generates rays that hit the yellow light source.
+Different sampling strategies give noise-free results faster or slower.
+
+</p>
+
+<p>
+
+It is important to realize that not all points on the spherical light source are even visible. Observe the below image.
+Only the points on the blue arc are visible from the point $x$. So, one sampling strategy, is that we sample only points from this arc, since 
+they are the only points on the light source that will actually contribute anything to the final image.
+A common strategy is that we uniformly sample a point from this arc. Which means that all points are equally likely to be chosen.
+
+</p>
+
+<p><a href="/img/urena2018_tldr/img3.png">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img3.png"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+<p>
+
+In the three dimensional case, the arc becomes a spherical cap, which is illustrated in the image below.
+The spherical cap is blue.
+
+</p>
+
+<p><a href="/img/urena2018_tldr/img4.png">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img4.png"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+
+<p>
+So, an easy solution would be that we sample points from the spherical cap, in order to generate rays that hit the light source.
+However, the paper describes a better solution: project the spherical cap onto the tangent plane of the point $x$:
+</p>
+
+<p><a href="/img/urena2018_tldr/img5.png">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img5.png"
+         alt="Image"
+title="Image" width="80%" height="80%"/></a>
+</p>
+
+<p>
+As can be observed above, the projected shape will either be a regular ellipse(left), the combination of an ellipse and a shape called a lune(middle), or just a lune(right). 
+At grazing angles, a lune is much more likely. Now, the authors suggest that we do our sampling from this projected 2D shape.
+So, we take a uniform sample from this 2D shape.
+In the middle image above, $w$ was sampled from the projected shape. $w$ is then projected onto the sphere, and we thus get our final ray $\omega$. 
+</p> 
+
+<p>
+ Now, why should we sample from the projected spherical cap, instead of directly sampling from the spherical cap? 
+ At a first glance, it seems like an awfully convoluted and roundabout approach.
+ But there is a very intuitive explanation for this. Observe the below image
+</p>
+
+<p><a href="/img/urena2018_tldr/img6.png">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img6.png"
+         alt="Image"
+title="Image" width="60%" height="60%"/></a>
+</p>
+
+<p>
+
+In the image, we have a green and blue spherical cap. The caps are equally wide, but are at different angles, with respect to the normal.
+The green cap is at a much more grazing angle.
+As can be observed, the blue spherical cap is projected to a much larger area than the green spherical cap. This is because the green spherical
+cap is at a much more grazing angle. 
+</p>
+
+<p>
+
+Now, what will happen if we sample from a projected spherical cap in our sampling strategy? 
+The areas of the spherical cap that are at a non-grazing angle will be projected to a much larger area, and so they are more likely to be sampled.
+Because if our sampling strategy is correctly  implemented, then all points on the projected spherical cap are equally likely to be chosen as samples.
+Ergo, points of the spherical cap that are at non-grazing angles are much more likely to be chosen as samples.
+And this is exactly what we want. Consider the rendering equation, as given in the paper:
+
+</p>
+
+<p><a href="/img/urena2018_tldr/img7.png">
+    <img class="article-img"
+         src="/img/urena2018_tldr/img7.png"
+         alt="Image"
+title="Image" width="60%" height="60%"/></a>
+</p>
+
+<p>
+Of particular importance is the cosine term. The cosine term means that samples that are at non-grazing angles, will be given more importance.
+However, the sampling method in the paper, actually is more likely to sample non-grazing rays(as we just described above), and this means that the Monte Carlo 
+method will give a noise-free result faster! Basically, the integrand in the rendering equation will have a high value for certain samples, and if we are more likely
+to generate such samples, then the Monte Carlo method converges quicker.
+</p>
+
+
+<p>
+To conclude, merely sampling the spherical cap is a worse sampling strategy, since this strategy doesn't take the cosine term into account.
+However, if we sample from the projected spherical cap, then the cosine term is actually taken into account, and this results in a better
+sampling strategy, that gives us noise free results in a less amount of time.
+</p>
+
+<p>
+Finally, the authors provide easily usable <a href="https://github.com/carlos-urena/psc-sampler">source code</a> that implements the method.
+
+</p>
