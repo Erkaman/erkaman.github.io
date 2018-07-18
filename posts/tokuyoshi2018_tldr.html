@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Eric Arnebäck</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Articles by Eric Arneb&#xe4;ck"/>
+
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
+  </head>
+  <body>
+
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="container"><h1>TL;DR of the paper 'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down a TL;DR of the paper <a href="http://jp.square-enix.com/tech/library/pdf/Conservative%20Z-Prepass%20for%20Frustum-Traced%20Irregular%20Z-Buffers.pdf">
+'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'</a>.
+
+</p>
+
+<p>
+The paper makes heavy use of irregular z-buffers, so first this concept shall be explained.
+Observe the below image
+</p>
+
+
+<p><a href="/img/tokuyoshi2018_tldr/izb1.svg">
+    <img class="article-img"
+         src="/img/tokuyoshi2018_tldr/izb1.svg"
+         alt="Image"
+title="Image" width="60%" height="60%"/></a>
+</p>
+'
+<p>
+The blue points are the points that are actually seen by the camera.
+On the other hand, the yellow points are the points seen from a z-buffer rendered
+from the perspective of the light source(that is, a shadow map). A major issue with 
+shadow maps is that we need a high resolution shadow map to achieve accurate shadows.
+And to achieve pixel-perfect shadows, very high resolutions are required.
+In this image, we can see that P1 is falsely considered to be in shadow, because the point P3 was rendered to the shadow map.
+P2 is however correctly classified to be in shadow(everything BELOW the green line is in shadow.).
+One simple solution is to simply increase the resolution of the shadow map, however,
+the paper presents an alternative solution.
+</p>
+
+<p>
+The Irregular Z-buffer offers a solution to the problem: it means that we store the blue points in
+the Z-buffer! This is called an Irregular z-buffer(IZB). This means that every 
+visible point will be stored in a texel in the Z-buffer. We simply
+reproject every blue point into light-space. The reprojected point
+will fall into one of the texels of the shadow map, and we store the point
+into that texel. As can be observed below, both P1 and P2 will fall into the same texel:
+</p>
+
+
+<p><a href="/img/tokuyoshi2018_tldr/izb2.svg">
+    <img class="article-img"
+         src="/img/tokuyoshi2018_tldr/izb2.svg"
+         alt="Image"
+title="Image" width="60%" height="60%"/></a>
+</p>
+
+
+
+<p>
+This means that a list
+of points must be stored in every texel of the Z-buffer. In the paper, this is achieved by means
+of storing a linked list for every texel in the IZB:
+</p>
+
+<p><a href="/img/tokuyoshi2018_tldr/linkedlist.svg">
+    <img class="article-img"
+         src="/img/tokuyoshi2018_tldr/linkedlist.svg"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+
+<p>
+Now, we will need to determine which of the points stored in the IZB are actually in shadow. 
+Frustum-tracing is used to accomplish this; we rasterize every shadow-casting triangle from
+the perspective of our light source, just like when we are rendering regular shadow maps.
+Now, every rasterized triangle will cover some texels in the IZB, and these texels contains
+a linked list of points. We need to check whether
+that triangle casts a shadow on those points.
+</p>
+
+<p><a href="/img/tokuyoshi2018_tldr/frustum_trace.svg">
+    <img class="article-img"
+         src="/img/tokuyoshi2018_tldr/frustum_trace.svg"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+<p>
+As shown above, we can extend a frustum from the triangle, using the direction of the light source.
+The frustum will be built up from four planes(one plane for the triangle itself, and three planes for the three sides 
+of the triangle.)
+Everything within this frustum, will clearly be in shadow.
+In the image, P1 is in shadow, while P2 is not.
+Thus our algorithm is simple: we rasterize all triangles in light-space.
+The rasterized fragments will cover some texel in the IZB, 
+and we will loop over all the points in the linked list,
+and check if they are within the frustum. If they are, then they are marked as shadowed.
+The cool thing about using frustum-tracing, is that we will obtain results
+that are equivalent to as if we had raytraced the shadows instead.
+As a result, we get pixel perfect shadows!
+</p>
+
+<p>
+Now, there is one important implementation detail to this algorithm: the triangles 
+must be rasterized using conservative rasterization.
+</p>
+
+<p><a href="/img/tokuyoshi2018_tldr/conservative_rasterization.svg">
+    <img class="article-img"
+         src="/img/tokuyoshi2018_tldr/conservative_rasterization.svg"
+         alt="Image"
+title="Image" width="70%" height="70%"/></a>
+</p>
+
+<p>
+Using the default rasterization algorithm, means that fragments are only rasterized,
+if the fragment center is covered by the triangle(so red fragments in the image
+above are not rasterized, only green ones are.). However, if a triangle
+at all covers a texel, then we certainly want to perform frustum culling for the
+points in the linked list, so this default behaviour is not what we want.
+Instead, we must enable conservative rasterization, which ensures
+that fragments are always rasterized when it is covered by some triangle.
+</p>
+
+<p>
+So that is how a IZB works. Next, we will explain what a conservative shadow map(CSM) is. 
+The CSM gives us a conservative estimate of which
+points are in shadow; that is, it allows us to find points that we for sure
+know are in shadow, but it doesn't find all of them. The issue with IZB,
+is that it is expensive to create a linked list, and then loop over it, 
+when computing the shadowed points. The CSM allows us to find points that
+for sure are in shadow, before we run the expensive IZB technique. These found 
+points do not need to be checked in the IZB technique.  
+Because less points now need to be checked for in the IZB calculations,
+we obtain a performance boost. 
+
+<p>
+The below image illustrates the conservative shadow map. The green line is a triangle seen from the side.
+If a triangle fully intersects a texel, that is,
+if the triangle fully covers that texel in light-space, then we output the conservative depth of that triangle.
+This is the depth value of that triangle which is the most distant from the light source.
+If we now use this conservative shadow map like a regular shadow map, then we will
+find that all points within the pink volume will be considered to be in shadow.
+Because since the depth value is only outputted when the triangle fully covers the texel,
+all points that are within that texel, and at a greater distance from the stored z-value,
+must be in shadow.
+
+So P2 will be considered to be in shadow, but not P1 though. P1 should be considered in 
+shadow, but it is not according to the CSM, since the CSM
+only provides a rough and conservative estimate. In order to correct classify
+P1 as a shadowed point, the authors use the IZB algorithm afterward.
+</p>
+
+<p><a href="/img/tokuyoshi2018_tldr/conservative_shadow_map.svg">
+    <img class="article-img"
+         src="/img/tokuyoshi2018_tldr/conservative_shadow_map.svg"
+         alt="Image"
+title="Image" width="70%" height="70%"/></a>
+</p>
+
+<p>
+To summarize, this is how it works: 
+
+We want to find which pixels on the screen are in shadow. 
+Now, we first use CSM, to find a conservative estimimate of pixels that
+must be in shadow. Next, for the pixels that were not classified as shadowed by CSM,
+we use the IZB technique. Since IZBs are expensive, using the CSM first as an early-out-test allows
+us to gain performance.
+
+</p></div>
+
+
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </body>
+</html>

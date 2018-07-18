@@ -69,3 +69,4 @@
 /img/gallery/fluidsimg2.jpg /projects.html#colorful-fluid-simulations
 /img/gallery/fluidsimg3.jpg /projects.html#colorful-fluid-simulations
 /img/gallery/fluidsimg4.jpg /projects.html#colorful-fluid-simulations
+/img/gallery/tokuyoshi2018_tldr.png /posts/tokuyoshi2018_tldr.html

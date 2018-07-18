@@ -7,6 +7,16 @@
   <description>Some small articles and tutorials written by Eric Arneb&#xe4;ck</description>
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
+  <item>
+    <title>TL;DR of the paper 'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'</title>
+    <link>https://erkaman.github.io/posts/tokuyoshi2018_tldr.html</link>
+    <guid>https://erkaman.github.io/posts/tokuyoshi2018_tldr.html</guid>
+    <description>
+	   I will in this post write down a TL;DR of the paper 'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'
+    </description>
+  </item>
+
+  
    <item>
     <title>TL;DR of the paper 'Stratified Sampling of Projected Spherical Caps'</title>
     <link>https://erkaman.github.io/posts/urena2018_tldr.html</link>

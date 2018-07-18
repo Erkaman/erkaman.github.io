@@ -3,6 +3,8 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/tokuyoshi2018_tldr.html", "TL;DR of the paper 'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'", "/img/gallery/tokuyoshi2018_tldr.png", "I will in this post write down a TL;DR of the paper 'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'"),
+
     ("src/urena2018_tldr.html", "TL;DR of the paper 'Stratified Sampling of Projected Spherical Caps'", "/img/urena2018_tldr/img1.jpeg", "I will in this post write down a TL;DR of the paper 'Stratified Sampling of Projected Spherical Caps'"),
 
 
