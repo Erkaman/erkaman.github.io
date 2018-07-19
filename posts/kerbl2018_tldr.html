@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Eric Arnebäck</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Articles by Eric Arneb&#xe4;ck"/>
+
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
+  </head>
+  <body>
+
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="container"><h1>TL;DR of the paper 'Revisiting The Vertex Cache: Understanding and Optimizing Vertex Processing on the modern GPU'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down a TL;DR of the paper <a href="https://www.markussteinberger.net/publications.php">
+'Revisiting The Vertex Cache: Understanding and Optimizing Vertex Processing on the modern GPU'</a>.
+
+</p>
+
+<p>
+It is well-known that modern GPUs have a post-transform cache. 
+If we for instance are drawing some geometry with indices $\{0, 1, 2, 0, 1, 2\}$,
+then the vertices with indices 0, 1 and 2 will have their vertex shader evaluated only once,
+for a total of three vertex shader invocations.
+But for the second occurrences of 0, 1, 2 in this list, the vertex shader will not
+at all be executed. Instead, the results from the first evaluation will have been 
+stored in some cache, and the results are fetched from this cache.
+Thus, the vertex shader is only executed 3 times for this index list.
+</p>
+
+<p>
+
+Now let's say we have a very long sequence of indices $\{0, 1, 2, 0, 1, 2, 0, 1, 2\dots\}$. 
+Let's say this sequence has length $N$.
+If there really is a central vertex cache that is used for all vertex shader invocations,
+then the vertex shader should only be executed three times, if these indices are rendered.
+
+</p>
+
+<p>
+But this is not what happens on GeForce GTX 1080Ti. If $N \le 96$,
+then the vertex shader is executed exactly three times, as expected. However, once we exceed 96 vertices,
+there is a jump. If $N=99$, then the vertex shader is executed 6 times! If there was really
+a central vertex cache used by all vertex shader invocations, this wouldn't make any sense.
+The authors claim that this is because the hardware uses a batch-based approach for the vertex
+cache. That is, we have batches of 96 vertices, and within every such batch a vertex cache is active.
+The key-point is that the cache doesn't appear to be shared between the batches. The authors denote this
+number 96 as $\text{MAX_SIZE}$. As another example, For AMD R7 200 we have that $\text{MAX_SIZE}=384$.
+For Intel hardware, it seems to be much more dynamic,
+and the authors are unable to find a conclusive number for $\text{MAX_SIZE}$.
+It appears the batch can be as big as 1791 vertices for Intel hardware, they report.
+
+</p>
+
+<p>
+
+Another interesting tidbit is that there appears to be a limit on the number of unique vertices
+within each batch.	For NVIDIA hardware, the authors report that cache misses will start
+occuring as soon as more than $\text{MAX_UNIQUES}=32$ unique vertices are used in a batch.
+ For AMD hardware, they find that $\text{MAX_UNIQUES}=\text{MAX_SIZE}$.
+
+</p>
+
+<p>
+Now, the authors design a mesh optimization algorithm based on these discoveries. 
+Triangles that are near each other should be close to each other in memory,
+so that the vertex cache can be properly utilized without many cache-misses. 
+The authors have basically discovered that, across patch boundaries, the vertex cache
+will not be useful. Previous mesh optimization algorithms did not take this fact into
+account, and so the authors design an algorithm that takes this into account. 
+On NVIDIA hardware, they are able to beat all other mesh optimization algorithms.
+However, on Intel and AMD hardware, their algorithm is almost always beaten by
+some other algorithm. This is presumably because NVIDIA hardware has much smaller batch sizes compared to
+AMD and intel. This means that taking batch sizes into account is much more important
+for NVIDIA hardware, and that's why the NVIDIA cards gain so much from this optimization.
+</p></div>
+
+
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </body>
+</html>

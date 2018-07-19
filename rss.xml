@@ -8,6 +8,15 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>TL;DR of the paper 'Revisiting The Vertex Cache: Understanding and Optimizing Vertex Processing on the modern GPU'</title>
+    <link>https://erkaman.github.io/posts/kerbl2018_tldr.html</link>
+    <guid>https://erkaman.github.io/posts/kerbl2018_tldr.html</guid>
+    <description>
+	   I will in this post write down a TL;DR of the paper 'Revisiting The Vertex Cache: Understanding and Optimizing Vertex Processing on the modern GPU'
+    </description>
+  </item>
+  
+  <item>
     <title>TL;DR of the paper 'Conservative Z-Prepass for Frustum-Traced Irregular Z-Buffers'</title>
     <link>https://erkaman.github.io/posts/tokuyoshi2018_tldr.html</link>
     <guid>https://erkaman.github.io/posts/tokuyoshi2018_tldr.html</guid>
