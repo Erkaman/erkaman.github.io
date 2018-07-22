@@ -1,0 +1,252 @@
+<h1>Explanation of the paper 'As-Rigid-As-Possible Surface Modeling'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down an explanation of the intuition behind the paper
+ <a href="http://igl.ethz.ch/projects/ARAP/index.php">'As-Rigid-As-Possible Surface Modeling'</a>.
+
+</p>
+
+<p><a href="/img/sorkine2007/animation.gif">
+    <img class="article-img"
+         src="/img/sorkine2007/animation.gif"
+         alt="Image"
+title="Image" width="30%" height="30%"/></a>
+</p>
+
+
+
+<p>
+The paper describes a mesh deformation technique called ARAP(As-Rigid-As-Possible) that allows you to change the shape 
+of a mesh, while still preserving its detail. This means the details of mesh
+doesn't get stretched, get flattened, nor get sheared. In the animation above,
+I am using the ARAP implementation from <a href="http://libigl.github.io">libigl</a> to
+deform the armadillo mesh. We can see in the animation that the details of the armadillo
+are preserved even when it is deformed; the shape of the eyes and teeth stay the same,
+and the bumpy pattern on the arms and legs stay the same, and this makes the
+deformation appear natural.
+
+</p>
+
+<p>
+The technique allows a user to deform a mesh like this: we specify a couple of vertices
+on the original mesh. Now we modify the positions of these vertices, and the result
+of this, is that the rest of the vertices of the mesh will naturally adapt to this.
+In the animation, we have specified five vertices, which can be seen below: 
+</p>
+
+
+<p><a href="/img/sorkine2007/constraints.png">
+    <img class="article-img"
+         src="/img/sorkine2007/constraints.png"
+         alt="Image"
+title="Image" width="30%" height="30%"/></a>
+</p>
+
+<p>
+The vertices at the hands and nose are moved, while the vertices at the legs are kept static.
+If we move the vertices at the hands and nose, we get the animation seen above.
+The purpose of the vertices at the legs are to anchor the armadillo, so that the legs
+stay still, even when the three vertices are moved.
+</p>
+
+<p>
+How can we implement such a deformation technique, that allows the user to modify 
+the mesh while still preserving the detail? We will now explain how the ARAP technique
+from the paper works.
+Let us look at a single edge of the undeformed mesh, 
+with the vertices $\mathbf{p}_i$ and $\mathbf{p}_j$. It will be deformed into
+the vertices $\mathbf{p}_i'$ and $\mathbf{p}_j'$. Now, we want the original
+geometric detail of the mesh to be preserved as well as possible, after the deformation.
+The paper aims to achieve this, by ensuring
+that the vertices are deformed as rigidly as possible; that is, they are deformed
+by a rigid body transform. Such a transform contains no scaling, nor shearing, which
+is exactly what we want.
+To accomplish this, we impose a condition on the deformed vertices:
+
+\begin{equation}
+\mathbf{p}_i' - \mathbf{p}_j' = \mathbf{p}_i - 	\mathbf{p}_j
+\label{eq:condone}
+\end{equation}
+
+This condition basically means that every deformed edge should maintain its original
+length and direction. See the below image for an example of this:
+
+</p>
+
+<p><a href="/img/sorkine2007/translation_only.svg">
+    <img class="article-img"
+         src="/img/sorkine2007/translation_only.svg"
+         alt="Image"
+title="Image" width="70%" height="70%"/></a>
+</p>
+
+<p>
+
+As can be observed, the deformed edge $(\mathbf{p}_i',\mathbf{p}_j')$ is just the undeformed edge
+$(\mathbf{p}_i,\mathbf{p}_j)$, but translated to the right a bit.
+Under this condition, translation is allowed, as long as scaling is not introduced.
+ Note that condition $\eqref{eq:condone}$ is not
+maintained in the below case
+
+</p>
+
+<p><a href="/img/sorkine2007/with_scaling.svg">
+    <img class="article-img"
+         src="/img/sorkine2007/with_scaling.svg"
+         alt="Image"
+title="Image" width="70%" height="70%"/></a>
+</p>
+
+<p>
+
+Since now scaling has been introduced to the deformed edge, and it has thus become longer.
+So the condition makes sure that scaling and shearing can not be introduced, which is exactly what we want.
+But an issue with our current condition, is that the direction of the deformed edge must match
+the direction of the original edge. This means that our deformation can not perform any rotation,
+which is too restrictive. In the animation shown earlier, there is clearly a rotation component to 
+the animation, for instance when the arm is being moved up and down.
+We will fix this by making our condition less restrictive:
+
+\begin{equation}
+\mathbf{p}_i' - \mathbf{p}_j' = \mathbf{R}_i(\mathbf{p}_i - 	\mathbf{p}_j)
+\label{eq:condtwo}
+\end{equation}
+
+we have introduced a rotation matrix $\mathbf{R}_i$ to our condition. This matrix encodes
+the fact that our original edge can be rotated when deformed. Rotated by some
+arbitrary rotation matrix $\mathbf{R}_i$. So now the below deformation is now possible:
+
+</p>
+
+<p><a href="/img/sorkine2007/with_rotation.svg">
+    <img class="article-img"
+         src="/img/sorkine2007/with_rotation.svg"
+         alt="Image"
+title="Image" width="70%" height="70%"/></a>
+</p>
+
+Shearing and scaling is still not possible, since the length must still be preserved by the condition.
+Furthermore, a proper rotation matrix can not introduce any scaling nor shearing,
+so even if we introduce $\mathbf{R}_i$, scaling can not be introduced.
+To summarize. The condition ensures that the edges can only be transformed by a translation and rotation transform
+(which is precisely a rigid transform)
+
+</p>
+
+<p>
+
+Now, here is how we will implement our deformation algorithm:  when doing the deformation,
+we will ensure that the condition $\eqref{eq:condtwo}$ is maintained as well as possible,
+for all the edges on the mesh. In practice, it is not possible to exactly fulfill the condition
+for all edges, but we will make sure that it is at least fulfilled in a least-squares sense. So for all edges,
+we want to ensure that the quantity
+
+\begin{equation}
+w_{ij} ||(\mathbf{p}_i' - \mathbf{p}_j') - \mathbf{R}_i(\mathbf{p}_i - \mathbf{p}_j) ||^2
+\label{eq:ls}
+\end{equation}
+
+is as minimal as possible($w_{ij}$ is a weighting factor, that we will discuss in more detail later).
+If  this quantity is minimal, then the edge will have been transformed by a transform that is As-Rigid-As-Possible,
+which is the main idea of the paper.
+Every edge in the mesh, has a corresponding term of the form $\eqref{eq:ls}$. In the paper,
+the authors compute the sum of all these terms, and denote this sum as $E(S')$:
+
+\[
+E(S') = \sum_{i=1}^n w_i \sum_{j \in N(i)} w_{ij} ||(\mathbf{p}_i' - \mathbf{p}_j') - \mathbf{R}_i(\mathbf{p}_i - \mathbf{p}_j) ||^2
+\]
+
+This is equation (7) from the paper. Now, if this sum is minimal,
+then all edges will be transformed As-Rigid-As-Possible(ARAP).
+
+</p>
+
+<p>
+In order to compute the deformed mesh, we need to find the values of the deformed vertices $\mathbf{p}_i'$ that minimize
+$E(S')$. We will let the user manipulate a couple of vertices freely, let's call them $\mathbf{p}_a'$ and $\mathbf{p}_b'$
+(these could be the vertices on the hands of the armadillo). For these vertices,
+we already know their values, since they are specified by the user. 
+But for the remaining vertices, we must set them to values that minimize the sum $E(S')$,
+because then the deformation is ARAP.  
+Also
+note that $\mathbf{p}_i$ represents the 
+undeformed vertices, and we already know the values of them too.
+</p>
+
+<p>
+
+However, we also don't know the values of the
+introduced rotation matrices $\mathbf{R}_i$. So, we need to solve for both $\mathbf{p}_i'$ and 
+$\mathbf{R}_i$ in order to find the deformed positions, since the values of $\mathbf{p}_i'$ 
+clearly depends on the values of $\mathbf{R}_i$. Solving for both at once is complicated,
+so the authors employ an Alternating Minimization scheme.
+
+</p>
+
+<p>
+
+The authors solve the problem as follows: they guess some initial values for $\mathbf{R_i}$ and $\mathbf{p_i'}$.
+Then, they assume that their guess for $\mathbf{p_i'}$ is correct, and from this assumption, they find values
+of $\mathbf{R_i}$ that are ARAP(using equation (6) from the paper). 
+Then, they assume their obtained values for $\mathbf{R_i'}$ is the correct solution, and then 
+find values for $\mathbf{p_i}$ that are ARAP(by solving equation (9) in the paper). 
+If you repeat this procedure a number of iterations, you will arrive at a
+satisfactory solution. This kind of strategy is called Alternating Minimization, and you can
+read more about this topic in Section 12.3 of 
+<a href="https://people.csail.mit.edu/jsolomon/share/book/numerical_book.pdf">this book</a>.
+
+</p>
+
+<p>
+
+Finally, we will give a brief explanation for the weight factor $w_{ij}$, that we did not explain earlier.
+Low-quality triangle tessellations may cause issues when deforming a mesh. Consider for instance
+the below mesh
+
+</p>
+
+<p><a href="/img/sorkine2007/tessellation.svg">
+    <img class="article-img"
+         src="/img/sorkine2007/tessellation.svg"
+         alt="Image"
+title="Image" width="30%" height="30%"/></a>
+</p>
+
+<p>
+There are quite a few diagonal edges, running from top-left to bottom-right, so this tessellation is a bit uneven
+ This kind of tessellation causes issues when using ARAP, as can be seen in figure 2 of the 
+ original paper. It results in an asymmetric deformation, which is not desirable.
+ The issue is fixed by using a cotangent weighting factor:
+
+\[
+w_{ij} = \frac{1}{2}(\cot \alpha + \cot \beta)
+\]
+
+Where $\alpha$ and $\beta$ are the two angles opposite to the edge, as illustrated
+in the image below
+ 
+ </p>
+
+<p><a href="/img/sorkine2007/cotangent.svg">
+    <img class="article-img"
+         src="/img/sorkine2007/cotangent.svg"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+The cotangent weight gives a lower weight to the diagonal edges of the tessellation
+(since $\alpha$ and $\beta$ have higher values for these edges).
+This means that they have less effect on the final deformed mesh, and this removes
+the asymmetric artifact.

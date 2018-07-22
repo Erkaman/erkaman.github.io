@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60mm" height="60mm" version="1.1" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<metadata>
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g transform="translate(0,-237)" stroke="#000">
+<rect x="2.6458" y="241.44" width="52.917" height="52.917" fill-opacity="0" stroke-width=".2"/>
+<path d="m2.5458 241.34v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m5.2917-53.117v53.117m-52.917-53.117h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117m-53.117 5.2917h53.117" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 241.44 52.917 52.917" fill="none" stroke-width=".26458px"/>
+<path d="m7.9375 241.44 47.625 47.625" fill="none" stroke-width=".26458px"/>
+<path d="m13.229 241.44 42.333 42.333" fill="none" stroke-width=".26458px"/>
+<path d="m18.521 241.44 37.042 37.042" fill="none" stroke-width=".26458px"/>
+<path d="m23.812 241.44 31.75 31.75" fill="none" stroke-width=".26458px"/>
+<path d="m29.104 241.44 26.458 26.458" fill="none" stroke-width=".26458px"/>
+<path d="m34.396 241.44 21.167 21.167" fill="none" stroke-width=".26458px"/>
+<path d="m39.687 241.44 15.875 15.875" fill="none" stroke-width=".26458px"/>
+<path d="m55.562 252.02-10.583-10.583" fill="none" stroke-width=".26458px"/>
+<path d="m50.271 241.44 5.2917 5.2917" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 246.73 47.625 47.625" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 252.02 42.333 42.333" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 257.31 37.042 37.042" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 262.6 31.75 31.75" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 267.9 26.458 26.458" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 273.19 21.167 21.167" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 278.48 15.875 15.875" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 283.77 10.583 10.583" fill="none" stroke-width=".26458px"/>
+<path d="m2.6458 289.06 5.2917 5.2917" fill="none" stroke-width=".26458px"/>
+</g>
+</svg>

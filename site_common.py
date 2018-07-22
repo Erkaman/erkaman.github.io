@@ -3,6 +3,11 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/sorkine2007.html", 
+	"Explanation of the paper 'As-Rigid-As-Possible Surface Modeling'",
+	"/img/gallery/sorkine2007.png", 
+	"I will in this post write down an explanation of the intuition behind the paper 'As-Rigid-As-Possible Surface Modeling'."),
+
     ("src/kerbl2018_tldr.html", 
 	"TL;DR of the paper 'Revisiting The Vertex Cache: Understanding and Optimizing Vertex Processing on the modern GPU'",
 	"/img/gallery/kerbl2018_tldr.png", 
