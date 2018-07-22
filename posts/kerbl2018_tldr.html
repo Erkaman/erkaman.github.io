@@ -105,7 +105,7 @@ occuring as soon as more than $\text{MAX_UNIQUES}=32$ unique vertices are used i
 Now, the authors design a mesh optimization algorithm based on these discoveries. 
 Triangles that are near each other should be close to each other in memory,
 so that the vertex cache can be properly utilized without many cache-misses. 
-The authors have basically discovered that, across patch boundaries, the vertex cache
+The authors have basically discovered that, across batch boundaries, the vertex cache
 will not be useful. Previous mesh optimization algorithms did not take this fact into
 account, and so the authors design an algorithm that takes this into account. 
 On NVIDIA hardware, they are able to beat all other mesh optimization algorithms.
