@@ -3,6 +3,11 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/marrs2018.html", 
+	"Explanation of the paper 'View-warped Multi-view Soft Shadows for Local Area Lights'",
+	"/img/gallery/marrs2018.png", 
+	"I will in this post write down an explanation of the intuition behind the paper 'View-warped Multi-view Soft Shadows for Local Area Lights'."),
+
     ("src/sorkine2007.html", 
 	"Explanation of the paper 'As-Rigid-As-Possible Surface Modeling'",
 	"/img/gallery/sorkine2007.png", 

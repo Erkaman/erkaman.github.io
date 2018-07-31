@@ -2,10 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 
 <channel>
+
   <title>Articles by Eric Arneb&#xe4;ck</title>
   <link>https://erkaman.github.io/articles.html</link>
   <description>Some small articles and tutorials written by Eric Arneb&#xe4;ck</description>
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
+
+  <item>
+    <title>Explanation of the paper 'View-warped Multi-view Soft Shadows for Local Area Lights'</title>
+    <link>https://erkaman.github.io/posts/marrs2018.html</link>
+    <guid>https://erkaman.github.io/posts/marrs2018.html</guid>
+    <description>
+	
+	I will in this post write down an explanation of the intuition behind the paper
+   'View-warped Multi-view Soft Shadows for Local Area Lights'.
+    </description>
+  </item>
 
   <item>
     <title>Explanation of the paper 'As-Rigid-As-Possible Surface Modeling'</title>

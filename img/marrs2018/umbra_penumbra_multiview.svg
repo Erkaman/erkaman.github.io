@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56mm" height="53mm" version="1.1" viewBox="0 0 56 53" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<metadata>
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g transform="translate(0,-244)">
+<path d="m10.205 281.22h43.656" fill="none" stroke="#000" stroke-width=".265"/>
+<path d="m23.435 266.67h15.875" fill="none" stroke="#00f" stroke-width=".26458px"/>
+<path d="m49.161 281.17-23.08-34.349-4.6621 34.261" fill="none" stroke="#000" stroke-dasharray="0.78, 0.78" stroke-width=".065"/>
+<path d="m35.341 246.82 6.8911 34.328" fill="none" stroke-width="0"/>
+<path d="m26.08 246.82h9.2604" fill="none" stroke="#ff0" stroke-width=".365"/>
+<path d="m35.341 246.82 6.9453 34.278" fill="none" stroke="#000" stroke-dasharray="0.78, 0.78" stroke-width=".065"/>
+<path d="m35.341 246.82-20.694 34.325" fill="none" stroke="#000" stroke-dasharray="0.78, 0.78" stroke-width=".065"/>
+<path d="m31.372 246.82-6.613 48.285h13.226z" fill="none" stroke="#ff5651" stroke-width=".078529"/>
+<path d="m29.023 246.89-27.913 39.951 11.77 6.0337z" fill="none" stroke="#80ff80" stroke-width=".078529"/>
+<path d="m34.162 246.85 8.276 48.028 12.609-3.9938z" fill="none" stroke="#5e56ff" stroke-width=".078529"/>
+<circle cx="31.133" cy="281.27" r=".40995" fill="#858c00" stroke="#000" stroke-width=".046917"/>
+<text x="30.163776" y="280.49759" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="30.163776" y="280.49759" font-size="1.4111px" stroke-width=".26458">P0</tspan></text>
+<circle cx="16.304" cy="281.12" r=".40995" fill="#5e3b00" stroke="#000" stroke-width=".046917"/>
+<text x="14.53205" y="282.8576" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="14.53205" y="282.8576" font-size="1.4111px" stroke-width=".26458">P1</tspan></text>
+<circle cx="43.5" cy="281.28" r=".40995" fill="#5ec500" stroke="#000" stroke-width=".046917"/>
+<text x="41.728321" y="283.0127" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="41.728321" y="283.0127" font-size="1.4111px" stroke-width=".26458">P2</tspan></text>
+</g>
+</svg>

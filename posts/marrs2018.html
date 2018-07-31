@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <title>Eric Arnebäck</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Articles by Eric Arneb&#xe4;ck"/>
+
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+
+  </head>
+  <body>
+
+    <div class="header container">
+      <div class="row">
+        <div class="twelve columns">
+          <nav>
+            <ul>
+              <li class="myname"><a href="/index.html">Eric Arnebäck</a></li>
+              <li><a href="/index.html">Home</a></li>
+              <li><a href="/projects.html">Projects</a></li>
+              <li><a href="/articles.html">Articles</a></li>
+              <li><a href="/resume.html">Resume</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="container"><h1>Explanation of the paper 'View-warped Multi-view Soft Shadows for Local Area Lights'</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>
+
+I will in this post write down an explanation of the intuition behind the paper
+ <a href="http://www.jcgt.org/published/0007/03/01/">'View-warped Multi-view Soft Shadows for Local Area Lights'</a>.
+
+</p>
+
+<p>
+
+The paper describes a real-time technique for soft shadows. 
+Area-lights do not create a sharp shadow. Instead, they create a soft shadow,
+as can be seen in the image below.
+
+</p>
+
+<p><a href="/img/marrs2018/umbra_penumbra.svg">
+    <img class="article-img"
+         src="/img/marrs2018/umbra_penumbra.svg"
+         alt="Image"
+title="Image" width="40%" height="40%"/></a>
+</p>
+
+<p>
+
+The yellow object is an area-light that emits light, and the blue object is an occluder that occludes light.
+The area-light casts a shadow on the flat plane below the occluder. 
+Points that are not at all visible from the area-light are in complete darkness,
+which is called the <i>umbra</i>. Points which are partly visible from the 
+area-light are part of the penumbra. The penumbra gradually goes from
+shadow to non-shadow, as is illustrated by the gradient in the bottom of the image. 
+If a point is not in the umbra or the penumbra, all points on the area-light are
+visible from that point, and it is thus a non-shadowed point. On the other hand,
+if only a subsection of the area-light is visible from the point,
+then it will receive a certain amount of light from that subsection, and 
+will thus not be in complete darkness, and it will be in the penumbra. Finally, points that are 
+part of the umbra are completely hidden from the area-light, and thus
+receive no light from it, and are black.
+The below image illustrates soft-shadows, as implemented in a 3D rendering engine:
+</p>
+
+<p><a href="/img/marrs2018/umbra_penumbra_3d.png">
+    <img class="article-img"
+         src="/img/marrs2018/umbra_penumbra_3d.png"
+         alt="Image"
+title="Image" width="25%" height="25%"/></a>
+</p>
+
+<p>
+In order to implement soft shadows, we need to find a value in the range $[0,1]$ for
+each point on the plane. $1$ signifies that the point is not in shadow,
+$0$ means the point is in the umbra, and values in-between are part of the penumbra.
+Multi-view rasterization is a solution to the problem of rendering soft-shadows that provides good quality.
+The idea is simple: pick a number of arbitrary points on the area-light, and
+render shadow maps from these points, as illustrated below:
+</p>
+
+<p><a href="/img/marrs2018/umbra_penumbra_multiview.svg">
+    <img class="article-img"
+         src="/img/marrs2018/umbra_penumbra_multiview.svg"
+         alt="Image"
+title="Image" width="50%" height="50%"/></a>
+</p>
+
+<p>
+The red, green, and blue triangles illustrates shadow map frustums.
+Using these shadow maps, we can compute soft-shadows for every point 
+on the plane. We loop through all the shadow maps, and check whether
+the point is visible from the shadow map frustum; this gives us a binary result, 
+either a $0$ and $1$. Now, if we take the average of all these results, 
+we get a soft shadow. This is because points that are visible from many
+shadow maps, like P1, will have a value that is close to 1 if we compute
+the average, which is exactly what we want. Furthermore, points like 
+P0 that are in the umbra, will not be visible from a single shadow map, so P0
+will get a value of 0. Finally, points like P2, that are near the umbra,
+will not be visible from very many shadow maps, and so it will get a 
+value that is close to 0; again, exactly our desired outcome.
+</p>
+
+<p>
+The main issue with MVR, is that we have to render a lot of shadow maps
+for good results. The paper presents an elegant solution to the problem:
+We convert our geometry into a point cloud, and reprojects these points into
+all of our shadow map frustums. So first, we rasterize our geometry,
+from the perspective of one of the shadow maps. Every rasterized fragment
+will give us a point, and we append that point to a buffer(for HLSL, a AppendStructuredBuffer).
+The below image illustrates the points we get from rasterizing a single triangle.
+</p>
+
+<p><a href="/img/marrs2018/tri_to_points.svg">
+    <img class="article-img"
+         src="/img/marrs2018/tri_to_points.svg"
+         alt="Image"
+title="Image" width="20%" height="20%"/></a>
+</p>
+
+<p>
+After rasterizing all geometry, we will have a huge buffer of points.
+We will create shadow maps from these points(and the shadow map frustums are just like
+in MVR, just positioned at arbitrary points on the area light).
+We execute a compute shader(the authors also tried using
+a pixel shader, but it was slower, so we won't discuss that alternative),
+that reprojects these points into the clip-space of one of the shadow maps.
+The reprojected point will map into one of the texels of the shadow map.
+
+If the depth value of the reprojected point is larger than the value
+already stored in the shadow map(or smaller, depending on your choice of convention), 
+we will update the depth value stored in the shadow map. In practice,
+this has to be implemented using GPU atomic operations(InterlockedMax in HLSL).
+We create all of our shadow maps from the point cloud in this manner. We now use these shadow maps just like in 
+MVR. So we average over the shadow maps, in order to compute a soft shadow.
+</p>
+
+<p>
+
+One important implementation detail, is that we disable z-testing when rasterizing
+and creating the point cloud. See the below image
+
+</p>
+
+<p><a href="/img/marrs2018/disable_z_test.svg">
+    <img class="article-img"
+         src="/img/marrs2018/disable_z_test.svg"
+         alt="Image"
+title="Image" width="50%" height="50%"/></a>
+</p>
+
+<p>
+
+The points Q1 and Q0 both fall into the same texel.
+If z-testing is enabled, then the point Q1 would not be included in the point cloud.
+So it would not be visible in any of the reprojected shadow maps, which
+may lead to artifacts since Q1 is now unable to cast any shadows
+since it's not in the point cloud(see figure 4 of the original paper)
+
+</p>
+
+<p>
+The huge advantage the technique described in the paper has over MVR, is that the geometry
+must only be rasterized once. All the triangle-setup and rasterization
+overhead is only paid for once, which makes this technique much faster
+than MVR. Also, the reprojection step can be executed using only a compute shader, 
+which makes it possible to use it together with async compute.
+When some geometry-heavy task is executed, such as shadow map rendering, 
+often not all GPU-cores are properly utilized. So we can use async compute
+to run our point cloud reprojection step at these times, so that all
+GPU-cores are properly utilized. 
+</p>
+
+<p>
+
+</p></div>
+
+
+    <div class="container">
+      <div class="footer">
+        <hr>
+        <ul>
+          <li><a href="mailto:arnebackeric@gmail.com" title="">  <img src="/img/email.png" alt="email"> </a></li>
+          <li><a href="https://github.com/Erkaman">  <img src="/img/github.png" alt="github"> </a></li>
+          <li><a href="https://www.linkedin.com/in/eric-arnebäck-a3801710a">  <img src="/img/linked-in.png" alt="linked-in"> </a></li>
+          <li><a href="https://www.reddit.com/user/erkaman/">  <img src="/img/reddit.png" alt="reddit"> </a></li>
+          <li><a href="https://twitter.com/erkaman2">  <img src="/img/twitter.png" alt="twitter"> </a></li>
+          <li><a href="https://www.youtube.com/channel/UC5ix2A47Sl5noRUm1awqpsg">  <img src="/img/youtube.png" alt="youtube"> </a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+  </body>
+</html>

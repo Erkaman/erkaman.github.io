@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46mm" height="42mm" version="1.1" viewBox="0 0 46 42" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient id="b" x1="29.718" x2="22.974" y1="278.43" y2="278.43" gradientTransform="translate(-17.198 14.552)" gradientUnits="userSpaceOnUse">
+<stop offset="0"/>
+<stop stop-color="#fff" offset="1"/>
+</linearGradient>
+<linearGradient id="a" x1="50.755" x2="57.582" y1="278.44" y2="278.44" gradientTransform="matrix(1.0325 0 0 1 -18.953 14.552)" gradientUnits="userSpaceOnUse">
+<stop offset="0"/>
+<stop stop-color="#fff" offset="1"/>
+</linearGradient>
+</defs>
+<metadata>
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g transform="translate(0,-255)">
+<path d="m1.3229 291.71h43.656" fill="none" stroke="#000" stroke-width=".265"/>
+<path d="m14.552 277.16h15.875" fill="none" stroke="#00f" stroke-width=".26458px"/>
+<path d="m40.278 291.66-23.08-34.349-4.6621 34.261" fill="none" stroke="#000" stroke-dasharray="0.78, 0.78" stroke-width=".065"/>
+<path d="m26.458 257.31 6.8911 34.328" fill="none" stroke-width="0"/>
+<path d="m17.198 257.31h9.2604" fill="none" stroke="#ff0" stroke-width=".365"/>
+<path d="m26.458 257.31 6.9453 34.278" fill="none" stroke="#000" stroke-dasharray="0.78, 0.78" stroke-width=".065"/>
+<path d="m26.458 257.31-20.694 34.325" fill="none" stroke="#000" stroke-dasharray="0.78, 0.78" stroke-width=".065"/>
+<rect x="5.7641" y="292.59" width="6.7717" height=".96146" fill="url(#b)" stroke-width="0"/>
+<rect x="12.536" y="292.59" width="20.946" height=".96146" stroke-width="0"/>
+<rect x="33.375" y="292.59" width="7.1245" height=".96146" fill="url(#a)" stroke-width="0"/>
+<text x="1.4578395" y="296.13187" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="1.4578395" y="296.13187" font-size="2.1167px" stroke-width=".26458">Penumbra</tspan></text>
+<text x="19.520479" y="296.13187" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="19.520479" y="296.13187" font-size="2.1167px" stroke-width=".26458">Umbra</tspan></text>
+<text x="34.412239" y="296.13187" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="34.412239" y="296.13187" font-size="2.1167px" stroke-width=".26458">Penumbra</tspan></text>
+</g>
+</svg>

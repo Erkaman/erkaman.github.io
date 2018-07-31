@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30mm" height="20mm" version="1.1" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<metadata>
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g transform="translate(0,-277)">
+<path d="m15.046 277.33-3.9688 5.2917-9.9219 13.229h27.781l-9.9219-13.229z" fill="none" stroke="#000" stroke-width=".065"/>
+<rect x="11.077" y="282.62" width="7.9375" height="1.3229" fill-opacity="0" stroke="#000" stroke-width=".065"/>
+<path d="m12.4 282.62v1.3229" fill="none" stroke="#000" stroke-width=".065"/>
+<path d="m13.723 282.62v1.3229" fill="none" stroke="#000" stroke-width=".065"/>
+<path d="m15.046 282.62v1.3229" fill="none" stroke="#000" stroke-width=".065"/>
+<path d="m16.369 282.62v1.3229" fill="none" stroke="#000" stroke-width=".065"/>
+<path d="m17.691 282.62v1.3229" fill="none" stroke="#000" stroke-width=".065"/>
+<path d="m15.046 277.33-6.6146 18.521" fill="none" stroke="#6e6f6d" stroke-width=".065"/>
+<rect x="9.754" y="286.59" width="2.6458" height="2.6458" fill="#dc8896" stroke-width="0"/>
+<ellipse cx="9.754" cy="292.54" rx="1.3229" ry=".66146" fill="#5ec36e" stroke-width="0"/>
+<circle cx="11.673" cy="286.64" r=".20671" fill-opacity="0" stroke="#830000" stroke-width=".05"/>
+<text x="12.05728" y="286.42554" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="12.05728" y="286.42554" font-size="1.4111px" stroke-width=".26458">Q0</tspan></text>
+<circle cx="9.8544" cy="291.9" r=".20671" fill-opacity="0" stroke="#830000" stroke-width=".05"/>
+<text x="10.238317" y="291.68503" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="10.238317" y="291.68503" font-size="1.4111px" stroke-width=".26458">Q1</tspan></text>
+<flowRoot transform="scale(.26458)" fill="#000000" font-family="sans-serif" font-size="40px" letter-spacing="0px" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><flowRegion><rect x="34.093" y="985.64" width="181.57" height="128.04"/></flowRegion><flowPara/></flowRoot>
+</g>
+</svg>
