@@ -51,6 +51,11 @@
 </script>
 
 <p>
+<b>UPDATE:</b> after receiving a <a href="https://twitter.com/acmarrs/status/1024729654068998150">small correction</a> from one of the authors of the paper, the 
+article has been corrected.
+</p>
+
+<p>
 
 I will in this post write down an explanation of the intuition behind the paper
  <a href="http://www.jcgt.org/published/0007/03/01/">'View-warped Multi-view Soft Shadows for Local Area Lights'</a>.
@@ -132,8 +137,21 @@ value that is close to 0; again, exactly our desired outcome.
 The main issue with MVR, is that we have to render a lot of shadow maps
 for good results. The paper presents an elegant solution to the problem:
 We convert our geometry into a point cloud, and reprojects these points into
-all of our shadow map frustums. So first, we rasterize our geometry,
-from the perspective of one of the shadow maps. Every rasterized fragment
+all of our shadow map frustums. First, we make a frustum that entirely contains the
+area light source, as is illustrated below.
+</p>
+
+<p><a href="/img/marrs2018/shadow_frustum.svg">
+    <img class="article-img"
+         src="/img/marrs2018/shadow_frustum.svg"
+         alt="Image"
+title="Image" width="30%" height="30%"/></a>
+</p>
+
+<p>
+As can be seen, the frustum entirely contains our yellow light source.
+We rasterize our geometry from the perspective of this frustum, and all geometry
+contained in the frustum will be rasterized into a fragment. Every rasterized fragment
 will give us a point, and we append that point to a buffer(for HLSL, a AppendStructuredBuffer).
 The below image illustrates the points we get from rasterizing a single triangle.
 </p>
