@@ -3,6 +3,11 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/hiz_occlusion_culling.html", 
+	"Hierarchical Z-buffer Occlusion Culling: A Brief Explanation",
+	"/img/gallery/hiz_occlusion_culling.jpg", 
+	"A brief explanation of the Hierarchical Z-buffer Occlusion Culling technique."),
+
     ("src/marrs2018.html", 
 	"Explanation of the paper 'View-warped Multi-view Soft Shadows for Local Area Lights'",
 	"/img/gallery/marrs2018.png", 

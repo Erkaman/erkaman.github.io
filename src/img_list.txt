@@ -72,3 +72,4 @@
 /img/gallery/tokuyoshi2018_tldr.png /posts/tokuyoshi2018_tldr.html
 /img/gallery/sorkine2007.png /posts/sorkine2007.html
 /img/gallery/marrs2018.png /posts/marrs2018.html
+/img/gallery/hiz_occlusion_culling.jpg /posts/hiz_occlusion_culling.html
