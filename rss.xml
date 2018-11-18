@@ -9,6 +9,26 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>Recovering the Scale, Rotation and Translation Matrices from the Model Matrix</title>
+    <link>https://erkaman.github.io/posts/hiz_occlusion_culling.html</link>
+    <guid>https://erkaman.github.io/posts/hiz_occlusion_culling.html</guid>
+    <description>
+      I will in this post show how to recover the separate translation, scale, and rotation matrices from the model matrix.
+    </description>
+  </item>
+
+  
+  <item>
+    <title>Hierarchical Z-buffer Occlusion Culling: A Brief Explanation</title>
+    <link>https://erkaman.github.io/posts/hiz_occlusion_culling.html</link>
+    <guid>https://erkaman.github.io/posts/hiz_occlusion_culling.html</guid>
+    <description>
+      A brief explanation of the Hierarchical Z-buffer Occlusion Culling technique.
+    </description>
+  </item>
+  
+  
+  <item>
     <title>Explanation of the paper 'View-warped Multi-view Soft Shadows for Local Area Lights'</title>
     <link>https://erkaman.github.io/posts/marrs2018.html</link>
     <guid>https://erkaman.github.io/posts/marrs2018.html</guid>
