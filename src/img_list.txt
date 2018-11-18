@@ -73,4 +73,4 @@
 /img/gallery/sorkine2007.png /posts/sorkine2007.html
 /img/gallery/marrs2018.png /posts/marrs2018.html
 /img/gallery/hiz_occlusion_culling.jpg /posts/hiz_occlusion_culling.html
-/img/gallery/trs_model.png /posts/model_matrix_recover.html
+/img/gallery/trs_model_r.png /posts/model_matrix_recover.html

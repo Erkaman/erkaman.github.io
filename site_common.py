@@ -5,7 +5,7 @@ import datetime
 posts = [
     ("src/model_matrix_recover.html", 
 	"Recovering the Scale, Rotation and Translation Matrices from the Model Matrix",
-	"/img/gallery/trs_model.png", 
+	"/img/gallery/trs_model_r.png", 
 	"I will in this post show how to recover the separate translation, scale, and rotation matrices from the model matrix."),
 
     ("src/hiz_occlusion_culling.html", 
