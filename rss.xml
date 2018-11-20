@@ -10,8 +10,8 @@
 
   <item>
     <title>Recovering the Scale, Rotation and Translation Matrices from the Model Matrix</title>
-    <link>https://erkaman.github.io/posts/hiz_occlusion_culling.html</link>
-    <guid>https://erkaman.github.io/posts/hiz_occlusion_culling.html</guid>
+    <link>https://erkaman.github.io/posts/model_matrix_recover.html</link>
+    <guid>https://erkaman.github.io/posts/model_matrix_recover.html</guid>
     <description>
       I will in this post show how to recover the separate translation, scale, and rotation matrices from the model matrix.
     </description>

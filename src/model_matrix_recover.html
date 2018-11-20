@@ -12,7 +12,37 @@
         src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
 </script>
 
-<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{colr}{RGB}{220,0,0}\definecolor{colg}{RGB}{0,220,0}\definecolor{colb}{RGB}{0,0,220}$In many rendering engines, the model matrix is used to translate, scale and rotate
+
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{colr}{RGB}{220,0,0}\definecolor{colg}{RGB}{0,220,0}\definecolor{colb}{RGB}{0,0,220}$<b>BEGIN EDIT</b>
+</p>
+
+<p>
+I will add a small edit before we begin: We write our matrices in Column-major order. This for instance means that we write
+our translation matrix as 
+
+\begin{equation*}
+  T= \begin{bmatrix}
+  1 & 0 & 0 & t_x \\
+  0 & 1 & 0 & t_y \\
+  0 & 0 & 1 & t_z \\
+  0 & 0 & 0 & 1   
+  \end{bmatrix},
+\end{equation*}
+
+To translate a vector, we write $T * \mvec{v}$, where $\mvec{v}$ is a column vector.
+ For further info, please read
+<a href="https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/row-major-vs-column-major-vector">this article</a>
+
+</p>	
+
+<p>
+<b>END EDIT</b>
+
+</p>
+
+<p>
+In many rendering engines, the model matrix is used to translate, scale and rotate
 objects in the world. Put more formally, it is a matrix that transforms from 
 object space to world space, and it is for this reason also called the ObjectToWorld matrix in some engines. 
  As a small exercise, I will in this post show how to 
@@ -112,11 +142,11 @@ if we apply this rotation matrix. As an example, consider the rotation matrix
   \end{bmatrix},
 \end{equation*}
 
-Essentially, when an object is rotated by this rotation matrix, then the default $\color{colr}{x}$-axis $\color{colr}{(1,0,0)}$ is rotated
-to become $\color{colr}{(R_{x,x}, R_{x,y}, R_{x,z}) = (-0.853553, 0.5, -0.146447)}$, and the $\color{colg}{y}$-axis is
-rotated to become $\color{colg}{(R_{y,x}, R_{y,y}, R_{y,z})}$, and finally, the
+Essentially, when an object is rotated by this rotation matrix, then the default $\color{colr}{x}$-axis $\color{colr}{[1,0,0]^T}$ is rotated
+to become $\color{colr}{[R_{x,x}, R_{x,y}, R_{x,z}]^T = [-0.853553, 0.5, -0.146447]^T}$, and the $\color{colg}{y}$-axis is
+rotated to become $\color{colg}{[R_{y,x}, R_{y,y}, R_{y,z}]^T}$, and finally, the
 $\color{colb}{z}$-axis is
-rotated to become $\color{colb}{(R_{z,x}, R_{z,y}, R_{z,z})}$. 
+rotated to become $\color{colb}{[R_{z,x}, R_{z,y}, R_{z,z}]^T}$. 
 The below image shows the original and rotated axes resulting for this matrix $R$.
 </p>
 
@@ -141,27 +171,27 @@ So rotations are simply described by specifying new values for the $xyz$-axes.
 
 <p>
 
-The original axes $\color{colr}{(1,0,0)}$, $\color{colg}{(0,1,0)}$, $\color{colb}{(0,0,1)}$ specifies an
+The original axes $\color{colr}{[1,0,0]^T}$, $\color{colg}{[0,1,0]^T}$, $\color{colb}{[0,0,1]^T}$ specifies an
 orthonormal basis. This means that all axis vectors must be normalized(have magnitude equal to one), and they must
 be orthogonal to each other, meaning the angles between them are perpendicular angles.
 It is simple to verify that they form an orthonormal basis. They are clearly normalized, since
 
 \begin{equation*}
-(1,0,0) \cdot (1,0,0) = 1 \\
-(0,1,0) \cdot (0,1,0) = 1 \\
-(0,0,1) \cdot (0,0,1) = 1
+[1,0,0]^T \cdot [1,0,0]^T = 1 \\
+[0,1,0]^T \cdot [0,1,0]^T = 1 \\
+[0,0,1]^T \cdot [0,0,1]^T = 1
 \end{equation*}
 
 Two vectors are orthogonal to each other, if their dot product is zero. 
 And these are vectors are clearly orthogonal to each other:
 
 \begin{equation*}
-(1,0,0) \cdot (0,1,0) = 0\\
-(1,0,0) \cdot (0,0,1) = 0\\
-(0,1,0) \cdot (1,0,0) = 0\\
-(0,1,0) \cdot (0,0,1) = 0\\
-(0,0,1) \cdot (1,0,0) = 0\\
-(0,0,1) \cdot (0,1,0) = 0
+[1,0,0]^T \cdot [0,1,0]^T = 0\\
+[1,0,0]^T \cdot [0,0,1]^T = 0\\
+[0,1,0]^T \cdot [1,0,0]^T = 0\\
+[0,1,0]^T \cdot [0,0,1]^T = 0\\
+[0,0,1]^T \cdot [1,0,0]^T = 0\\
+[0,0,1]^T \cdot [0,1,0]^T = 0
 \end{equation*}
 
 Since the original coordinate axes form an orthonormal basis, the three axis vectors specified by a rotation matrix must 
@@ -207,21 +237,25 @@ M_2 = \begin{bmatrix}
   \end{bmatrix}
 \end{equation*}
 	
+Since the fourth row is $[0, 0, 0, 1]$, we can see that this is a column-major order matrix, so
+all our derived formulas will work for this matrix. If it is a row-major order matrix, it
+can just be transposed, before we recover the three matrices.
+	
 Comparing $M_2$ with $M$, we see that we can recover the translation values from the fourth column.
 So $t_x = -1.50$, $t_y, = 1.50$ and $t_z = -2.50$. Also, as we just stated, the 
 columns of the rotation matrix must form an orthonormal basis, which means that the 
-vectors in these columns must have magnitude one. This means that $(R_{x,x}, R_{x,y}, R_{x,z})$
+vectors in these columns must have magnitude one. This means that $[R_{x,x}, R_{x,y}, R_{x,z}]^T$
 must have magnitude 1, and therefore we can recover $s_x$ by calculating the magnitude of 
-$(-2.56066, 1.50, -0.43934)$, and same reasoning applies for $s_y$ and $s_z$:
+$[-2.56066, 1.50, -0.43934]^T$, and same reasoning applies for $s_y$ and $s_z$:
 
 \begin{align*}
-s_x &= ||(-2.56066 ,1.50, -0.43934)|| = 3\\
-s_y &= ||(-0.21967, -0.75,   -1.28033)|| = 1.5\\
-s_z &= ||(-0.25,   -0.35355, 0.25)|| = 0.499998
+s_x &= ||[-2.56066 ,1.50, -0.43934]^T|| = 3\\
+s_y &= ||[-0.21967, -0.75,   -1.28033]^T|| = 1.5\\
+s_z &= ||[-0.25,   -0.35355, 0.25]^T|| = 0.499998
 \end{align*}
 
 Finally, if we normalize these vectors, instead of computing their magnitudes, we recover the rotation matrix.
-Normalizing $(-2.56066 ,1.50, -0.43934)$ yields $(-0.853553, 0.5, -0.146447)  = (R_{x,x}, R_{x,y}, R_{x,z})$,
+Normalizing $[-2.56066 ,1.50, -0.43934]^T$ yields $[-0.853553, 0.5, -0.146447]^T  = [R_{x,x}, R_{x,y}, R_{x,z}]^T$,
 and we repeat this for the remaining vectors, and this gives us the rotation matrix
 
 \begin{equation*}
