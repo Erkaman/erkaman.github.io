@@ -9,6 +9,16 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title>How to Sanity Check your Spherical Harmonics Projection Code</title>
+    <link>https://erkaman.github.io/posts/sh_sanity_check.html</link>
+    <guid>https://erkaman.github.io/posts/sh_sanity_check.html</guid>
+    <description>
+      In this post, I will show a small sanity check I use to verify that my spherical harmonics code is correct.
+    </description>
+  </item>
+  
+  
+  <item>
     <title>Recovering the Scale, Rotation and Translation Matrices from the Model Matrix</title>
     <link>https://erkaman.github.io/posts/model_matrix_recover.html</link>
     <guid>https://erkaman.github.io/posts/model_matrix_recover.html</guid>

@@ -1,0 +1,163 @@
+<h1>How to Sanity Check your Spherical Harmonics Projection Code</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] }
+
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{colr}{RGB}{220,0,0}\definecolor{colg}{RGB}{0,220,0}\definecolor{colb}{RGB}{0,0,220}$Spherical
+Harmonics(SH) are often used in computer graphics to cheaply encode and render diffuse indirect lighting.
+See the seminal <a href="http://graphics.stanford.edu/papers/envmap/">paper by Ramamoorthi</a> for more info on this topic.
+
+SH, however, involve some involved math, and it is not entirely obvious how to debug and verify that you are using
+them correctly. In this post, I will show a small sanity check I use to verify that my spherical harmonics code is correct.
+</p>
+
+  <p>
+  We begin by giving a short re-introduction to SH. 
+  Let us say we have a spherical function $f(\theta,\phi)$, where $\theta$ and $\phi$ are
+  spherical coordinates and they are in range  $0 \le \theta \le \pi$ and $0 \le \phi \le 2\pi$.
+  This is a function that assigns a value for every point $(\theta,\phi)$ on the surface of the unit sphere.
+  Spherical harmonics allows us to cheaply approximate and encode such a function.
+  In graphics, we use the following nine spherical harmonics functions:
+  (Taken from <a href="https://patapom.com/blog/SHPortal/">Patapom's blog</a>.)
+ 
+\begin{align*}
+ Y_{0}^{0} &= \frac{1}{2} \sqrt{\frac{1}{\pi}} \\
+ Y_{1}^{-1} &= \frac{1}{2} \sqrt{\frac{3}{\pi}} y \\
+ Y_{1}^{0} &= \frac{1}{2} \sqrt{\frac{3}{\pi}} z \\
+ Y_{1}^{1} &= \frac{1}{2} \sqrt{\frac{3}{\pi}} x \\
+ Y_{2}^{-2} &= \frac{1}{2} \sqrt{\frac{15}{\pi}} xy \\
+ Y_{2}^{-1} &= \frac{1}{2} \sqrt{\frac{15}{\pi}} yz \\
+  Y_{2}^{0} &= \frac{1}{4} \sqrt{\frac{5}{\pi}} (3z^2 - 1) \\
+ Y_{2}^{1} &= \frac{1}{2} \sqrt{\frac{15}{\pi}} xz \\
+ Y_{2}^{2} &= \frac{1}{4} \sqrt{\frac{15}{\pi}} (x^2 - y^2) \\
+\end{align*}
+ 
+ Where
+ 
+ 
+\begin{align*}
+ x &= \sin(\theta)\cos(\phi) \\
+ y &= \sin(\theta)\sin(\phi) \\
+ z &= \cos(\theta) \\
+\end{align*}
+ 
+ There are actually an infinite number of SH functions,
+ but for real-time rendering purposes, we in practice rarely use 
+ more than the nine above.
+We use SH to approximate $f$ as follow:
+
+\begin{align*}
+f(\theta,\phi)  \approx
+C_{0}^{0} Y_{0}^{0}(\theta,\phi) +
+
+C_{1}^{-1} Y_{1}^{-1}(\theta,\phi) +
+C_{1}^{0} Y_{1}^{0}(\theta,\phi) +
+C_{1}^{1} Y_{1}^{1}(\theta,\phi) + \\
+
+C_{2}^{-2} Y_{2}^{-2}(\theta,\phi) +
+C_{2}^{-1} Y_{2}^{-1}(\theta,\phi) +
+
+C_{2}^{0} Y_{2}^{0}(\theta,\phi) +
+
+
+C_{2}^{1} Y_{2}^{1}(\theta,\phi) +
+
+
+C_{2}^{2} Y_{2}^{2}(\theta,\phi)
+
+\end{align*}
+
+Let us give a cute analogy: Essentially, these 9 SH functions are like LEGO bricks that we can use to build spherical functions.
+We combine together these LEGO bricks into a sum, and this sum forms our approximation for the spherical function $f$.
+The constants $C_{0}^{0}, C_{1}^{-1}, C_{1}^{0},\dots$ specifies how much of each
+LEGO brick we will use. If a constant is zero, then its corresponding LEGO brick is not 
+used at all, and if it is non-zero, then the brick is used in the sum that builds $f$. 
+Also, do note the use of $\approx$ instead of $=$. This is because using only nine SH functions results in a very
+rough approximation of $f$; this approximation is poor for capturing high frequency detail in $f$, but for the purposes
+of diffuse indirect lighting, this is not a large drawback, and thus it is a useful approximation in practice.
+
+We can determine the values of the constants by convolving the SH-functions with $f$, one by one.
+
+\begin{align*}
+C_{0}^{0} &= \int_0^{2\pi} \int_0^{\pi} f(\theta,\phi) Y_{0}^{0} \sin(\theta) d\theta\ d\phi \\
+C_{1}^{-1} &= \int_0^{2\pi} \int_0^{\pi} f(\theta,\phi) Y_{1}^{-1} \sin(\theta) d\theta\ d\phi \\
+&\dots \\
+&\dots
+\end{align*}
+
+To perform this convolution in practice, we need to perform a numerical integration, as is described at
+<a href="https://patapom.com/blog/SHPortal/">Patapom's blog</a>. This kind of calculation is often called a 
+<i>projection</i> in some literature. After projecting all the nine
+SH-functions, we will have our nine constants. I think that this projection calculation can be 
+easy to get wrong, so it is good if we can sanity check our implementation. What I often
+do, is that I give a spherical function defined as $f(\theta,\phi)=1$ to the projection code. So the function is 1 everywhere on the unit sphere. If we have
+our function $f$ encoded as a cubemap, we would just give an all-white cubemap to the projection code.
+For this spherical function $f(\theta,\phi)=1$, we can analytically perform the convolution.
+
+\begin{align*}
+C_{0}^{0} &= \int_0^{2\pi} \int_0^{\pi} f(\theta,\phi) Y_{0}^{0} \sin(\theta) d\theta\ d\phi = \\
+
+          &= \int_0^{2\pi} \int_0^{\pi} \frac{1}{2} \sqrt{\frac{1}{\pi}} \sin(\theta) d\theta\ d\phi = 2\sqrt{\pi}\\
+
+\end{align*}
+
+We got this analytic answer by plugging it into <a href="https://www.wolframalpha.com/input/?i=int+(1%2F2)*sqrt(1%2Fpi)*++sin(theta)+dtheta+dphi,+phi%3D0+to+2pi,+theta%3D0+to+pi">Wolfram Alpha</a>.
+Calculating the next constant is <a href="https://www.wolframalpha.com/input/?i=int+(1%2F2)*sqrt(3%2Fpi)*++sin(theta)*sin(phi)+++sin(theta)+dtheta+dphi,+phi%3D0+to+2pi,+theta%3D0+to+pi">also easy</a>
+
+\begin{align*}
+C_{1}^{-1} &= \int_0^{2\pi} \int_0^{\pi} \frac{1}{2} \sqrt{\frac{3}{\pi}} \sin(\theta)\sin(\phi) \sin(\theta) d\theta\ d\phi = 0\\
+\end{align*}
+
+If we do all the integrations, it turns out that $
+C_{0}^{0} = 2\sqrt{\pi}$ and 
+$C_{1}^{-1} =
+C_{1}^{0} =
+C_{1}^{1} =
+C_{2}^{-2} =
+C_{2}^{-1} =
+C_{2}^{0} =
+C_{2}^{1} =
+C_{2}^{2} = 0$. Note also that the obtained constants perfectly describe the input function $f(\theta,\phi)=1$, since
+
+\begin{align*}
+&C_{0}^{0} Y_{0}^{0}(\theta,\phi) +
+C_{1}^{-1} Y_{1}^{-1}(\theta,\phi) +
+C_{1}^{0} Y_{1}^{0}(\theta,\phi) +\\
+
+&C_{1}^{1} Y_{1}^{1}(\theta,\phi) + 
+C_{2}^{-2} Y_{2}^{-2}(\theta,\phi) +
+C_{2}^{-1} Y_{2}^{-1}(\theta,\phi) +\\
+
+&C_{2}^{0} Y_{2}^{0}(\theta,\phi) +
+C_{2}^{1} Y_{2}^{1}(\theta,\phi) +
+C_{2}^{2} Y_{2}^{2}(\theta,\phi) = \\
+
+&C_{0}^{0} Y_{0}^{0}(\theta,\phi) = \\&(2\sqrt{\pi}) (\frac{1}{2} \sqrt{\frac{1}{\pi}}) = 1 = f(\theta,\phi)
+
+\end{align*}
+
+</p>
+
+<p>
+
+So this is my approach to sanity checking my SH projection code: Give a spherical function with
+a constant value of $1$ to the code. If the first constant has a value very close to $2\sqrt{\pi}$(due to floating point imprecision issues, you should
+not check for exact equality!), and the
+remaining constants are all close to zero, then the projection code is very likely correctly implemented.
+Because the above calculations shows that the constants must assume these values for that input spherical function. 
+
+
+
+</p>
+

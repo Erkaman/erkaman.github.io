@@ -3,6 +3,12 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/sh_sanity_check.html", 
+	"How to Sanity Check your Spherical Harmonics Projection Code",
+	"/img/gallery/sh_sanity_check.png", 
+	"In this post, I will show a small sanity check I use to verify that my spherical harmonics code is correct."),
+
+
     ("src/model_matrix_recover.html", 
 	"Recovering the Scale, Rotation and Translation Matrices from the Model Matrix",
 	"/img/gallery/trs_model_r.png", 
