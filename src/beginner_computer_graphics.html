@@ -1,0 +1,280 @@
+<h1>How to Start Learning Computer Graphics Programming</h1>
+
+<p>
+Ever since I opened up my Direct Messages and invited everyone to 
+ask me computer graphics related questions on 
+<a href="https://twitter.com/erkaman2">Twitter</a>, 
+I am very often asked the question
+"How can I get started with graphics programming?".
+Since I am getting tired of answering this same question over and
+over again, I will in this post compile a summary of all
+my advice I have regarding this question.
+</p>
+
+<p>
+
+</p>
+
+<h2>Advice 1: Start with Raytracing and Rasterization</h2>
+
+<p>
+
+Quite a few API:s for coding against the GPU hardware have 
+appeared over the years: Direct3D, OpenGL, Vulkan, Metal, WebGL, and so on.
+These API:s can be difficult to get started with,  
+since they often require much boilerplate code, 
+and I consider that they are not beginner friendly at all.
+In these API:s, even figuring out how to draw a single triangle is a massive undertaking
+for a complete beginner to graphics.
+Of course, an alternative is that we instead use a Game Engine like 
+Unity and Unreal Engine. The game engine will be doing the tedious work
+of talking to the graphics API for you in this case. But I think that 
+even a game engine is too much to learn for a complete beginner,
+and that time should be spend on something a bit simpler.
+
+</p>
+
+<p>
+
+Instead, what I recommend for beginners, is that they write
+themselves either a raytracer or a software rasterizer(or both!). Put it simply, 
+A <b>raytracer</b> is a program
+that renders 3D scenes by sending out rays from every pixel in the screen,
+and does a whole bunch of intersection calculations and physical lighting 
+calculations, in order to figure out the final color of each pixel. 
+A <b>software rasterizer</b>, renders 3D scenes
+(which in a majority of cases is just a bunch of triangle) like this:
+for every triangle we want to draw, we figure out which pixels on the screen that
+triangle covers, and then for each such pixel, we calculate how the light 
+interacts with the point on the triangle that corresponds to the pixel.
+From this light interaction calculation, we obtain the final color of the pixel.
+Rasterization is much faster than raytracing, and it is the algorithm that 
+modern GPU:s uses for drawing 3D scenes. And software rasterization, simply
+means that we are doing this rasterization on the CPU, instead of the GPU.
+
+</p>
+
+<p>
+Both rasterization and raytracing are actually two pretty simple algorithms,
+and it is much easier for a beginner to implement these,
+than it is to figure out modern graphics API:s.
+Furthermore, by implementing one or both of these, the beginner will be 
+introduced to many concepts that are fundamental to computer graphics, like
+dot products, cross products, transformation matrices, cameras, and so on,
+without having to waste time wrestling with modern graphics API:s.
+I believe that these frustrating graphics API:s turn off a lot of beginners
+from graphics, and making your first computer graphics project into a rasterizer or a raytracer
+is a good way of getting around this initial hurdle.
+</p>
+
+<p>
+Note that one large advantage to writing a software rasterizer before learning a 
+graphics API, is that it becomes much easier to debug things when things 
+inevitably go wrong somewhere, since these API:s basically just provide an interface
+to a GPU-based rasterizer(note to pedantics: yes,this is a great simplification,
+since they provides access to things like computer shaders as well). Since you know how these API:s work behind the scenes,
+it becomes much easier to debug your code.
+</p>
+
+<p>
+For writing a raytracer, I always recommend reading
+<a href="https://twitter.com/peter_shirley/status/984947257035243520?lang=da">Peter Shirley's books</a>.
+For writing a software rasterizer, see these resources: 
+<a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation">1</a>,
+<a href="https://github.com/ssloy/tinyrenderer">2</a>,
+<a href="https://tayfunkayhan.wordpress.com/2018/11/24/rasterization-in-one-weekend-part-i/">3</a>.
+</p>
+
+<h2>Advice 2: Learn the necessary Math</h2>
+
+<p>
+My next advice is that you should study the math you need for computer graphics. The number
+of math concepts and techniques I use in my day-to-day work as a graphics programmer
+is surprisingly small, so this is not as much work as you might think.
+When you are a beginner in graphics, a field of mathematics called 'linear algebra' will be 
+your main tool of choice. The concepts from linear algebra that you will mostly be using are 
+listed below
+</p>
+
+<ul>
+<li>Dot Product</li>
+<li>Cross Product</li>
+<li>Spherical Coordinates</li>
+<li>Transformation Matrix(hint: you will mostly be using nothing but 4x4 matrices
+as a graphics programmer, so do not spend any time on studying large matrices)</li>
+<li>Rotation Matrix, Scaling Matrix, Translation Matrix, Homogeneous Coordinates, Quaternions</li>
+<li>Orthonormal Basis Matrix</li>
+<li>Intersection calculations. Mostly things like calculating the intersection
+between a ray and a sphere, or a plane, or a triangle.</li>
+<li>Column-major order and row-major order is a detail that trips up many beginners
+in my experience, so do make sure you fully understand this. Read <a href="https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/row-major-vs-column-major-vector">
+this article</a> for a good explanation.</li>
+<li>How to model a camera, with the view matrix and perspective transformation matrix.
+This is something that a lot of beginners struggle with, so this is a 
+topic that should be studied carefully and in depth.
+For the perspective matrix, see this <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/projection-matrix-introduction">tutorial</a>. 
+For the view matrix, see <a href="https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/lookat-function">this</a>.
+</li>
+
+</ul>
+
+<p>
+From the beginner to intermediate level, you will mostly not encounter any
+other math than the above. Once you get into topics like physically based shading, 
+a field of mathematics called 'calculus' also becomes useful, but that is a story for another day :-).
+</p>
+
+<p>
+I will list some resources for learning linear algebra. 
+A good online mathbook on the topic is 
+<a href="http://immersivemath.com/ila/index.html">immersive linear algebra</a>.
+A good video series on the topic that allows you to visualize many concepts is
+<a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab">
+Essence of linear algebra</a>. 
+Also, <a href="https://learnopengl.com/Getting-started/Transformations">this OpenGL tutorial</a> has useful explanations of elementary, yet useful
+linear algebra concepts. Another resource is
+<a href="http://graphicscodex.com/">The Graphics Codex</a>. 
+
+</p>
+
+
+<h2>Advice 3: Debugging tips when Drawing your First triangle</h2>
+
+<p><a href="/img/beginner_computer_graphics/first_triangle.jpg">
+    <img class="article-img"
+         src="/img/beginner_computer_graphics/first_triangle.jpg"
+         alt="Img"
+title="Img" width="40%" height="40%"/></a></p>
+
+<p>
+
+
+<p>
+Once you have written a raytracer or rasterizer, you will feel more confident
+in learning a graphics API. The hello world of learning a graphics API is to 
+simply draw a triangle on the screen. It can actually be surprisingly difficult to draw your first
+triangle, since usually a large amount of boilerplate is necessary, and 
+debugging graphics code tends to be difficult for beginners.
+In case you have problems with drawing your first triangle, and is getting
+a black screen instead of a triangle, I will list some debugging advice below.
+It is a summary of the steps I usually go through when I run into the same issue. 
+</p>
+
+<ul>
+<li>Usually, the issue lies in the projection and view matrices, since they are
+easy to get wrong. In the vertex shader, on every vertex you apply first
+the model matrix, then the view matrix, and then the projection matrix,
+and then finally do the perspective divide(although this last divide is handled behind
+the scenes usually, and not something you do explicitly). Try doing this process by hand, to sanity check your matrices.
+If you expect a vertex to be visible, then after the perspective divide the
+vertex will be in normalized device coordinates, and x should be in range [-1,+1],
+y in range [-1,+1], and z in range [-1,+1] if OpenGL(z in range [0,1] for Direct3D).
+If the coordinate values are not in this range, then a vertex you expected to be
+visible is not visible(since everything outside this range is clipped by the hardware), and something is likely wrong with your matrices.
+</li>
+
+<li>
+Did you remember to clear the depth buffer to sensible values?
+For instance, if you use a depth comparison function of D3DCMP_LESS(Direct3D),
+and then clear the depth buffer to 0, then nothing will ever drawn, because
+nothing will ever pass the depth test! To sum up, make sure that you fully understand the 
+depth test, and that you configure sensible depth testing settings.
+</li>
+
+<li>
+Make sure you correctly upload your matrices(like the view and projection matrices) to the GPU. 
+It is not difficult to accidentally not upload that data to the GPU.
+You can verify the uploaded matrices in a GPU debugger like RenderDoc.
+Similarly, make sure that you upload all your vertex data correctly.
+By mistake uploading only a part of your vertex data
+is a common mistake due to miscalculations.
+</li>
+
+<li>
+Backface culling is another detail that trips up a lot of beginners.
+In OpenGL for instance, backfacing triangles are all culled by default,
+and if you made a backfacing triangle and render it, it
+will not be rendered at all. My recommendation is to temporarily disable
+backface culling when you are trying to render your first triangle.
+</li>
+
+<li>
+Check all error codes returned by the functions of the graphics API,
+because they might contain useful information. If your API has access
+to some kind of debugging layer, like Vulkan, you should enable it.
+</li>
+
+<li>
+For doing any kind of graphics debugging, I strongly recommend learning 
+some kind of GPU debugging tool, like <a href="https://renderdoc.org/">RenderDoc</a> 
+or <a href="https://developer.nvidia.com/nsight-graphics">Nsight</a>.
+These tools provide you with an overview of the current state of the GPU for
+every step of your graphics application. They allow you to easily see
+whether you have correctly uploaded your matrices, inspect your depth buffer and 
+depth comparison settings, backface culling settings, and so on. All state that you
+can set in the graphics API, can easily be inspected in such programs.
+Another feature of RenderDoc that I really like and use a lot, is that it allows you to 
+step through the fragment shader of a pixel(This feature appears to be 
+exclusive to Direct3D at the time of writing though). You simply click on a pixel,
+and RenderDoc allows you to step through the fragment shader that was
+evaluated and gave the pixel its current color value. This feature is shown in the 
+gif below. I click on an orange pixel, and then step through the fragment shader
+calculations that caused the pixel to be assigned this color.
+ Check out <a href="https://www.youtube.com/user/baldurkarlsson/">Baldur Karlsson's youtube channel</a>, if you want to see
+more RenderDoc features.
+</li>
+</ul>
+
+<p><a href="/img/beginner_computer_graphics/renderdoc_debugger.gif">
+    <img class="article-img"
+         src="/img/beginner_computer_graphics/renderdoc_debugger.gif"
+         alt="Img"
+title="Img" width="60%" height="60%"/></a></p>
+
+<p>
+
+<h2>Advice 4: Good Projects for Beginners</h2>
+
+<p>
+
+In my view, the best way to become good at graphics, is to work on implementing
+various rendering techniques by yourself. I will below give a list of suggestions of
+projects that a beginner can implement and learn from.
+
+</p>
+
+<ul>
+<li>Make a sphere mesh using spherical coordinates, and render it.</li>
+<li>Implement shader for simple diffuse and specular shading.</li>
+<li>Directional Lights, point lights, and spot lights</li>
+<li>Heightmap Rendering</li>
+<li>Write a simple parser for a simple mesh format such as <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Wavefront .obj</a>,
+import it into your program and render it. In particular, try and import and render meshes with textures.
+</li>
+<li>Implement a simple minecraft renderer. It is surprisingly simple
+to render minecraft-like worlds, and it is also very learningful.</li>
+<li>Render reflections using cubemaps</li>
+<li>Shadow rendering using shadow maps.</li>
+<li>Implement view frustum culling. This is a simple, yet very practical
+optimization technique.</li>
+<li>Implement rendering of particle systems</li>
+<li>Learn how to implement Gamma Correction.</li>
+<li>Implement normal mapping</li>
+<li>Learn how to render lots of meshes efficiently with instanced rendering </li>
+<li>Animate meshes with mesh skinning.</li>
+</ul>
+
+<p>
+And here are also some more advanced techniques:
+</p>
+
+<ul>
+<li>Various post-processing effects. Like Bloom(using Gaussian blur), 
+ambient occlusion with SSAO, anti-aliasing with FXAA.	</li>
+<li>Implement deferred shading, a technique useful for rendering many light sources.</li>
+
+</ul>
+
+<p>
+And this concludes the article. So that was all the advice I had offer on this topic.	
+</p>

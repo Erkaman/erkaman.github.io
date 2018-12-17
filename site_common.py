@@ -3,6 +3,11 @@ import markdown2
 import datetime
 
 posts = [
+    ("src/beginner_computer_graphics.html", 
+	"How to Start Learning Computer Graphics Programming",
+	"/img/gallery/beginner_computer_graphics.jpg", 
+	"I will in this post, give my advice to beginners on how to get started with learning Computer Graphics Programming."),
+
     ("src/sh_sanity_check.html", 
 	"How to Sanity Check your Spherical Harmonics Projection Code",
 	"/img/gallery/sh_sanity_check.png", 

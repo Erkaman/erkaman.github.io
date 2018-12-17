@@ -9,6 +9,15 @@
   <atom:link href="https://erkaman.github.io/rss.xml" rel="self" type="application/rss+xml" />
 
   <item>
+    <title></title>
+    <link>https://erkaman.github.io/posts/beginner_computer_graphics.html</link>
+    <guid>https://erkaman.github.io/posts/beginner_computer_graphics.html</guid>
+    <description>
+	I will in this post, give my advice to beginners on how to get started with learning Computer Graphics Programming.
+    </description>
+  </item>
+ 
+  <item>
     <title>How to Sanity Check your Spherical Harmonics Projection Code</title>
     <link>https://erkaman.github.io/posts/sh_sanity_check.html</link>
     <guid>https://erkaman.github.io/posts/sh_sanity_check.html</guid>
