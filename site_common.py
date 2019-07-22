@@ -2,7 +2,13 @@
 import markdown2
 import datetime
 
+
 posts = [
+    ("src/ray_trace_inverse_ray.html", 
+	"How to ray-intersect a transformed geometry, without actually transforming it: a geometric illustration",
+	"/img/gallery/ray_trace_inverse_ray.png", 
+	"The goal of this article, is to describe how we can transform some geometry with a transformation matrix, and then compute the intersection between the transformed geometry, and some ray. However, we want to do this without <it>actually</it> transforming the geometry, since this can be expensive."),
+
     ("src/beginner_computer_graphics.html", 
 	"How to Start Learning Computer Graphics Programming",
 	"/img/gallery/beginner_computer_graphics.jpg", 

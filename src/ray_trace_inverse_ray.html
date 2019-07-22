@@ -1,0 +1,280 @@
+<h1>How to ray-intersect a transformed geometry, without actually transforming it: a geometric illustration</h1>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config(
+  {
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+  TeX: { equationNumbers: { autoNumber: "AMS" }, extensions: ["color.js"] },
+  });
+</script>
+<script type="text/javascript"
+        src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+
+<p>$\newcommand{\mvec}[1]{\mathbf{#1}}\newcommand{\gvec}[1]{\boldsymbol{#1}}\definecolor{eqcol2}{RGB}{114,0,172}\definecolor{eqcol1}{RGB}{172,0,114}\definecolor{eqcol3}{RGB}{0,172,114}\definecolor{eqcol4}{RGB}{230,190,120}$The 
+  goal of this article, is to describe how we can transform some geometry with a transformation matrix,
+  and then compute the intersection between the transformed geometry, and some ray. However, we want to do
+  this without <it>actually</it> transforming the geometry, since this can be expensive.   
+</p>
+
+</p>
+  Let us say we have a ray $\mvec{p}(t) = \mvec{o} + \mvec{d}t$, with origin $\mvec{o}$ and direction $\mvec{d}$,
+  and we want to find its intersection with some geometry, by finding the value of $t$ for this intersection.
+</p>
+
+<p>
+  <a href="/img/ray_trace_inverse_ray/trans0.svg">
+    <img class="article-img"
+         src="/img/ray_trace_inverse_ray/trans0.svg"
+         alt="figure" title="figure"
+         width="60%" height="60%"/></a>
+</p>
+
+<p>
+For an example, consider the intersection between above ray, with the given values of $\mvec{o}$ and $\mvec{d}$. 
+and the green geometry. The ray certainly intersects this geometry, and the value of $t$ is $t=2$, since the 
+ray is heading straight towards the wall of the geometry, and the distance between $\mvec{o}$ and the wall of the geometry
+is 2. Let us now translate this geometry, 4 units upwards on the $y$-axis, by applying the following matrix: 
+
+\begin{equation*}
+T = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 4 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+  \end{bmatrix},
+\end{equation*}
+
+then we get this geometry:
+
+</p>
+
+<p>
+  <a href="/img/ray_trace_inverse_ray/trans1.svg">
+    <img class="article-img"
+         src="/img/ray_trace_inverse_ray/trans1.svg"
+         alt="figure" title="figure"
+         width="60%" height="60%"/></a>
+</p>
+
+
+<p>
+
+  This translated geometry is intersected by the ray with origin $\mvec{o}=(-4,4)$
+and direction $\mvec{d}=(+1,0)$, with again $t=2$. However, is there a way
+we can calculate this exact intersection, without having to translate the geometry 
+at all. The geometry might be very complex, and have millions upon millions of triangles, so
+transforming the whole geometry might be expensive. Also, the geometry might also be 
+storing some kind of spatial data structure for fast ray-intersection queries(like a bounding-volume hierarchy), 
+which would also have to be updated if we transformed and updated the geometry vertex data.
+If we found a way to intersect the translated geometry, without actually having to translate it all,
+these costs would become zero. 
+
+</p>
+
+<p>
+  So, is there a way to intersect the geometry with the ray, without having to transform
+  the geometry at all? Yes, and it is actually rather simple: instead of transforming
+  the geometry, we apply the inverse of the transform on the ray. And then, we 
+  intersect this inverse transformed ray, with the original geometry. 
+  A small example should convince the reader that this is a valid approach. 
+  The inverse of the translation matrix $T$ we just used, is 
+
+  \begin{equation*}
+T^{-1} = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & -4 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+  \end{bmatrix},
+\end{equation*}
+
+If we apply this matrix to the ray with properties $\mvec{o}=(-4,4)$, $\mvec{d}=(+1,0)$, 
+we arrive at the following situation:
+
+</p>
+
+<p>
+    <a href="/img/ray_trace_inverse_ray/trans2svg">
+      <img class="article-img"
+           src="/img/ray_trace_inverse_ray/trans2.svg"
+           alt="figure" title="figure"
+           width="60%" height="60%"/></a>
+</p>
+
+<p>
+  Now as we can observe, we can intersect this inverse transformed ray, with the untransformed
+  geometry, and by doing so, we arrive at our desired result $t=2$.
+</p>
+
+<p>
+  One subtle detail here, is that we must make sure to apply this inverse transformation
+  on both the ray origin, <i>and</i> direction. To understand this, 
+  let us go through a slightly more subtle example. In this example, the 
+  transformation matrix is
+
+
+
+\begin{equation*}
+M = \begin{bmatrix}
+0 & -1 & 0 & 0 \\
+1 & 0 & 0 & 4 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+  \end{bmatrix} = 
+  \begin{bmatrix}
+  0 & -1 & 0 & 0 \\
+  1 & 0 & 0 & 0 \\
+  0 & 0 & 1 & 0 \\
+  0 & 0 & 0 & 1
+    \end{bmatrix}
+  \begin{bmatrix}
+  1 & 0 & 0 & 4 \\
+  0 & 1 & 0 & 0 \\
+  0 & 0 & 1 & 0 \\
+  0 & 0 & 0 & 1
+    \end{bmatrix}
+  ,
+\end{equation*}
+
+This is a transform that first translates +4 units on the $x$-axis,
+and then does a 90 degrees counter-clockwise rotation about the origin $(0,0)$. If we apply
+this transform to a geometry, we arrive at the below situation
+
+</p>
+
+<p>
+    <a href="/img/ray_trace_inverse_ray/rot0.svg">
+      <img class="article-img"
+           src="/img/ray_trace_inverse_ray/rot0.svg"
+           alt="figure" title="figure"
+           width="60%" height="60%"/></a>
+</p>
+
+<p>
+  
+We want to intersect the above ray with the original geometry instead of the transformed
+geometry, and so we begin by inverse transforming the ray origin. The inverse of the 
+transform is 
+
+\begin{equation*}
+M^{-1} = \begin{bmatrix}
+0 & 1 & 0 & -4 \\
+-1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+  \end{bmatrix}
+\end{equation*}
+
+now apply this to the ray origin:
+
+\begin{equation*}
+\begin{bmatrix}
+0 & 1 & 0 & -4 \\
+-1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+  \end{bmatrix}
+  \begin{bmatrix}
+  -3 \\
+  +4  \\
+  0 \\
+  1
+    \end{bmatrix} =
+    \begin{bmatrix}
+  0 \\
+  +3  \\
+  0 \\
+  1
+    \end{bmatrix}
+
+\end{equation*}
+
+And after doing this transform, we obtain:
+
+</p>
+
+<p>
+    <a href="/img/ray_trace_inverse_ray/rot1.svg">
+      <img class="article-img"
+           src="/img/ray_trace_inverse_ray/rot1.svg"
+           alt="figure" title="figure"
+           width="60%" height="60%"/></a>
+</p>
+
+<p>
+  And we can see that the ray obviously will not intersect the original geometry
+  in this configuration. Because we also need to inverse transform
+  the ray direction, so let us do this:
+
+  \begin{equation*}
+\begin{bmatrix}
+0 & 1 & 0 & -4 \\
+-1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+  \end{bmatrix}
+  \begin{bmatrix}
+  +1 \\
+  0  \\
+  0 \\
+  0
+    \end{bmatrix} =
+    \begin{bmatrix}
+  0 \\
+  -1  \\
+  0 \\
+  0
+    \end{bmatrix}
+
+\end{equation*}
+
+And by doing this, we end up with
+
+</p>
+
+<p>
+    <a href="/img/ray_trace_inverse_ray/rot2.svg">
+      <img class="article-img"
+           src="/img/ray_trace_inverse_ray/rot2.svg"
+           alt="figure" title="figure"
+           width="60%" height="60%"/></a>
+</p>
+
+<p>
+
+  Now the ray does intersect the geometry, and the point it does intersect,
+  is the same point it would have intersected, on the transformed geometry.
+  We highlight these two intersection points in blue for clarity
+</p>
+
+<p>
+    <a href="/img/ray_trace_inverse_ray/rot3.svg">
+      <img class="article-img"
+           src="/img/ray_trace_inverse_ray/rot3.svg"
+           alt="figure" title="figure"
+           width="60%" height="60%"/></a>
+</p>
+
+<p>
+  As long as we remember to inverse transform both the ray origin and direction,
+  we can intersect a transformed geometry, without actually having to transform it.
+ Note that the method has one more caveat to it: we can only use this method 
+ for rigid transforms. A rigid transform is a transform which consists of only
+ rotations and translations. Basically, a rigid transform is not allowed to
+ "stretch" or "shrink" an object. If the object is stretched or shrinked, the 
+ geometry behind the object changes completely
+ (it may become very stretched in one dimension for instance), and we have no choice but to 
+ update the spatial data structures, and the vertex data. A rigid transform only
+ moves and rotates an object, and so it will never modify the actual geometry of the 
+ object. And this is the reason that either transforming the ray, or transforming the object,
+ both will result in the same intersection $t$-value.
+ 
+</p>
+
+<p>
+  To summarize, if we apply the inverse transform on a ray, where the 
+  transform is <i>non</i>-rigid, we will not in the end obtain the value of $t$
+  we expected. The reader is encouraged to make a small toy example,
+  and confirm this.
+</p>

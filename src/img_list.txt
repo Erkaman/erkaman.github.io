@@ -76,3 +76,4 @@
 /img/gallery/trs_model_r.png /posts/model_matrix_recover.html
 /img/gallery/sh_sanity_check.png /posts/sh_sanity_check.html
 /img/gallery/beginner_computer_graphics.jpg /posts/beginner_computer_graphics.html
+/img/gallery/ray_trace_inverse_ray.png /posts/ray_trace_inverse_ray.html
