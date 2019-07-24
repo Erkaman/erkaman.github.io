@@ -259,22 +259,9 @@ And by doing this, we end up with
 <p>
   As long as we remember to inverse transform both the ray origin and direction,
   we can intersect a transformed geometry, without actually having to transform it.
- Note that the method has one more caveat to it: we can only use this method 
- for rigid transforms. A rigid transform is a transform which consists of only
- rotations and translations. Basically, a rigid transform is not allowed to
- "stretch" or "shrink" an object. If the object is stretched or shrinked, the 
- geometry behind the object changes completely
- (it may become very stretched in one dimension for instance), and we have no choice but to 
- update the spatial data structures, and the vertex data. A rigid transform only
- moves and rotates an object, and so it will never modify the actual geometry of the 
- object. And this is the reason that either transforming the ray, or transforming the object,
- both will result in the same intersection $t$-value.
- 
-</p>
-
-<p>
-  To summarize, if we apply the inverse transform on a ray, where the 
-  transform is <i>non</i>-rigid, we will not in the end obtain the value of $t$
-  we expected. The reader is encouraged to make a small toy example,
-  and confirm this.
+It even works if the transform matrix has a scaling component to it.
+We must just make sure to <i>not</i> normalize the ray direction after inverse transforming,
+and we will get the correct result. The one requirement to using the technique is
+that the transform matrix is invertible. If it is <i>not</i> invertible, then
+we are not able to inverse transform the ray to begin with. 
 </p>
